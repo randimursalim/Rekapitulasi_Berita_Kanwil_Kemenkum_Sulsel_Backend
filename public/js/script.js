@@ -4,110 +4,77 @@ const modeToggle = document.querySelector(".mode-toggle");
 const sidebar = document.querySelector("nav");
 const sidebarToggle = document.querySelector(".sidebar-toggle");
 
-// Cek mode tersimpan di localStorage
+// === Mode Dark/Light ===
 let getMode = localStorage.getItem("mode");
-if (getMode && getMode === "dark") {
-    body.classList.add("dark");
-}
+if (getMode === "dark") body.classList.add("dark");
 
-// Cek status sidebar tersimpan
+// === Sidebar Open/Close ===
 let getStatus = localStorage.getItem("status");
-if (getStatus && getStatus === "close") {
-    sidebar.classList.add("close");
-}
+if (getStatus === "close") sidebar.classList.add("close");
 
-// Fungsi untuk update tema chart saat dark/light mode
+// Fungsi update tema chart (jika ada chart)
 function updateChartTheme() {
-    if (typeof rekapChart !== "undefined") {
-        const isDark = body.classList.contains("dark");
-        rekapChart.options.plugins.legend.labels.color = isDark ? "#fff" : "#333";
-        rekapChart.options.plugins.datalabels.color = isDark ? "#fff" : "#000";
-        rekapChart.options.scales.x.ticks.color = isDark ? "#fff" : "#333";
-        rekapChart.options.scales.y.ticks.color = isDark ? "#fff" : "#333";
-        rekapChart.update();
-    }
+  if (typeof rekapChart !== "undefined") {
+    const isDark = body.classList.contains("dark");
+    rekapChart.options.plugins.legend.labels.color = isDark ? "#fff" : "#333";
+    rekapChart.options.plugins.datalabels.color = isDark ? "#fff" : "#000";
+    rekapChart.options.scales.x.ticks.color = isDark ? "#fff" : "#333";
+    rekapChart.options.scales.y.ticks.color = isDark ? "#fff" : "#333";
+    rekapChart.update();
+  }
 }
 
-// Event toggle dark mode
-modeToggle.addEventListener("click", () => {
+// Toggle dark mode
+if (modeToggle) {
+  modeToggle.addEventListener("click", () => {
     body.classList.toggle("dark");
+    localStorage.setItem("mode", body.classList.contains("dark") ? "dark" : "light");
+    updateChartTheme();
+  });
+}
 
-    if (body.classList.contains("dark")) {
-        localStorage.setItem("mode", "dark");
-    } else {
-        localStorage.setItem("mode", "light");
-    }
-
-    updateChartTheme(); // update grafik biar ikutan
-});
-
-// Event toggle sidebar
-sidebarToggle.addEventListener("click", () => {
+// Toggle sidebar
+if (sidebarToggle) {
+  sidebarToggle.addEventListener("click", () => {
     sidebar.classList.toggle("close");
+    localStorage.setItem("status", sidebar.classList.contains("close") ? "close" : "open");
+  });
+}
 
-    if (sidebar.classList.contains("close")) {
-        localStorage.setItem("status", "close");
-    } else {
-        localStorage.setItem("status", "open");
-    }
-});
+// === Dashboard Detail Modal ===
+// const detailModal = document.getElementById("detailModal");
+// const modalTitle = document.getElementById("modalTitle");
+// const modalList = document.getElementById("modalList");
 
-//detail dashboard//
-// function showDetail(type) {
-//   const modal = document.getElementById("detailModal");
-//   const title = document.getElementById("modalTitle");
-//   const list = document.getElementById("modalList");
-  
-//   list.innerHTML = ''; // reset isi
+// if (detailModal && modalTitle && modalList) {
+//   window.showDetail = function(type, data = []) {
+//     modalList.innerHTML = "";
+//     if (type === "berita") modalTitle.textContent = "Rincian Total Berita";
+//     else if (type === "medsos") modalTitle.textContent = "Rincian Postingan Medsos";
 
-//   if (type === 'berita') {
-//     title.textContent = "Rincian Total Berita";
-//     const data = [
-//       { name: "Media Online", value: 20 },
-//       { name: "Surat Kabar", value: 45 },
-//       { name: "Website Kanwil", value: 15 }
-//     ];
 //     data.forEach(item => {
 //       const li = document.createElement("li");
 //       li.textContent = `${item.name}: ${item.value}`;
-//       list.appendChild(li);
+//       modalList.appendChild(li);
 //     });
-//   }
 
-//   if (type === 'medsos') {
-//     title.textContent = "Rincian Postingan Medsos";
-//     const data = [
-//       { name: "Facebook", value: 10 },
-//       { name: "Instagram", value: 8 },
-//       { name: "Twitter (X)", value: 6 },
-//       { name: "TikTok", value: 10 }
-//     ];
-//     data.forEach(item => {
-//       const li = document.createElement("li");
-//       li.textContent = `${item.name}: ${item.value}`;
-//       list.appendChild(li);
-//     });
-//   }
+//     detailModal.style.display = "block";
+//   };
 
-//   modal.style.display = "block";
+//   window.closeModal = function() {
+//     detailModal.style.display = "none";
+//   };
+
+//   window.addEventListener("click", function(e) {
+//     if (e.target === detailModal) detailModal.style.display = "none";
+//   });
 // }
 
-// function closeModal() {
-//   document.getElementById("detailModal").style.display = "none";
-// }
-
-// Tutup modal saat klik luar
-// window.onclick = function(e) {
-//   const modal = document.getElementById("detailModal");
-//   if (e.target === modal) modal.style.display = "none";
-// };
-
-
-// Modal Img //
+// === Modal Image (arsip.php) ===
 const imgModal = document.getElementById("imgModal");
-  const modalImage = document.getElementById("modalImage");
+const modalImage = document.getElementById("modalImage");
 
-  // Event delegation agar bisa klik semua gambar
+if (imgModal && modalImage) {
   document.addEventListener("click", function(e) {
     if (e.target.tagName === "IMG" && e.target.closest(".data-list")) {
       modalImage.src = e.target.src;
@@ -118,3 +85,4 @@ const imgModal = document.getElementById("imgModal");
   imgModal.addEventListener("click", function() {
     imgModal.style.display = "none";
   });
+}
