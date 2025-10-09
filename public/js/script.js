@@ -41,7 +41,7 @@ if (sidebarToggle) {
   });
 }
 
-// === Dashboard Detail Modal ===
+//=== Dashboard Detail Modal ===
 // const detailModal = document.getElementById("detailModal");
 // const modalTitle = document.getElementById("modalTitle");
 // const modalList = document.getElementById("modalList");

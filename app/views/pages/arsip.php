@@ -101,7 +101,7 @@
                   onclick="window.open('https://www.sulselsatu.com/2025/09/27/news/dirjen-ahu-pastikan-dukungan-layanan-publik-di-sulsel-makin-optimal.html', '_blank')">
             <i class="uil uil-eye"></i>
           </button>
-          <button class="btn-action-aksi edit" onclick="window.location.href='edit-konten.html'"><i class="uil uil-edit"></i></button>
+          <button class="btn-action-aksi edit" onclick="window.location.href='index.php?page=edit-konten'"><i class="uil uil-edit"></i></button>
           <button class="btn-action-aksi delete"><i class="uil uil-trash-alt"></i></button>
         </span>
 

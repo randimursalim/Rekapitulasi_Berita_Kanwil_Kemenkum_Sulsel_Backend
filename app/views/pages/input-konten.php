@@ -9,7 +9,7 @@
 
     <!-- Form Input Konten -->
     <div class="form-container">
-        <form action="#" method="POST" class="input-berita-form" autocomplete="off" enctype="multipart/form-data">
+        <form action="index.php?page=store-konten" method="POST" class="input-berita-form" autocomplete="off" enctype="multipart/form-data">
 
             <!-- Pilih Jenis Konten -->
             <div class="form-group">
@@ -111,3 +111,29 @@
         </form>
     </div>
 </div>
+<script>
+    // === Toggle form berdasarkan jenis konten ===
+document.addEventListener('DOMContentLoaded', function () {
+  const jenisSelect = document.getElementById('jenis');
+  const formBerita = document.getElementById('form-berita');
+  const formMedsos = document.getElementById('form-medsos');
+
+  function toggleForm() {
+    if (!jenisSelect) return;
+    if (jenisSelect.value === 'berita') {
+      formBerita.style.display = 'block';
+      formMedsos.style.display = 'none';
+    } else if (jenisSelect.value !== '') {
+      formBerita.style.display = 'none';
+      formMedsos.style.display = 'block';
+    } else {
+      formBerita.style.display = 'none';
+      formMedsos.style.display = 'none';
+    }
+  }
+
+  toggleForm();
+  jenisSelect.addEventListener('change', toggleForm);
+});
+
+</script>

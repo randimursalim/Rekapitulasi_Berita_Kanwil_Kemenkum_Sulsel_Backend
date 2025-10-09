@@ -54,24 +54,24 @@ document.querySelectorAll(".boxes .box[data-type]").forEach(box => {
 });
 
 // === Toggle form berdasarkan jenis konten ===
-const jenisSelect = document.getElementById("jenis");
-const formBerita = document.getElementById("form-berita");
-const formMedsos = document.getElementById("form-medsos");
+// const jenisSelect = document.getElementById("jenis");
+// const formBerita = document.getElementById("form-berita");
+// const formMedsos = document.getElementById("form-medsos");
 
-if (jenisSelect) {
-    jenisSelect.addEventListener("change", function() {
-        if (this.value === "berita") {
-            formBerita.style.display = "block";
-            formMedsos.style.display = "none";
-        } else if (this.value !== "") {
-            formBerita.style.display = "none";
-            formMedsos.style.display = "block";
-        } else {
-            formBerita.style.display = "none";
-            formMedsos.style.display = "none";
-        }
-    });
-}
+// if (jenisSelect) {
+//     jenisSelect.addEventListener("change", function() {
+//         if (this.value === "berita") {
+//             formBerita.style.display = "block";
+//             formMedsos.style.display = "none";
+//         } else if (this.value !== "") {
+//             formBerita.style.display = "none";
+//             formMedsos.style.display = "block";
+//         } else {
+//             formBerita.style.display = "none";
+//             formMedsos.style.display = "none";
+//         }
+//     });
+// }
 
 // === Filter log aktivitas ===
 const filterBtn = document.getElementById("filterBtn");

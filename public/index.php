@@ -22,6 +22,12 @@ switch ($page) {
         $controller->inputKonten();
         break;
 
+    case 'store-konten':
+        require_once '../app/controllers/KontenController.php';
+        $controller = new KontenController();
+        $controller->storeKonten();
+        break;
+
     case 'edit-konten':
         require_once __DIR__ . '/../app/controllers/KontenController.php';
         $controller = new KontenController();
