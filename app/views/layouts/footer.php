@@ -5,6 +5,9 @@
 <script src="/rekap-konten/public/js/rekap.js"></script>
 
 <script>
+
+// Sweet alert
+
 // Data dari PHP
 const detailBerita = <?= json_encode($detailBerita ?? []) ?>;
 const detailMedsos = <?= json_encode($detailMedsos ?? []) ?>;
