@@ -157,6 +157,16 @@ document.addEventListener('DOMContentLoaded', function () {
     input.addEventListener('input', function(){
       const page = input.dataset.page;
       const query = input.value.trim();
+      
+      if(page==='arsip') {
+        // Gunakan pagination system untuk arsip
+        if(typeof window.setCurrentFilters === 'function') {
+          window.setCurrentFilters({ search: query });
+        }
+        return;
+      }
+      
+      // Untuk halaman lain, gunakan sistem lama
       if(query==='') return renderArsip(null);
 
       let url = '';

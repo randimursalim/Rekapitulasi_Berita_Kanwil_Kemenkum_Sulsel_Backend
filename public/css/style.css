@@ -895,6 +895,37 @@ body.dark .filter-select:hover {
     font-weight: 600;
 }
 
+.pagination-dots {
+    padding: 6px 8px;
+    color: var(--black-light-color);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.pagination-btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary-color);
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.2s, color 0.3s;
+}
+
+.pagination-btn:hover {
+    background: var(--panel-color);
+    transform: scale(1.05);
+}
+
+.pagination-btn.active {
+    background: var(--toggle-color);
+    color: var(--text-color);
+    font-weight: 600;
+}
+
 /* Search ajax */
 .table-search {
   width: 100%;

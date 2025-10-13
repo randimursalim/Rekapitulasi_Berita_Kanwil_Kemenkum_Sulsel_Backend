@@ -21,7 +21,7 @@
     <select id="filterJenis" class="filter-select">
       <option value="all">Semua</option>
       <option value="berita">Berita</option>
-      <option value="sosial_media">Sosial Media</option>
+      <option value="medsos">Media Sosial</option>
     </select>
 
     <label for="filterKategori">Kategori/Platform:</label>
@@ -33,7 +33,7 @@
       <option value="facebook">Facebook</option>
       <option value="instagram">Instagram</option>
       <option value="tiktok">TikTok</option>
-      <option value="twitter">X (Twitter)</option>
+      <option value="twitter">Twitter</option>
       <option value="youtube">YouTube</option>
     </select>
   </div>
@@ -42,82 +42,17 @@
   <div class="activity-wrapper" style="margin-top:20px;">
     <div class="activity">
       <div class="activity-data" id="searchResults">
-        <?php
-        $allKonten = array_merge($detailBerita ?? [], $detailMedsos ?? []);
-        $no = 1;
-        ?>
-
-        <!-- Tabel Data -->
-        <div class="data no">
-          <span class="data-title">No</span>
-          <?php foreach ($allKonten as $konten): ?>
-            <span class="data-list"><?= $no++; ?></span>
-          <?php endforeach; ?>
-        </div>
-
-        <div class="data title-news">
-          <span class="data-title">Judul</span>
-          <?php foreach ($allKonten as $konten): ?>
-            <span class="data-list"><?= htmlspecialchars($konten['judul']); ?></span>
-          <?php endforeach; ?>
-        </div>
-
-        <div class="data jenis">
-          <span class="data-title">Jenis</span>
-          <?php foreach ($allKonten as $konten): ?>
-            <span class="data-list"><?= $konten['jenis'] === 'berita' ? 'Berita' : 'Sosial Media'; ?></span>
-          <?php endforeach; ?>
-        </div>
-
-        <div class="data kategori">
-          <span class="data-title">Kategori/Platform</span>
-          <?php foreach ($allKonten as $konten): ?>
-            <span class="data-list">
-              <?= $konten['jenis'] === 'berita' ? ucwords(str_replace('_', ' ', $konten['jenis_berita'] ?? '-')) : ($konten['jenis'] ?? '-'); ?>
-            </span>
-          <?php endforeach; ?>
-        </div>
-
-        <div class="data date">
-          <span class="data-title">Tanggal</span>
-          <?php foreach ($allKonten as $konten): ?>
-            <span class="data-list"><?= $konten['jenis'] === 'berita' ? $konten['tanggal_berita'] : $konten['tanggal_post']; ?></span>
-          <?php endforeach; ?>
-        </div>
-
-        <div class="data dokumentasi">
-          <span class="data-title">Dokumentasi</span>
-          <?php foreach ($allKonten as $konten): ?>
-            <span class="data-list">
-              <?php if (!empty($konten['dokumentasi'])): ?>
-                <img src="<?= $konten['dokumentasi']; ?>" alt="Foto" class="preview-img" style="width:60px; cursor:pointer;">
-              <?php else: ?>
-                -
-              <?php endif; ?>
-            </span>
-          <?php endforeach; ?>
-        </div>
-
-        <div class="data actions">
-          <span class="data-title">Aksi</span>
-          <?php foreach ($allKonten as $konten): ?>
-            <span class="data-list">
-              <button class="btn-action-aksi view" onclick="window.open('<?= $konten['jenis']==='berita'? $konten['link_berita'] : $konten['link_post']; ?>','_blank')"><i class="uil uil-eye"></i></button>
-              <button class="btn-action-aksi edit" onclick="window.location.href='index.php?page=edit-konten&id=<?= $konten['id_konten']; ?>'"><i class="uil uil-edit"></i></button>
-              <button class="btn-action-aksi delete" data-id="<?= $konten['id_konten']; ?>"><i class="uil uil-trash-alt"></i></button>
-            </span>
-          <?php endforeach; ?>
+        <!-- Data akan dimuat via AJAX -->
+        <div style="text-align: center; padding: 20px;">
+          <p>Memuat data...</p>
         </div>
       </div>
     </div>
   </div>
 
   <!-- 🔹 Pagination -->
-  <div class="pagination">
-    <button class="active">1</button>
-    <button>2</button>
-    <button>3</button>
-    <button>Next</button>
+  <div class="pagination" id="pagination">
+    <!-- Pagination akan di-generate via JavaScript -->
   </div>
 </div>
 
@@ -127,236 +62,320 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
+  // Global variables
+  let currentPage = 1;
+  let totalPages = 1;
+  let totalData = 0;
+  let itemsPerPage = 10; // Default items per page
+  let currentFilters = {
+    search: '',
+    jenis: 'all',
+    kategori: 'all',
+    startDate: '',
+    endDate: ''
+  };
 
-  const searchInput = document.querySelector('.live-search');
+  // DOM elements
   const container = document.getElementById('searchResults');
-  const originalHTML = container ? container.innerHTML : '';
-
-  // 🔹 Event delegation untuk tombol delete
-  container.addEventListener('click', (e) => {
-    const btn = e.target.closest('.btn-action-aksi.delete');
-    if (!btn) return;
-
-    Swal.fire({
-      title: 'Hapus Konten?',
-      text: "Data yang dihapus tidak bisa dikembalikan!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Ya, hapus!'
-    }).then(result => {
-      if(result.isConfirmed){
-        window.location.href = 'index.php?page=delete-konten&id=' + btn.dataset.id;
-      }
-    });
-  });
-
-  // 🔹 Event preview image
-  container.addEventListener('click', (e) => {
-    const img = e.target.closest('.preview-img');
-    if (!img) return;
-    const modal = document.getElementById('imgModal');
-    modal.style.display = 'block';
-    document.getElementById('modalImage').src = img.src;
-  });
-
-  // 🔹 Live search
-  if (searchInput && container) {
-    searchInput.addEventListener('input', () => {
-      const query = searchInput.value.trim().toLowerCase();
-
-      if(query==='') {
-        container.innerHTML = originalHTML;
-        return;
-      }
-
-      const dataColumns = container.querySelectorAll('.data');
-      const rowCount = dataColumns[0].querySelectorAll('.data-list').length;
-
-      for(let i=0;i<rowCount;i++){
-        let match = false;
-
-        dataColumns.forEach(col=>{
-          const cell = col.querySelectorAll('.data-list')[i];
-          const text = cell.textContent || '';
-          if(text.toLowerCase().includes(query)) match = true;
-        });
-
-        dataColumns.forEach(col=>{
-          const cell = col.querySelectorAll('.data-list')[i];
-          cell.style.display = match ? '' : 'none';
-        });
-      }
-    });
-  }
-
-});
-
-// Tombol Filter
-document.addEventListener('DOMContentLoaded', () => {
+  const paginationContainer = document.getElementById('pagination');
   const filterBtn = document.getElementById('filterBtn');
   const resetBtn = document.getElementById('resetBtn');
   const filterJenis = document.getElementById('filterJenis');
   const filterKategori = document.getElementById('filterKategori');
   const startDate = document.getElementById('startDate');
   const endDate = document.getElementById('endDate');
-  const container = document.getElementById('searchResults');
 
-  // Normalisasi teks kategori: spasi → underscore, huruf kecil
-  function normalizeKategori(str) {
-    return str.toLowerCase().replace(/\s+/g, '_');
+  // Check if required elements exist
+  if (!container || !paginationContainer) {
+    console.error('Required DOM elements not found');
+    return;
   }
 
-  function applyFilter() {
-    const jenis = filterJenis.value;       // 'all', 'berita', 'sosial_media'
-    const kategori = filterKategori.value; // 'all', 'media_online', 'facebook', dll
-    const start = startDate.value;
-    const end = endDate.value;
+  // Initialize the page
+  loadKonten(1);
+  attachEventListeners();
 
-    const dataColumns = container.querySelectorAll('.data');
-    const rowCount = dataColumns[0].querySelectorAll('.data-list').length;
+  // Expose loadKonten function globally untuk digunakan oleh header.php
+  window.loadKontenArsip = loadKonten;
+  window.setCurrentFilters = function(filters) {
+    currentFilters = { ...currentFilters, ...filters };
+    currentPage = 1;
+    loadKonten(currentPage);
+  };
 
-    for (let i = 0; i < rowCount; i++) {
-      let show = true;
-
-      const jenisText = dataColumns[2].querySelectorAll('.data-list')[i].textContent.trim().toLowerCase();
-      const kategoriText = dataColumns[3].querySelectorAll('.data-list')[i].textContent.trim();
-      const tanggalText = dataColumns[4].querySelectorAll('.data-list')[i].textContent.trim();
-
-      // Filter jenis
-      if (jenis !== 'all' && jenisText !== (jenis === 'berita' ? 'berita' : 'sosial media')) {
-        show = false;
-      }
-
-      // Filter kategori
-      if (kategori !== 'all' && normalizeKategori(kategoriText) !== kategori) {
-        show = false;
-      }
-
-      // Filter tanggal
-      if (start && tanggalText < start) show = false;
-      if (end && tanggalText > end) show = false;
-
-      // Tampilkan atau sembunyikan semua kolom baris ini
-      dataColumns.forEach(col => {
-        const cell = col.querySelectorAll('.data-list')[i];
-        cell.style.display = show ? '' : 'none';
+  // Event listeners
+  function attachEventListeners() {
+    // Filter button
+    if (filterBtn && filterJenis && filterKategori && startDate && endDate) {
+      filterBtn.addEventListener('click', function() {
+        currentFilters.jenis = filterJenis.value;
+        currentFilters.kategori = filterKategori.value;
+        currentFilters.startDate = startDate.value;
+        currentFilters.endDate = endDate.value;
+        currentPage = 1;
+        loadKonten(currentPage);
       });
+    }
+
+    // Reset button
+    if (resetBtn && filterJenis && filterKategori && startDate && endDate) {
+      resetBtn.addEventListener('click', function() {
+        filterJenis.value = 'all';
+        filterKategori.value = 'all';
+        startDate.value = '';
+        endDate.value = '';
+        currentFilters = {
+          search: '',
+          jenis: 'all',
+          kategori: 'all',
+          startDate: '',
+          endDate: ''
+        };
+        currentPage = 1;
+        loadKonten(currentPage);
+      });
+    }
+
+    // Live search akan dihandle oleh header.php
+  }
+
+  // Load konten with pagination
+  async function loadKonten(page = 1) {
+    if (!container) return;
+    
+    try {
+      // Show loading
+      container.innerHTML = '<div style="text-align: center; padding: 20px;"><p>Memuat data...</p></div>';
+
+      // Build query parameters
+      const params = new URLSearchParams({
+        page: page,
+        search: currentFilters.search,
+        filterJenis: currentFilters.jenis === 'all' ? '' : currentFilters.jenis,
+        filterDivisi: currentFilters.kategori === 'all' ? '' : currentFilters.kategori,
+        startDate: currentFilters.startDate,
+        endDate: currentFilters.endDate
+      });
+
+      const response = await fetch(`ajax/fetch_konten.php?${params}`);
+      
+      // Check if response is ok
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+
+      if (!result.success) {
+        container.innerHTML = `<p style="color:red;">Gagal memuat data konten: ${result.error || 'Unknown error'}</p>`;
+        return;
+      }
+
+      const data = result.data;
+      totalPages = result.pagination.totalPages;
+      totalData = result.pagination.totalData;
+      currentPage = result.pagination.currentPage;
+      
+      // Items per page is fixed at 10 (as defined in fetch_konten.php)
+      itemsPerPage = 10;
+
+      // Render data
+      renderData(data);
+      
+      // Render pagination
+      renderPagination();
+
+    } catch (error) {
+      console.error('Error loading konten:', error);
+      container.innerHTML = '<p style="color:red;">Terjadi kesalahan saat memuat data.</p>';
     }
   }
 
-  filterBtn.addEventListener('click', applyFilter);
-
-  resetBtn.addEventListener('click', () => {
-    filterJenis.value = 'all';
-    filterKategori.value = 'all';
-    startDate.value = '';
-    endDate.value = '';
-
-    const dataColumns = container.querySelectorAll('.data');
-    const rowCount = dataColumns[0].querySelectorAll('.data-list').length;
-    for (let i = 0; i < rowCount; i++) {
-      dataColumns.forEach(col => {
-        const cell = col.querySelectorAll('.data-list')[i];
-        cell.style.display = '';
-      });
+  // Render data table
+  function renderData(data) {
+    if (!container) return;
+    
+    if (data.length === 0) {
+      container.innerHTML = '<p style="text-align: center; padding: 20px;">Tidak ada data konten ditemukan.</p>';
+      return;
     }
-  });
+
+    const html = `
+      <div class="data no">
+        <span class="data-title">No</span>
+        ${data.map((_, i) => {
+          const startNumber = (currentPage - 1) * itemsPerPage + 1;
+          return `<span class="data-list">${startNumber + i}</span>`;
+        }).join('')}
+      </div>
+
+      <div class="data title-news">
+        <span class="data-title">Judul</span>
+        ${data.map(k => `<span class="data-list">${k.judul}</span>`).join('')}
+      </div>
+
+      <div class="data jenis">
+        <span class="data-title">Jenis</span>
+        ${data.map(k => `<span class="data-list">${k.jenis === 'berita' ? 'Berita' : 'Media Sosial'}</span>`).join('')}
+      </div>
+
+      <div class="data kategori">
+        <span class="data-title">Kategori/Platform</span>
+        ${data.map(k => {
+          if (k.jenis === 'berita') {
+            return `<span class="data-list">${k.jenis_berita ? k.jenis_berita.replace('_', ' ') : '-'}</span>`;
+          } else {
+            // Untuk media sosial, tampilkan platform spesifik
+            const platformNames = {
+              'instagram': 'Instagram',
+              'youtube': 'YouTube', 
+              'tiktok': 'TikTok',
+              'twitter': 'Twitter',
+              'facebook': 'Facebook'
+            };
+            return `<span class="data-list">${platformNames[k.jenis] || k.jenis || '-'}</span>`;
+          }
+        }).join('')}
+      </div>
+
+      <div class="data date">
+        <span class="data-title">Tanggal</span>
+        ${data.map(k => `<span class="data-list">${k.tanggal_berita || k.tanggal_post || '-'}</span>`).join('')}
+      </div>
+
+      <div class="data dokumentasi">
+        <span class="data-title">Dokumentasi</span>
+        ${data.map(k => `
+          <span class="data-list">
+            ${k.dokumentasi ? `<img src="${k.dokumentasi}" alt="Foto" class="preview-img" style="width:60px;cursor:pointer;">` : '-'}
+          </span>
+        `).join('')}
+      </div>
+
+      <div class="data actions">
+        <span class="data-title">Aksi</span>
+        ${data.map(k => `
+          <span class="data-list">
+            <button class="btn-action-aksi view" onclick="window.open('${k.jenis === 'berita' ? k.link_berita : k.link_post}','_blank')"><i class="uil uil-eye"></i></button>
+            <button class="btn-action-aksi edit" onclick="window.location.href='index.php?page=edit-konten&id=${k.id_konten}'"><i class="uil uil-edit"></i></button>
+            <button class="btn-action-aksi delete" data-id="${k.id_konten}"><i class="uil uil-trash-alt"></i></button>
+          </span>
+        `).join('')}
+      </div>
+    `;
+
+    container.innerHTML = html;
+    attachActionEvents();
+  }
+
+  // Render pagination
+  function renderPagination() {
+    if (!paginationContainer) return;
+    
+    if (totalPages <= 1) {
+      paginationContainer.innerHTML = '';
+      return;
+    }
+
+    let paginationHTML = '';
+    
+    // Previous button
+    if (currentPage > 1) {
+      paginationHTML += `<button class="pagination-btn" data-page="${currentPage - 1}">Previous</button>`;
+    }
+
+    // Page numbers
+    const startPage = Math.max(1, currentPage - 2);
+    const endPage = Math.min(totalPages, currentPage + 2);
+
+    if (startPage > 1) {
+      paginationHTML += `<button class="pagination-btn" data-page="1">1</button>`;
+      if (startPage > 2) {
+        paginationHTML += `<span class="pagination-dots">...</span>`;
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      const activeClass = i === currentPage ? 'active' : '';
+      paginationHTML += `<button class="pagination-btn ${activeClass}" data-page="${i}">${i}</button>`;
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        paginationHTML += `<span class="pagination-dots">...</span>`;
+      }
+      paginationHTML += `<button class="pagination-btn" data-page="${totalPages}">${totalPages}</button>`;
+    }
+
+    // Next button
+    if (currentPage < totalPages) {
+      paginationHTML += `<button class="pagination-btn" data-page="${currentPage + 1}">Next</button>`;
+    }
+
+    paginationContainer.innerHTML = paginationHTML;
+
+    // Attach pagination event listeners
+    const paginationBtns = paginationContainer.querySelectorAll('.pagination-btn');
+    paginationBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const page = parseInt(this.dataset.page);
+        if (page && page !== currentPage) {
+          currentPage = page;
+          loadKonten(currentPage);
+        }
+      });
+    });
+  }
+
+  // Attach action events (delete, image preview)
+  function attachActionEvents() {
+    if (!container) return;
+    
+    // Delete buttons
+    const deleteBtns = container.querySelectorAll('.btn-action-aksi.delete');
+    deleteBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const id = this.dataset.id;
+        Swal.fire({
+          title: 'Hapus Konten?',
+          text: "Data yang dihapus tidak bisa dikembalikan!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Ya, hapus!'
+        }).then(result => {
+          if(result.isConfirmed){
+            // Here you would typically make an AJAX call to delete the content
+            console.log('Delete content with ID:', id);
+            // After successful deletion, reload the current page
+            loadKonten(currentPage);
+          }
+        });
+      });
+    });
+
+    // Image preview
+    const previewImgs = container.querySelectorAll('.preview-img');
+    previewImgs.forEach(img => {
+      img.addEventListener('click', function() {
+        const modal = document.getElementById('imgModal');
+        const modalImg = document.getElementById('modalImage');
+        if (modal && modalImg) {
+          modalImg.src = this.src;
+          modal.style.display = 'block';
+        }
+      });
+    });
+  }
+
+  // Close modal when clicking outside
+  const modal = document.getElementById('imgModal');
+  if (modal) {
+    modal.addEventListener('click', function() {
+      this.style.display = 'none';
+    });
+  }
 });
-
-// Pagination
-// document.addEventListener('DOMContentLoaded', () => {
-//   const container = document.getElementById('searchResults');
-//   const pagination = document.querySelector('.pagination');
-//   const rowsPerPage = 10;
-
-//   // 🔹 Hitung baris yang visible
-//   function getVisibleRows() {
-//     const dataColumns = container.querySelectorAll('.data');
-//     const rowCount = dataColumns[0].querySelectorAll('.data-list').length;
-//     const visibleRows = [];
-//     for (let i = 0; i < rowCount; i++) {
-//       if (dataColumns[0].querySelectorAll('.data-list')[i].style.display !== 'none') {
-//         visibleRows.push(i);
-//       }
-//     }
-//     return visibleRows;
-//   }
-
-//   // 🔹 Tampilkan halaman tertentu
-//   function showPage(page = 1) {
-//     const visibleRows = getVisibleRows();
-//     const totalPages = Math.ceil(visibleRows.length / rowsPerPage);
-//     if(totalPages===0) {
-//       pagination.innerHTML = '';
-//       return;
-//     }
-
-//     const dataColumns = container.querySelectorAll('.data');
-//     // sembunyikan semua dulu
-//     dataColumns.forEach(col => col.querySelectorAll('.data-list').forEach(cell => cell.style.display = 'none'));
-
-//     const start = (page - 1) * rowsPerPage;
-//     const end = start + rowsPerPage;
-//     const rowsToShow = visibleRows.slice(start, end);
-
-//     dataColumns.forEach(col => {
-//       rowsToShow.forEach(idx => {
-//         col.querySelectorAll('.data-list')[idx].style.display = '';
-//       });
-//     });
-
-//     renderPagination(page, totalPages);
-//   }
-
-//   // 🔹 Render tombol pagination
-//   function renderPagination(currentPage, totalPages) {
-//     pagination.innerHTML = '';
-
-//     const createBtn = (text, page) => {
-//       const btn = document.createElement('button');
-//       btn.textContent = text;
-//       if (page === currentPage) btn.classList.add('active');
-//       btn.addEventListener('click', () => showPage(page));
-//       return btn;
-//     }
-
-//     if (currentPage > 1) {
-//       pagination.appendChild(createBtn('First', 1));
-//       pagination.appendChild(createBtn('Prev', currentPage - 1));
-//     }
-
-//     for (let p = 1; p <= totalPages; p++) {
-//       if (p === 1 || p === totalPages || (p >= currentPage - 1 && p <= currentPage + 1)) {
-//         pagination.appendChild(createBtn(p, p));
-//       } else if (p === 2 && currentPage > 3) {
-//         const span = document.createElement('span'); span.textContent = '...'; pagination.appendChild(span);
-//       } else if (p === totalPages - 1 && currentPage < totalPages - 2) {
-//         const span = document.createElement('span'); span.textContent = '...'; pagination.appendChild(span);
-//       }
-//     }
-
-//     if (currentPage < totalPages) {
-//       pagination.appendChild(createBtn('Next', currentPage + 1));
-//       pagination.appendChild(createBtn('Last', totalPages));
-//     }
-//   }
-
-//   // 🔹 Refresh pagination saat filter / reset / search
-//   function refreshPagination() {
-//     showPage(1);
-//   }
-
-//   // event listener untuk filter, reset, live search
-//   document.querySelectorAll('#filterBtn, #resetBtn, .live-search').forEach(el => {
-//     el.addEventListener('click', refreshPagination);
-//     el.addEventListener('input', refreshPagination);
-//   });
-
-//   // Inisialisasi halaman pertama
-//   showPage(1);
-// });
-
 </script>
