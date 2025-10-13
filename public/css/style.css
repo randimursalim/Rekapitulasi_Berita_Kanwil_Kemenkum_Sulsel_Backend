@@ -59,11 +59,27 @@ body.dark{
     background: #0b3cc1;
 }
 
+/* 🔹 Wrapper utama, untuk memastikan scroll horizontal selalu muncul */
+.activity-wrapper {
+  overflow-x: auto;        /* selalu tampil scroll horizontal */
+  overflow-y: hidden;
+  position: relative;
+  padding-bottom: 8px;     /* beri sedikit jarak biar tidak tertutup */
+}
+
+/* 🔹 Area dalamnya di-scroll vertikal */
+.activity {
+  max-height: 70vh;        /* tinggi tabel */
+  overflow-y: auto;        /* bisa scroll vertikal */
+}
+
+/* 🔹 Grid tabel */
 .activity-data {
   display: grid;
-  grid-template-columns: 50px 1fr 150px 150px 120px; /* sesuaikan dengan kebutuhan */
-  overflow-x: auto;
+  grid-template-columns: 50px 1fr 150px 150px 120px 120px 150px;
+  min-width: 1000px;
 }
+
 
 
 body.dark::-webkit-scrollbar-thumb:hover,
@@ -878,6 +894,27 @@ body.dark .filter-select:hover {
     color: var(--text-color);
     font-weight: 600;
 }
+
+/* Search ajax */
+.table-search {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.table-search th, .table-search td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table-search th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+.table-search tr:nth-child(even) {background-color: #f9f9f9;}
+.table-search tr:hover {background-color: #e9e9e9;}
+
 
 /* Mode gelap override */
 body.dark-mode .pagination button,

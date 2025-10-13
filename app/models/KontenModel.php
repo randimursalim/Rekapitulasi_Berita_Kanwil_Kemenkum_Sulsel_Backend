@@ -145,4 +145,32 @@ class KontenModel {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    
+    // Search konten
+    public function searchKonten($keyword) {
+    $db = $this->db; // misal $this->db adalah PDO
+    $keyword = "%$keyword%";
+
+    $sql = "
+        SELECT k.*, kb.tanggal_berita, kb.link_berita, kb.sumber_berita, kb.jenis_berita, kb.ringkasan,
+               km.tanggal_post, km.link_post, km.caption
+        FROM konten k
+        LEFT JOIN konten_berita kb ON k.id_konten = kb.id_konten
+        LEFT JOIN konten_medsos km ON k.id_konten = km.id_konten
+        WHERE k.judul LIKE :keyword
+           OR kb.link_berita LIKE :keyword
+           OR kb.sumber_berita LIKE :keyword
+           OR kb.ringkasan LIKE :keyword
+           OR km.link_post LIKE :keyword
+           OR km.caption LIKE :keyword
+        ORDER BY k.tanggal_input DESC
+    ";
+
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':keyword', $keyword);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }
