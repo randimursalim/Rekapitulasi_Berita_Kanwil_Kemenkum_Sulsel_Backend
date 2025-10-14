@@ -34,6 +34,36 @@ switch ($page) {
         $controller->editKonten();
         break;
 
+    case 'update-konten':
+        require_once __DIR__ . '/../app/controllers/KontenController.php';
+        $controller = new KontenController();
+        $controller->updateKonten();
+        break;
+
+    case 'delete-konten':
+        require_once __DIR__ . '/../app/controllers/KontenController.php';
+        $controller = new KontenController();
+        $controller->deleteKonten();
+        break;
+
+    case 'get-rekap-data':
+        require_once __DIR__ . '/../app/controllers/KontenController.php';
+        $controller = new KontenController();
+        $controller->getRekapData();
+        break;
+
+    case 'get-rekap-tabel':
+        require_once __DIR__ . '/../app/controllers/KontenController.php';
+        $controller = new KontenController();
+        $controller->getRekapTabel();
+        break;
+
+    case 'get-available-periods':
+        require_once __DIR__ . '/../app/controllers/KontenController.php';
+        $controller = new KontenController();
+        $controller->getAvailablePeriods();
+        break;
+
     case 'arsip':
         require_once __DIR__ . '/../app/controllers/KontenController.php';
         $controller = new KontenController();

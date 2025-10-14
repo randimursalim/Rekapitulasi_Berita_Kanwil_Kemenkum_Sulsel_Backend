@@ -4,12 +4,12 @@ const canvas = document.getElementById("rekapChart");
 if (canvas) {
   const ctx = canvas.getContext("2d");
 
-  // Dummy data awal
+  // Data awal kosong
   const chartData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
+    labels: [],
     datasets: [{
       label: "Jumlah Konten",
-      data: [23, 8, 3, 12, 7, 9, 12, 7, 14, 11, 23, 15],
+      data: [],
       backgroundColor: "rgba(54, 162, 235, 0.7)",
       borderColor: "rgba(54, 162, 235, 1)",
       borderWidth: 1
@@ -51,37 +51,174 @@ if (canvas) {
     plugins: [ChartDataLabels]
   });
 
-  // Fungsi update total
-  function updateTotal() {
-    const total = rekapChart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-    const totalEl = document.getElementById("totalBerita");
-    if (totalEl) totalEl.innerText = "Total Konten: " + total;
+  // Fungsi untuk fetch data dari backend
+  async function fetchRekapData(filter = 'monthly', startDate = null, endDate = null, jenis = 'all') {
+    try {
+      const params = new URLSearchParams({
+        filter: filter,
+        jenis: jenis
+      });
+      
+      if (startDate) params.append('startDate', startDate);
+      if (endDate) params.append('endDate', endDate);
 
-    const maxVal = Math.max(...rekapChart.data.datasets[0].data);
-    const margin = Math.ceil(maxVal * 0.1);
-    rekapChart.options.scales.y.suggestedMax = maxVal + margin;
-    rekapChart.update();
+      const response = await fetch(`index.php?page=get-rekap-data&${params}`);
+      const result = await response.json();
+
+      if (result.success) {
+        updateChart(result.data);
+      } else {
+        console.error('Error fetching rekap data:', result.error);
+        showError('Gagal memuat data rekap');
+      }
+    } catch (error) {
+      console.error('Error fetching rekap data:', error);
+      showError('Terjadi kesalahan saat memuat data');
+    }
   }
-  updateTotal();
+
+  // Fungsi untuk update chart dengan data baru
+  function updateChart(data) {
+    // Jika tidak ada data, tampilkan skeleton
+    if (!data.labels || data.labels.length === 0) {
+      rekapChart.data.labels = ['Belum Ada Data'];
+      rekapChart.data.datasets[0].data = [0];
+      rekapChart.data.datasets[0].backgroundColor = "rgba(200, 200, 200, 0.7)";
+      rekapChart.data.datasets[0].borderColor = "rgba(200, 200, 200, 1)";
+    } else {
+      rekapChart.data.labels = data.labels;
+      rekapChart.data.datasets[0].data = data.data;
+      rekapChart.data.datasets[0].backgroundColor = "rgba(54, 162, 235, 0.7)";
+      rekapChart.data.datasets[0].borderColor = "rgba(54, 162, 235, 1)";
+    }
+    
+    rekapChart.update();
+    updateTotal(data.total || 0);
+  }
+
+  // Fungsi update total
+  function updateTotal(total = null) {
+    const totalEl = document.getElementById("totalBerita");
+    if (totalEl) {
+      if (total !== null) {
+        totalEl.innerText = "Total Konten: " + total;
+      } else {
+        const total = rekapChart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+        totalEl.innerText = "Total Konten: " + total;
+      }
+    }
+
+    // Update scale jika ada data
+    if (rekapChart.data.datasets[0].data.length > 0) {
+      const maxVal = Math.max(...rekapChart.data.datasets[0].data);
+      const margin = Math.ceil(maxVal * 0.1);
+      rekapChart.options.scales.y.suggestedMax = maxVal + margin;
+      rekapChart.update();
+    }
+  }
+
+  // Fungsi untuk menampilkan error
+  function showError(message) {
+    const totalEl = document.getElementById("totalBerita");
+    if (totalEl) {
+      totalEl.innerText = message;
+      totalEl.style.color = 'red';
+    }
+  }
+
+  // Fungsi untuk memuat dropdown periode dinamis
+  async function loadAvailablePeriods() {
+    try {
+      const response = await fetch('index.php?page=get-available-periods');
+      const result = await response.json();
+
+      if (result.success) {
+        populateDropdowns(result.data);
+      } else {
+        console.error('Error loading periods:', result.error);
+      }
+    } catch (error) {
+      console.error('Error loading periods:', error);
+    }
+  }
+
+  // Fungsi untuk mengisi dropdown bulan dan tahun
+  function populateDropdowns(data) {
+    const bulanSelect = document.getElementById('filterBulan');
+    const tahunSelect = document.getElementById('filterTahun');
+
+    if (!bulanSelect || !tahunSelect) return;
+
+    // Clear existing options
+    bulanSelect.innerHTML = '<option value="">-- Pilih Bulan --</option>';
+    tahunSelect.innerHTML = '<option value="">-- Pilih Tahun --</option>';
+
+    // Month names mapping
+    const monthNames = {
+      1: 'Januari', 2: 'Februari', 3: 'Maret', 4: 'April',
+      5: 'Mei', 6: 'Juni', 7: 'Juli', 8: 'Agustus',
+      9: 'September', 10: 'Oktober', 11: 'November', 12: 'Desember'
+    };
+
+    // Populate months
+    data.months.forEach(month => {
+      const option = document.createElement('option');
+      option.value = month;
+      option.textContent = monthNames[month] || `Bulan ${month}`;
+      bulanSelect.appendChild(option);
+    });
+
+    // Populate years
+    data.years.forEach(year => {
+      const option = document.createElement('option');
+      option.value = year;
+      option.textContent = year;
+      tahunSelect.appendChild(option);
+    });
+
+    // Set default to latest period if available
+    if (data.periods.length > 0) {
+      const latest = data.periods[0];
+      bulanSelect.value = latest.bulan;
+      tahunSelect.value = latest.tahun;
+      
+      // Update table title
+      updateTableTitle(latest.bulan, latest.tahun);
+      
+      // Load data for default period
+      fetchRekapTabel(latest.bulan, latest.tahun);
+    }
+  }
+
+  // Fungsi untuk update judul tabel
+  function updateTableTitle(bulan, tahun) {
+    const title = document.getElementById('tableTitle');
+    if (title && bulan && tahun) {
+      const monthNames = {
+        1: 'JANUARI', 2: 'FEBRUARI', 3: 'MARET', 4: 'APRIL',
+        5: 'MEI', 6: 'JUNI', 7: 'JULI', 8: 'AGUSTUS',
+        9: 'SEPTEMBER', 10: 'OKTOBER', 11: 'NOVEMBER', 12: 'DESEMBER'
+      };
+      title.textContent = `REKAP PUBLIKASI DAN GLORIFIKASI BULAN ${monthNames[bulan] || bulan} TAHUN ${tahun}`;
+    }
+  }
+
+  // Load data awal
+  fetchRekapData('monthly');
+  loadAvailablePeriods();
 
   // Filter waktu
   document.querySelectorAll(".filter-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       const filter = btn.dataset.filter;
-      if (filter === "daily") {
-        rekapChart.data.labels = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
-        rekapChart.data.datasets[0].data = [2, 3, 1, 5, 4, 0, 6];
-      } else if (filter === "weekly") {
-        rekapChart.data.labels = ["Minggu 1", "Minggu 2", "Minggu 3", "Minggu 4"];
-        rekapChart.data.datasets[0].data = [10, 14, 7, 9];
-      } else if (filter === "monthly") {
-        rekapChart.data.labels = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun"];
-        rekapChart.data.datasets[0].data = [5, 8, 3, 12, 7, 9];
-      } else if (filter === "yearly") {
-        rekapChart.data.labels = ["2021", "2022", "2023", "2024", "2025"];
-        rekapChart.data.datasets[0].data = [45, 67, 52, 80, 34];
-      }
-      updateTotal();
+      
+      // Remove active class from all buttons
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      
+      // Add active class to clicked button
+      btn.classList.add("active");
+      
+      fetchRekapData(filter);
     });
   });
 
@@ -91,10 +228,18 @@ if (canvas) {
     applyRangeBtn.addEventListener("click", () => {
       const startDate = document.getElementById("start-date").value;
       const endDate = document.getElementById("end-date").value;
-      if (!startDate || !endDate) return alert("Pilih rentang tanggal dulu!");
-      rekapChart.data.labels = ["Rentang Terpilih"];
-      rekapChart.data.datasets[0].data = [Math.floor(Math.random() * 20)];
-      updateTotal();
+      const jenis = document.getElementById("filterJenis").value;
+      
+      if (!startDate || !endDate) {
+        alert("Pilih rentang tanggal dulu!");
+        return;
+      }
+      
+      // Remove active class from all filter buttons
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      
+      // Untuk range tanggal, gunakan filter 'range' bukan 'daily'
+      fetchRekapData('range', startDate, endDate, jenis);
     });
   }
 
@@ -103,16 +248,45 @@ if (canvas) {
   if (filterJenis) {
     filterJenis.addEventListener("change", (e) => {
       const jenis = e.target.value;
-      const d = rekapChart.data.datasets[0];
-      if (jenis === "all") {
-        d.data = [23, 8, 3, 12, 7, 9, 12, 7, 14, 11, 23, 15];
-        d.label = "Semua Konten";
-      } else if (jenis === "berita") {
-        d.data = [5, 2, 1, 3, 4, 2, 1, 3, 5, 4, 6, 7];
-        d.label = "Berita (Total)";
+      
+      // Cek apakah ada filter tanggal yang aktif
+      const startDate = document.getElementById("start-date").value;
+      const endDate = document.getElementById("end-date").value;
+      
+      // Cek apakah ada tombol filter yang aktif
+      const activeFilterBtn = document.querySelector(".filter-btn.active");
+      let currentFilter = 'monthly'; // default
+      
+      if (activeFilterBtn) {
+        currentFilter = activeFilterBtn.dataset.filter;
       }
-      rekapChart.update();
-      updateTotal();
+      
+      // Jika ada range tanggal, gunakan filter range
+      if (startDate && endDate) {
+        fetchRekapData('range', startDate, endDate, jenis);
+      } else {
+        // Gunakan filter yang sedang aktif
+        fetchRekapData(currentFilter, null, null, jenis);
+      }
+    });
+  }
+
+  // Reset filter
+  const resetFilterBtn = document.getElementById("reset-filter");
+  if (resetFilterBtn) {
+    resetFilterBtn.addEventListener("click", () => {
+      // Reset semua filter ke default
+      document.getElementById("start-date").value = "";
+      document.getElementById("end-date").value = "";
+      document.getElementById("filterJenis").value = "all";
+      
+      // Reset tombol filter aktif
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.classList.remove("active");
+      });
+      
+      // Load data default (bulanan)
+      fetchRekapData('monthly');
     });
   }
 
@@ -145,14 +319,62 @@ if (canvas) {
     });
   }
 
+  // Fungsi untuk fetch data tabel dari backend
+  async function fetchRekapTabel(bulan = null, tahun = null) {
+    try {
+      const params = new URLSearchParams();
+      if (bulan) params.append('bulan', bulan);
+      if (tahun) params.append('tahun', tahun);
+
+      const response = await fetch(`index.php?page=get-rekap-tabel&${params}`);
+      const result = await response.json();
+
+      if (result.success) {
+        console.log('Tabel data received:', result.data);
+        updateTabel(result.data);
+      } else {
+        console.error('Error fetching tabel data:', result.error);
+      }
+    } catch (error) {
+      console.error('Error fetching tabel data:', error);
+    }
+  }
+
+  // Fungsi untuk update tabel dengan data baru
+  function updateTabel(data) {
+    // Update data di tabel menggunakan ID
+    const mediaOnlineEl = document.getElementById('mediaOnline');
+    const websiteKanwilEl = document.getElementById('websiteKanwil');
+    const instagramEl = document.getElementById('instagram');
+    const twitterEl = document.getElementById('twitter');
+    const youtubeEl = document.getElementById('youtube');
+    const facebookEl = document.getElementById('facebook');
+
+    if (mediaOnlineEl) mediaOnlineEl.textContent = (data.media_online || 0) + ' Rilis Berita';
+    if (websiteKanwilEl) websiteKanwilEl.textContent = (data.website_kanwil || 0) + ' Berita';
+    if (instagramEl) instagramEl.textContent = (data.instagram || 0) + ' Postingan';
+    if (twitterEl) twitterEl.textContent = (data.twitter || 0) + ' Twit';
+    if (youtubeEl) youtubeEl.textContent = (data.youtube || 0) + ' Video';
+    if (facebookEl) facebookEl.textContent = (data.facebook || 0) + ' Postingan';
+  }
+
   // Filter tabel
   const applyFilter = document.getElementById("applyFilter");
   if (applyFilter) {
     applyFilter.addEventListener("click", () => {
       const bulan = document.getElementById("filterBulan").value;
       const tahun = document.getElementById("filterTahun").value;
-      const title = document.getElementById("tableTitle");
-      if (title) title.textContent = `REKAP PUBLIKASI DAN GLORIFIKASI BULAN ${bulan.toUpperCase()} TAHUN ${tahun}`;
+      
+      if (!bulan || !tahun) {
+        alert("Pilih bulan dan tahun terlebih dahulu!");
+        return;
+      }
+      
+      // Update table title
+      updateTableTitle(parseInt(bulan), parseInt(tahun));
+      
+      // Fetch data tabel
+      fetchRekapTabel(parseInt(bulan), parseInt(tahun));
     });
   }
 

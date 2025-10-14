@@ -5,6 +5,7 @@ header('Content-Type: application/json; charset=utf-8');
 try {
     require_once '../../config/database.php';
 
+
     // Ambil parameter dari AJAX
     $page        = isset($_GET['page']) ? (int) $_GET['page'] : 1;
     $search      = isset($_GET['search']) ? trim($_GET['search']) : '';
@@ -12,6 +13,16 @@ try {
     $filterDivisi = isset($_GET['filterDivisi']) ? $_GET['filterDivisi'] : '';
     $startDate   = isset($_GET['startDate']) ? $_GET['startDate'] : '';
     $endDate     = isset($_GET['endDate']) ? $_GET['endDate'] : '';
+
+    // Debug: Log parameters
+    error_log("Filter Parameters: " . json_encode([
+        'page' => $page,
+        'search' => $search,
+        'filterJenis' => $filterJenis,
+        'filterDivisi' => $filterDivisi,
+        'startDate' => $startDate,
+        'endDate' => $endDate
+    ]));
 
     // Pagination setup
     $limit  = 10;
@@ -31,12 +42,10 @@ try {
     // Initialize params array
     $params = [];
 
-    // Filter search
+    // Filter search - hanya berdasarkan judul untuk live search
     if ($search !== '') {
       $search = "%{$search}%";
-      $query .= " AND (k.judul LIKE ? OR kb.ringkasan LIKE ? OR km.caption LIKE ?)";
-      $params[] = $search;
-      $params[] = $search;
+      $query .= " AND k.judul LIKE ?";
       $params[] = $search;
     }
 
@@ -68,7 +77,13 @@ try {
 
     // Filter tanggal
     if ($startDate !== '' && $endDate !== '') {
-      $query .= " AND DATE(k.tanggal_input) BETWEEN ? AND ?";
+      // Filter berdasarkan tanggal_berita untuk berita dan tanggal_post untuk medsos
+      $query .= " AND (
+        (k.jenis = 'berita' AND DATE(kb.tanggal_berita) BETWEEN ? AND ?) OR
+        (k.jenis IN ('instagram', 'youtube', 'tiktok', 'twitter', 'facebook') AND DATE(km.tanggal_post) BETWEEN ? AND ?)
+      )";
+      $params[] = $startDate;
+      $params[] = $endDate;
       $params[] = $startDate;
       $params[] = $endDate;
     }

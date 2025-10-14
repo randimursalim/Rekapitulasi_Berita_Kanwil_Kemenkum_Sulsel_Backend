@@ -224,7 +224,10 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="data-title">Kategori/Platform</span>
         ${data.map(k => {
           if (k.jenis === 'berita') {
-            return `<span class="data-list">${k.jenis_berita ? k.jenis_berita.replace('_', ' ') : '-'}</span>`;
+            // Ubah underscore menjadi spasi dan kapitalkan setiap kata
+            const kategoriBerita = k.jenis_berita ? 
+              k.jenis_berita.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) : '-';
+            return `<span class="data-list">${kategoriBerita}</span>`;
           } else {
             // Untuk media sosial, tampilkan platform spesifik
             const platformNames = {
@@ -337,6 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
     deleteBtns.forEach(btn => {
       btn.addEventListener('click', function() {
         const id = this.dataset.id;
+        
         Swal.fire({
           title: 'Hapus Konten?',
           text: "Data yang dihapus tidak bisa dikembalikan!",
@@ -344,13 +348,12 @@ document.addEventListener('DOMContentLoaded', function() {
           showCancelButton: true,
           confirmButtonColor: '#d33',
           cancelButtonColor: '#3085d6',
-          confirmButtonText: 'Ya, hapus!'
+          confirmButtonText: 'Ya, hapus!',
+          cancelButtonText: 'Batal'
         }).then(result => {
           if(result.isConfirmed){
-            // Here you would typically make an AJAX call to delete the content
-            console.log('Delete content with ID:', id);
-            // After successful deletion, reload the current page
-            loadKonten(currentPage);
+            // AJAX call untuk hapus konten
+            deleteKonten(id);
           }
         });
       });
@@ -375,6 +378,92 @@ document.addEventListener('DOMContentLoaded', function() {
   if (modal) {
     modal.addEventListener('click', function() {
       this.style.display = 'none';
+    });
+  }
+
+  // Function untuk hapus konten via AJAX
+  async function deleteKonten(idKonten) {
+    try {
+      // Show loading
+      Swal.fire({
+        title: 'Menghapus...',
+        text: 'Sedang menghapus konten',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        willOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      // AJAX request untuk hapus
+      const formData = new FormData();
+      formData.append('id_konten', idKonten);
+
+      const response = await fetch('index.php?page=delete-konten', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Success message
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil!',
+          text: 'Konten berhasil dihapus',
+          showConfirmButton: false,
+          timer: 1500
+        }).then(() => {
+          // Reload data setelah hapus
+          loadKonten(currentPage);
+        });
+      } else {
+        // Error message
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal!',
+          text: result.error || 'Terjadi kesalahan saat menghapus konten',
+          confirmButtonText: 'OK'
+        });
+      }
+    } catch (error) {
+      console.error('Error deleting konten:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'Terjadi kesalahan saat menghapus konten',
+        confirmButtonText: 'OK'
+      });
+    }
+  }
+
+  // Check for success message from URL parameters
+  const urlParams = new URLSearchParams(window.location.search);
+  const status = urlParams.get('status');
+  
+  if (status === 'update_success') {
+    Swal.fire({
+      icon: 'success',
+      title: 'Ubah Konten Sukses!',
+      text: 'Data konten berhasil diperbarui.',
+      showConfirmButton: false,
+      timer: 2000
+    }).then(() => {
+      // Remove status parameter from URL
+      const newUrl = window.location.pathname + '?page=arsip';
+      window.history.replaceState({}, document.title, newUrl);
+    });
+  } else if (status === 'error_main' || status === 'error_detail') {
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal Mengubah Data!',
+      text: 'Terjadi kesalahan saat memperbarui konten. Silakan coba lagi.',
+      showConfirmButton: true
+    }).then(() => {
+      // Remove status parameter from URL
+      const newUrl = window.location.pathname + '?page=arsip';
+      window.history.replaceState({}, document.title, newUrl);
     });
   }
 });

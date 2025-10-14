@@ -10,6 +10,7 @@
 :root{
     /* ===== Colors ===== */
     --primary-color: #0E4BF1;
+    --primary-color-dark: #0A3BC7;
     --panel-color: #FFF;
     --text-color: #000;
     --black-light-color: #707070;
@@ -32,6 +33,7 @@ body{
 }
 body.dark{
     --primary-color: #3A3B3C;
+    --primary-color-dark: #2A2B2C;
     --panel-color: #242526;
     --text-color: #CCC;
     --black-light-color: #CCC;
@@ -59,25 +61,26 @@ body.dark{
     background: #0b3cc1;
 }
 
-/* 🔹 Wrapper utama, untuk memastikan scroll horizontal selalu muncul */
+/* 🔹 Wrapper utama untuk arsip - hanya scroll horizontal */
 .activity-wrapper {
-  overflow-x: auto;        /* selalu tampil scroll horizontal */
-  overflow-y: hidden;
+  overflow-x: auto;        /* scroll horizontal untuk tabel */
+  overflow-y: visible;     /* tidak ada scroll vertikal di wrapper */
   position: relative;
   padding-bottom: 8px;     /* beri sedikit jarak biar tidak tertutup */
 }
 
-/* 🔹 Area dalamnya di-scroll vertikal */
+/* 🔹 Area dalamnya - tidak ada scroll vertikal */
 .activity {
-  max-height: 70vh;        /* tinggi tabel */
-  overflow-y: auto;        /* bisa scroll vertikal */
+  max-height: none;        /* tidak ada batasan tinggi */
+  overflow-y: visible;     /* tidak ada scroll vertikal */
 }
 
-/* 🔹 Grid tabel */
+/* 🔹 Grid tabel untuk arsip */
 .activity-data {
   display: grid;
   grid-template-columns: 50px 1fr 150px 150px 120px 120px 150px;
   min-width: 1000px;
+  gap: 0;                  /* tidak ada gap antar kolom */
 }
 
 
@@ -357,13 +360,14 @@ nav.close ~ .dashboard .top{
 .boxes .box.box3{
     background-color: var(--box3-color);
 }
-.dash-content .activity .activity-data{
+/* CSS untuk dashboard (bukan arsip) */
+.dash-content .activity .activity-data:not(.arsip-page .activity-data){
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
 }
-.activity .activity-data{
+.activity .activity-data:not(.arsip-page .activity-data){
     display: flex;
 }
 .activity-data .data{
@@ -614,6 +618,12 @@ body.dark #caption::placeholder {
   color: #fff;
 }
 
+.filters button.active {
+  background: var(--primary-color-dark);
+  color: #fff !important;
+  opacity: 1;
+}
+
 /* ================================
    CHART CONTAINER
 ================================ */
@@ -638,8 +648,25 @@ body.dark #caption::placeholder {
   transition: background 0.3s;
 }
 
+/* ================================
+   CHART CONTAINER BUTTONS
+================================ */
+.chart-container button {
+  background: var(--primary-color);
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin: 0 5px;
+  transition: background 0.3s, color 0.3s;
+}
+
 .chart-container button:hover {
-  background: var(--primary-color-dark);
+  background: #0077ff;
+  color: #fff;
+  opacity: 1;
 }
 
 /* ================================
@@ -746,10 +773,35 @@ body.dark #apply-range:hover {
   color: #fff; /* tetap putih biar kontras */
 }
 
+body.dark .filters button.active {
+  background: var(--primary-color-dark);
+  color: #fff !important;
+  opacity: 1;
+}
+
+
+
+body.dark .rekap-page {
+  overflow-x: hidden;      /* tidak ada scroll horizontal */
+  overflow-y: auto;        /* scroll vertikal jika perlu */
+  width: 100%;             /* lebar penuh */
+  max-width: 100%;         /* tidak melebihi lebar container */
+}
 
 body.dark .chart-container {
   background: var(--panel-color-dark);
   color: var(--text-color-light);
+}
+
+body.dark .chart-container button {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+body.dark .chart-container button:hover {
+  background: #0077ff;
+  color: #fff;
+  opacity: 1;
 }
 
 body.dark #totalBerita {
@@ -964,6 +1016,100 @@ body.dark .filters span {
   color: var(--text-color) !important; /* gunakan warna teks terang */
 }
 
+
+/* 🔹 CSS Khusus untuk Halaman Arsip */
+.arsip-page .activity-wrapper {
+  overflow-x: auto;        /* hanya scroll horizontal */
+  overflow-y: visible;    /* tidak ada scroll vertikal */
+  max-height: none;        /* tidak ada batasan tinggi */
+}
+
+.arsip-page .activity {
+  max-height: none;        /* tidak ada batasan tinggi */
+  overflow-y: visible;    /* tidak ada scroll vertikal */
+}
+
+.arsip-page .activity-data {
+  display: grid !important;  /* override CSS lain */
+  grid-template-columns: 50px 1fr 150px 150px 120px 120px 150px;
+  min-width: 1000px;
+  gap: 0;
+  overflow-x: auto;        /* scroll horizontal jika perlu */
+  overflow-y: visible;    /* tidak ada scroll vertikal */
+}
+
+/* 🔹 CSS Khusus untuk Halaman Rekap Konten */
+.rekap-page {
+  overflow-x: hidden;      /* tidak ada scroll horizontal */
+  overflow-y: auto;        /* scroll vertikal jika perlu */
+  width: 100%;             /* lebar penuh */
+  max-width: 100%;         /* tidak melebihi lebar container */
+}
+
+.rekap-page .chart-container {
+  overflow: visible;       /* tidak ada scroll */
+  max-height: none;        /* tidak ada batasan tinggi */
+  width: 100%;             /* lebar penuh */
+}
+
+.rekap-page .chart-wrapper {
+  overflow: visible;       /* tidak ada scroll */
+  max-height: none;        /* tidak ada batasan tinggi */
+  width: 100%;             /* lebar penuh */
+}
+
+.rekap-page .table-container {
+  overflow-x: auto;        /* scroll horizontal untuk tabel */
+  overflow-y: visible;     /* tidak ada scroll vertikal */
+  max-height: none;        /* tidak ada batasan tinggi */
+  width: 100%;             /* lebar penuh */
+  max-width: 100%;         /* tidak melebihi lebar container */
+}
+
+.rekap-page #rekapTable {
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;     /* tabel layout tetap */
+}
+
+.rekap-page .form-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;      /* tidak ada scroll horizontal */
+}
+
+.rekap-page .filters {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;      /* tidak ada scroll horizontal */
+  flex-wrap: wrap;         /* wrap jika tidak muat */
+}
+
+/* Pastikan tidak ada scroll vertikal di arsip */
+.arsip-page .activity-data::-webkit-scrollbar {
+  height: 8px;            /* hanya scroll horizontal */
+  width: 0px;             /* tidak ada scroll vertikal */
+}
+
+.arsip-page .activity-data::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.arsip-page .activity-data::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 12px;
+}
+
+/* Override untuk memastikan tidak ada scroll vertikal */
+.arsip-page .activity-wrapper::-webkit-scrollbar {
+  height: 8px;
+  width: 0px;
+}
+
+.arsip-page .activity::-webkit-scrollbar {
+  height: 0px;
+  width: 0px;
+}
 
 /* Akhir Arsip Berita */
 

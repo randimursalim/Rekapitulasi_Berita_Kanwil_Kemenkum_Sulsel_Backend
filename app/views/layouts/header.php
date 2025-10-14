@@ -160,8 +160,14 @@ document.addEventListener('DOMContentLoaded', function () {
       
       if(page==='arsip') {
         // Gunakan pagination system untuk arsip
+        console.log('Live search for arsip:', query);
         if(typeof window.setCurrentFilters === 'function') {
+          console.log('setCurrentFilters function available');
+          // Langsung kirim query tanpa validasi panjang
+          console.log('Calling setCurrentFilters with:', query);
           window.setCurrentFilters({ search: query });
+        } else {
+          console.log('setCurrentFilters function not available');
         }
         return;
       }
@@ -170,7 +176,6 @@ document.addEventListener('DOMContentLoaded', function () {
       if(query==='') return renderArsip(null);
 
       let url = '';
-      if(page==='arsip') url = `<?= $BASE ?>/ajax/search-arsip.php?query=${encodeURIComponent(query)}`;
       // nanti tambah else if untuk pengguna / jadwal-kegiatan
 
       if(url==='') return;
