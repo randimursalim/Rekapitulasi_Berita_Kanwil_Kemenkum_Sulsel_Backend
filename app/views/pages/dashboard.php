@@ -36,13 +36,14 @@
 </div>
 
 <!-- Log Aktivitas -->
-<div class="activity">
-  <div class="title">
-    <i class="uil uil-history"></i>
-    <span class="text">Log Aktivitas</span>
-  </div>
+<div class="activity-wrapper">
+  <div class="activity">
+    <div class="title">
+      <i class="uil uil-history"></i>
+      <span class="text">Log Aktivitas</span>
+    </div>
 
-  <div class="activity-data">
+    <div class="activity-data">
     <div class="data activity-log">
       <span class="data-title">Aktivitas</span>
       <?php foreach ($logAktivitas as $log): ?>

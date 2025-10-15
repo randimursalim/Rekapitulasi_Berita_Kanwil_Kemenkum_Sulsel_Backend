@@ -69,18 +69,19 @@
   </div>
 
   <!-- Tabel Rekap -->
-  <table id="rekapTable">
+  <table id="rekapTable" style="width: 100%; table-layout: fixed;">
     <thead>
       <tr>
-        <th>No</th>
-        <th>Bulan</th>
-        <th>Media Online/Cetak</th>
-        <th>Website Kanwil Sulsel</th>
-        <th>Website SIPP</th>
-        <th>Instagram</th>
-        <th>Twitter (X)</th>
-        <th>Youtube</th>
-        <th>Facebook</th>
+        <th style="width: 5%;">No</th>
+        <th style="width: 12%;">Bulan</th>
+        <th style="width: 12%;">Media Online/Cetak</th>
+        <th style="width: 12%;">Website Kanwil</th>
+        <th style="width: 10%;">Website SIPP</th>
+        <th style="width: 10%;">Instagram</th>
+        <th style="width: 10%;">TikTok</th>
+        <th style="width: 10%;">Twitter (X)</th>
+        <th style="width: 10%;">Youtube</th>
+        <th style="width: 9%;">Facebook</th>
       </tr>
     </thead>
     <tbody>
@@ -91,6 +92,7 @@
         <td id="websiteKanwil">0 Berita</td>
         <td>-</td>
         <td id="instagram">0 Postingan</td>
+        <td id="tiktok">0 Video</td>
         <td id="twitter">0 Twit</td>
         <td id="youtube">0 Video</td>
         <td id="facebook">0 Postingan</td>

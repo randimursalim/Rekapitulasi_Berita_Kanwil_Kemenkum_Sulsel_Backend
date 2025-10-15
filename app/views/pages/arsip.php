@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
 
       <div class="data kategori">
-        <span class="data-title">Kategori/Platform</span>
+        <span class="data-title">Platform</span>
         ${data.map(k => {
           if (k.jenis === 'berita') {
             // Ubah underscore menjadi spasi dan kapitalkan setiap kata

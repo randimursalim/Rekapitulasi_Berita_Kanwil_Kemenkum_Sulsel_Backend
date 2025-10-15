@@ -203,6 +203,18 @@ if (canvas) {
     }
   }
 
+  function updateBulanTabel(bulan, tahun) {
+    const bulanEl = document.getElementById('bulanTabel');
+    if (bulanEl && bulan && tahun) {
+      const monthNames = {
+        1: 'Januari', 2: 'Februari', 3: 'Maret', 4: 'April',
+        5: 'Mei', 6: 'Juni', 7: 'Juli', 8: 'Agustus',
+        9: 'September', 10: 'Oktober', 11: 'November', 12: 'Desember'
+      };
+      bulanEl.textContent = `${monthNames[bulan] || bulan} ${tahun}`;
+    }
+  }
+
   // Load data awal
   fetchRekapData('monthly');
   loadAvailablePeriods();
@@ -346,6 +358,7 @@ if (canvas) {
     const mediaOnlineEl = document.getElementById('mediaOnline');
     const websiteKanwilEl = document.getElementById('websiteKanwil');
     const instagramEl = document.getElementById('instagram');
+    const tiktokEl = document.getElementById('tiktok');
     const twitterEl = document.getElementById('twitter');
     const youtubeEl = document.getElementById('youtube');
     const facebookEl = document.getElementById('facebook');
@@ -353,6 +366,7 @@ if (canvas) {
     if (mediaOnlineEl) mediaOnlineEl.textContent = (data.media_online || 0) + ' Rilis Berita';
     if (websiteKanwilEl) websiteKanwilEl.textContent = (data.website_kanwil || 0) + ' Berita';
     if (instagramEl) instagramEl.textContent = (data.instagram || 0) + ' Postingan';
+    if (tiktokEl) tiktokEl.textContent = (data.tiktok || 0) + ' Video';
     if (twitterEl) twitterEl.textContent = (data.twitter || 0) + ' Twit';
     if (youtubeEl) youtubeEl.textContent = (data.youtube || 0) + ' Video';
     if (facebookEl) facebookEl.textContent = (data.facebook || 0) + ' Postingan';
@@ -373,6 +387,9 @@ if (canvas) {
       // Update table title
       updateTableTitle(parseInt(bulan), parseInt(tahun));
       
+      // Update bulan di tabel
+      updateBulanTabel(parseInt(bulan), parseInt(tahun));
+      
       // Fetch data tabel
       fetchRekapTabel(parseInt(bulan), parseInt(tahun));
     });
@@ -383,12 +400,24 @@ if (canvas) {
   if (downloadTablePDF) {
     downloadTablePDF.addEventListener("click", () => {
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF("p", "pt", "a4");
+      const doc = new jsPDF("l", "pt", "a4"); // landscape mode
       const title = document.getElementById("tableTitle")?.innerText || "";
       doc.setFontSize(14);
       doc.text(title, 40, 40);
-      doc.autoTable({ html: "#rekapTable", startY: 60, theme: "grid", styles: { fontSize: 10 } });
-      doc.save("rekap_tabel.pdf");
+      doc.autoTable({ 
+        html: "#rekapTable", 
+        startY: 60, 
+        theme: "grid", 
+        styles: { 
+          fontSize: 8,
+          cellPadding: 3
+        },
+        headStyles: {
+          fontSize: 8,
+          fontStyle: 'bold'
+        }
+      });
+      doc.save("Rekap_Publikasi_Glorifikasi_" + new Date().toISOString().split('T')[0] + ".pdf");
     });
   }
 
@@ -402,19 +431,78 @@ if (canvas) {
         <html xmlns:o='urn:schemas-microsoft-com:office:office'
               xmlns:w='urn:schemas-microsoft-com:office:word'
               xmlns='http://www.w3.org/TR/REC-html40'>
-        <head><meta charset='utf-8'><title>Rekap</title>
-        <style>
-          table { border-collapse: collapse; width: 100%; font-family: Arial; }
-          table, th, td { border: 1px solid #000; }
-          th, td { padding: 8px 12px; text-align: center; }
-          th { background: #f2f2f2; } h3 { text-align: center; }
-        </style></head>
-        <body><h3>${title}</h3>${table}</body></html>`;
+        <head>
+          <meta charset='utf-8'>
+          <title>Rekap</title>
+          <!--[if gte mso 9]>
+          <xml>
+            <w:WordDocument>
+              <w:View>Print</w:View>
+              <w:Zoom>90</w:Zoom>
+              <w:DoNotOptimizeForBrowser/>
+            </w:WordDocument>
+          </xml>
+          <![endif]-->
+          <style>
+            @page {
+              size: A4 landscape;
+              margin: 1cm;
+            }
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+            }
+            h3 {
+              text-align: center;
+              margin-bottom: 20px;
+              font-size: 16px;
+            }
+            table {
+              border-collapse: collapse;
+              width: 100%;
+              font-size: 10px;
+              table-layout: fixed;
+            }
+            table, th, td {
+              border: 1px solid #000;
+            }
+            th, td {
+              padding: 4px 6px;
+              text-align: center;
+              vertical-align: middle;
+            }
+            th {
+              background: #f2f2f2;
+              font-weight: bold;
+              font-size: 9px;
+            }
+            td {
+              font-size: 9px;
+            }
+            /* Kolom width untuk landscape */
+            th:nth-child(1), td:nth-child(1) { width: 4%; }  /* No */
+            th:nth-child(2), td:nth-child(2) { width: 10%; } /* Bulan */
+            th:nth-child(3), td:nth-child(3) { width: 12%; } /* Media Online/Cetak */
+            th:nth-child(4), td:nth-child(4) { width: 12%; } /* Website Kanwil */
+            th:nth-child(5), td:nth-child(5) { width: 10%; } /* Website SIPP */
+            th:nth-child(6), td:nth-child(6) { width: 9%; }  /* Instagram */
+            th:nth-child(7), td:nth-child(7) { width: 9%; }  /* TikTok */
+            th:nth-child(8), td:nth-child(8) { width: 9%; }  /* Twitter */
+            th:nth-child(9), td:nth-child(9) { width: 9%; }  /* Youtube */
+            th:nth-child(10), td:nth-child(10) { width: 8%; } /* Facebook */
+          </style>
+        </head>
+        <body>
+          <h3>${title}</h3>
+          ${table}
+        </body>
+        </html>`;
       const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = "rekap_tabel.doc";
+      link.download = "Rekap_Publikasi_Glorifikasi_" + new Date().toISOString().split('T')[0] + ".doc";
       link.click();
     });
   }

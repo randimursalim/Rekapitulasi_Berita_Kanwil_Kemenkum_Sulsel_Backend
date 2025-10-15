@@ -113,6 +113,67 @@ switch ($page) {
         $controller = new KegiatanController();
         $controller->editKegiatan();
         break;
+
+    case 'store-kegiatan':
+        require_once __DIR__ . '/../app/controllers/KegiatanController.php';
+        $controller = new KegiatanController();
+        $controller->storeKegiatan();
+        break;
+
+    case 'update-kegiatan':
+        require_once __DIR__ . '/../app/controllers/KegiatanController.php';
+        $controller = new KegiatanController();
+        $controller->updateKegiatan();
+        break;
+
+    case 'hapus-kegiatan':
+        require_once __DIR__ . '/../app/controllers/KegiatanController.php';
+        $controller = new KegiatanController();
+        $controller->hapusKegiatan();
+        break;
+
+    // === PENGGUNA ===
+    case 'pengguna':
+        require_once __DIR__ . '/../app/controllers/PenggunaController.php';
+        $controller = new PenggunaController();
+        $controller->daftarPengguna();
+        break;
+
+    case 'tambah-pengguna':
+        require_once __DIR__ . '/../app/controllers/PenggunaController.php';
+        $controller = new PenggunaController();
+        $controller->tambahPengguna();
+        break;
+
+    case 'store-pengguna':
+        require_once __DIR__ . '/../app/controllers/PenggunaController.php';
+        $controller = new PenggunaController();
+        $controller->storePengguna();
+        break;
+
+    case 'edit-pengguna':
+        require_once __DIR__ . '/../app/controllers/PenggunaController.php';
+        $controller = new PenggunaController();
+        $controller->editPengguna();
+        break;
+
+    case 'update-pengguna':
+        require_once __DIR__ . '/../app/controllers/PenggunaController.php';
+        $controller = new PenggunaController();
+        $controller->updatePengguna();
+        break;
+
+    case 'hapus-pengguna':
+        require_once __DIR__ . '/../app/controllers/PenggunaController.php';
+        $controller = new PenggunaController();
+        $controller->hapusPengguna();
+        break;
+
+    case 'edit-profil':
+        require_once __DIR__ . '/../app/controllers/PenggunaController.php';
+        $controller = new PenggunaController();
+        $controller->editProfilPengguna();
+        break;
     
     // === AUTH ===
     case 'login':

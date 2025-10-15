@@ -61,6 +61,19 @@ body.dark{
     background: #0b3cc1;
 }
 
+/* Dark mode untuk scrollbar vertikal */
+body.dark::-webkit-scrollbar-track {
+    background: #3A3B3C;
+}
+
+body.dark::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+}
+
+body.dark::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color-dark);
+}
+
 /* 🔹 Wrapper utama untuk arsip - hanya scroll horizontal */
 .activity-wrapper {
   overflow-x: auto;        /* scroll horizontal untuk tabel */
@@ -73,6 +86,8 @@ body.dark{
 .activity {
   max-height: none;        /* tidak ada batasan tinggi */
   overflow-y: visible;     /* tidak ada scroll vertikal */
+  overflow-x: visible;     /* biarkan scroll horizontal dari child */
+  width: 100%;             /* lebar penuh */
 }
 
 /* 🔹 Grid tabel untuk arsip */
@@ -81,13 +96,47 @@ body.dark{
   grid-template-columns: 50px 1fr 150px 150px 120px 120px 150px;
   min-width: 1000px;
   gap: 0;                  /* tidak ada gap antar kolom */
+  overflow-x: auto;        /* scroll horizontal jika perlu */
+  overflow-y: visible;     /* tidak ada scroll vertikal */
+  width: 100%;             /* lebar penuh container */
 }
 
+/* Styling untuk scrollbar horizontal */
+.activity-data::-webkit-scrollbar {
+  height: 8px;
+}
 
+.activity-data::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.activity-data::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.activity-data::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Dark mode untuk scrollbar horizontal */
+body.dark .activity-data::-webkit-scrollbar-track {
+  background: #3A3B3C;
+}
+
+body.dark .activity-data::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+body.dark .activity-data::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color-dark);
+}
 
 body.dark::-webkit-scrollbar-thumb:hover,
 body.dark .activity-data::-webkit-scrollbar-thumb:hover{
-    background: #3A3B3C;
+    background: var(--primary-color-dark);
 }
 
 nav{
@@ -361,14 +410,32 @@ nav.close ~ .dashboard .top{
     background-color: var(--box3-color);
 }
 /* CSS untuk dashboard (bukan arsip) */
+.dash-content .activity-wrapper {
+    overflow-x: auto;             /* scroll horizontal jika perlu */
+    overflow-y: visible;          /* tidak ada scroll vertikal */
+    position: relative;
+    padding-bottom: 8px;          /* beri sedikit jarak biar tidak tertutup */
+}
+
+.dash-content .activity {
+    max-height: none;             /* tidak ada batasan tinggi */
+    overflow-y: visible;          /* tidak ada scroll vertikal */
+    overflow-x: visible;          /* biarkan scroll horizontal dari child */
+    width: 100%;                  /* lebar penuh */
+}
+
 .dash-content .activity .activity-data:not(.arsip-page .activity-data){
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    overflow-x: auto;             /* scroll horizontal jika perlu */
+    overflow-y: visible;         /* tidak ada scroll vertikal */
 }
 .activity .activity-data:not(.arsip-page .activity-data){
     display: flex;
+    overflow-x: auto;             /* scroll horizontal jika perlu */
+    overflow-y: visible;         /* tidak ada scroll vertikal */
 }
 .activity-data .data{
     display: flex;
@@ -386,6 +453,70 @@ nav.close ~ .dashboard .top{
     margin-top: 20px;
     white-space: nowrap;
     color: var(--text-color);
+}
+
+/* Styling scrollbar khusus untuk dashboard */
+.dash-content .activity .activity-data::-webkit-scrollbar {
+    height: 8px;
+}
+
+.dash-content .activity .activity-data::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.dash-content .activity .activity-data::-webkit-scrollbar-thumb {
+    background: #4DA3FF;  /* warna biru seperti box1 */
+    border-radius: 4px;
+}
+
+.dash-content .activity .activity-data::-webkit-scrollbar-thumb:hover {
+    background: #3A8BDB;  /* warna biru lebih gelap saat hover */
+}
+
+/* Dark mode untuk dashboard scrollbar - dengan specificity tinggi */
+body.dark .dash-content .activity .activity-data::-webkit-scrollbar-track {
+    background: #3A3B3C !important;
+}
+
+body.dark .dash-content .activity .activity-data::-webkit-scrollbar-thumb {
+    background: #3A3B3C !important;
+    border-radius: 4px !important;
+}
+
+body.dark .dash-content .activity .activity-data::-webkit-scrollbar-thumb:hover {
+    background: #2A2B2C !important;
+}
+
+/* Override untuk semua scrollbar dashboard di dark mode */
+body.dark .dashboard .activity-data::-webkit-scrollbar-thumb {
+    background: #3A3B3C !important;
+}
+
+body.dark .dashboard .activity-data::-webkit-scrollbar-thumb:hover {
+    background: #2A2B2C !important;
+}
+
+/* Override agresif untuk semua scrollbar horizontal di dark mode */
+body.dark *::-webkit-scrollbar-thumb {
+    background: #3A3B3C !important;
+}
+
+body.dark *::-webkit-scrollbar-thumb:hover {
+    background: #2A2B2C !important;
+}
+
+/* Khusus untuk dashboard - override semua kemungkinan */
+body.dark .dash-content *::-webkit-scrollbar-thumb,
+body.dark .activity *::-webkit-scrollbar-thumb,
+body.dark .activity-data::-webkit-scrollbar-thumb {
+    background: #3A3B3C !important;
+}
+
+body.dark .dash-content *::-webkit-scrollbar-thumb:hover,
+body.dark .activity *::-webkit-scrollbar-thumb:hover,
+body.dark .activity-data::-webkit-scrollbar-thumb:hover {
+    background: #2A2B2C !important;
 }
 
 .profile-link {
@@ -1093,11 +1224,30 @@ body.dark .filters span {
 
 .arsip-page .activity-data::-webkit-scrollbar-track {
   background: #f1f1f1;
+  border-radius: 4px;
 }
 
 .arsip-page .activity-data::-webkit-scrollbar-thumb {
   background: var(--primary-color);
-  border-radius: 12px;
+  border-radius: 4px;
+}
+
+.arsip-page .activity-data::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color-dark);
+}
+
+/* Dark mode untuk arsip scrollbar */
+body.dark .arsip-page .activity-data::-webkit-scrollbar-track {
+  background: #3A3B3C;
+}
+
+body.dark .arsip-page .activity-data::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+body.dark .arsip-page .activity-data::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color-dark);
 }
 
 /* Override untuk memastikan tidak ada scroll vertikal */
@@ -1210,6 +1360,84 @@ small {
   font-weight: 600;
 }
 
+.data-list.status-berlangsung {
+  color: #9b59b6 !important; /* ungu */
+  font-weight: 600;
+  animation: pulse 2s infinite;
+}
+
+/* Animasi untuk status sedang berlangsung */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+
+/* CSS responsif untuk arsip */
+.arsip-page .activity-data {
+    min-width: 1000px; /* Diperbesar untuk memberi ruang lebih */
+}
+
+.arsip-page .data-title {
+    font-size: 0.9rem; /* Kembali ke ukuran yang lebih kecil */
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: visible; /* Ubah dari hidden ke visible */
+    text-overflow: unset; /* Hapus ellipsis */
+}
+
+/* CSS khusus untuk kolom yang membutuhkan ruang lebih */
+.arsip-page .data.dokumentasi {
+    min-width: 120px; /* Beri ruang khusus untuk dokumentasi */
+}
+
+.arsip-page .data.kategori {
+    min-width: 100px; /* Beri ruang khusus untuk platform */
+}
+
+/* Responsive untuk layar kecil */
+@media (max-width: 1200px) {
+    .arsip-page .activity-data {
+        min-width: 1100px; /* Lebih lebar untuk layar kecil */
+    }
+    
+    .arsip-page .data-title {
+        font-size: 0.85rem;
+    }
+    
+    .arsip-page .data.dokumentasi {
+        min-width: 110px;
+    }
+    
+    .arsip-page .data.kategori {
+        min-width: 90px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .arsip-page .activity-data {
+        min-width: 1200px; /* Lebih lebar lagi untuk mobile */
+    }
+    
+    .arsip-page .data-title {
+        font-size: 0.8rem;
+    }
+    
+    .arsip-page .data.dokumentasi {
+        min-width: 100px;
+    }
+    
+    .arsip-page .data.kategori {
+        min-width: 80px;
+    }
+}
 
 /* Akhir jadwal kegiatan */
 
@@ -1309,4 +1537,36 @@ small {
         left: 0;
         width: 100%;
     }
+}
+
+/* Password Toggle Styles */
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-container input {
+    width: 100%;
+    padding-right: 40px; /* Space for the eye icon */
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-color);
+    font-size: 18px;
+    transition: color 0.3s ease;
+    z-index: 10;
+}
+
+.password-toggle:hover {
+    color: var(--primary-color);
+}
+
+.password-toggle i {
+    pointer-events: none;
 }

@@ -9,47 +9,53 @@
     </div>
 
     <!-- Form Edit Kegiatan -->
-    <form action="index.php?page=update-kegiatan" method="post" class="input-berita-form" autocomplete="off">
-        <!-- Hidden ID -->
-        <input type="hidden" id="idKegiatan" name="idKegiatan" value="1">
-
+    <form id="formKegiatan" class="input-berita-form" action="index.php?page=update-kegiatan" method="POST" autocomplete="off">
+        <input type="hidden" name="id" value="<?= htmlspecialchars($kegiatan['id_kegiatan']) ?>">
+        
         <div class="form-group">
             <label for="namaKegiatan">Nama Kegiatan</label>
-            <input type="text" id="namaKegiatan" name="namaKegiatan" value="Rapat Koordinasi" required>
+            <input type="text" id="namaKegiatan" name="namaKegiatan" 
+                   value="<?= htmlspecialchars($kegiatan['nama_kegiatan']) ?>" 
+                   placeholder="Masukkan nama kegiatan" required>
         </div>
 
         <div class="form-group">
             <label for="tanggal">Tanggal</label>
-            <input type="date" id="tanggal" name="tanggal" value="2025-09-25" required>
+            <input type="date" id="tanggal" name="tanggal" 
+                   value="<?= htmlspecialchars($kegiatan['tanggal']) ?>" required>
         </div>
 
         <div class="form-group">
             <label for="jamMulai">Jam Mulai</label>
-            <input type="time" id="jamMulai" name="jamMulai" value="09:00" required>
+            <input type="time" id="jamMulai" name="jamMulai" 
+                   value="<?= htmlspecialchars($kegiatan['jam_mulai']) ?>" required>
         </div>
 
         <div class="form-group">
             <label for="jamSelesai">Jam Selesai</label>
-            <input type="time" id="jamSelesai" name="jamSelesai" value="11:00" required>
+            <input type="time" id="jamSelesai" name="jamSelesai" 
+                   value="<?= htmlspecialchars($kegiatan['jam_selesai']) ?>" required>
+        </div>
+
+        <div class="form-group">
+            <label for="keterangan">Keterangan</label>
+            <textarea id="keterangan" name="keterangan" rows="3" 
+                      placeholder="Masukkan keterangan kegiatan, misal peserta, tujuan, hasil rapat" required><?= htmlspecialchars($kegiatan['keterangan']) ?></textarea>
         </div>
 
         <div class="form-group">
             <label for="status">Status</label>
             <select id="status" name="status" required>
-                <option value="Belum Dimulai" selected>Belum Dimulai</option>
-                <option value="Selesai">Selesai</option>
-                <option value="Ditunda">Ditunda</option>
-                <option value="Dibatalkan">Dibatalkan</option>
+                <option value="">-- Pilih Status --</option>
+                <option value="Selesai" <?= $kegiatan['status'] == 'Selesai' ? 'selected' : '' ?>>Selesai</option>
+                <option value="Ditunda" <?= $kegiatan['status'] == 'Ditunda' ? 'selected' : '' ?>>Ditunda</option>
+                <option value="Dibatalkan" <?= $kegiatan['status'] == 'Dibatalkan' ? 'selected' : '' ?>>Dibatalkan</option>
+                <option value="Belum Dimulai" <?= $kegiatan['status'] == 'Belum Dimulai' ? 'selected' : '' ?>>Belum Dimulai</option>
             </select>
         </div>
 
-        <div class="form-group">
-            <label for="keterangan">Keterangan</label>
-            <textarea id="keterangan" name="keterangan" rows="5" placeholder="Masukkan detail kegiatan (misal: kegiatan dihadiri oleh..., membahas tentang...)" required>Rapat ini membahas koordinasi pelaksanaan kegiatan bulanan, dihadiri oleh seluruh staf humas.</textarea>
-        </div>
-
         <!-- Tombol Aksi -->
-        <div style="text-align:center; margin-top:20px;" class="form-actions">
+        <div class="form-actions" style="text-align:center; margin-top:20px;">
             <button type="submit" class="btn-simpan">
                 <i class="uil uil-save"></i> Update
             </button>
@@ -59,3 +65,75 @@
         </div>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Validasi jam
+    const jamMulai = document.getElementById('jamMulai');
+    const jamSelesai = document.getElementById('jamSelesai');
+    
+    function validateTime() {
+        if (jamMulai.value && jamSelesai.value) {
+            if (jamMulai.value >= jamSelesai.value) {
+                jamSelesai.setCustomValidity('Jam selesai harus lebih besar dari jam mulai');
+                jamSelesai.reportValidity();
+            } else {
+                jamSelesai.setCustomValidity('');
+            }
+        }
+    }
+
+    jamMulai.addEventListener('change', validateTime);
+    jamSelesai.addEventListener('change', validateTime);
+
+    // Validasi form sebelum submit
+    document.getElementById('formKegiatan').addEventListener('submit', function(e) {
+        validateTime();
+        
+        if (jamMulai.value >= jamSelesai.value) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Validasi Gagal!',
+                text: 'Jam selesai harus lebih besar dari jam mulai',
+                showConfirmButton: true
+            });
+            return false;
+        }
+    });
+});
+</script>
+
+<?php if (isset($_GET['status'])): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  <?php if ($_GET['status'] == 'success'): ?>
+    Swal.fire({
+      icon: 'success',
+      title: 'Update Kegiatan Sukses!',
+      text: 'Data kegiatan berhasil diperbarui.',
+      showConfirmButton: false,
+      timer: 2000
+    }).then(() => {
+      window.location.href = 'index.php?page=jadwal-kegiatan';
+    });
+  <?php elseif ($_GET['status'] == 'error'): ?>
+    <?php if (isset($_GET['message']) && $_GET['message'] == 'jam'): ?>
+      Swal.fire({
+        icon: 'error',
+        title: 'Validasi Gagal!',
+        text: 'Jam selesai harus lebih besar dari jam mulai.',
+        showConfirmButton: true
+      });
+    <?php else: ?>
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal Memperbarui Data!',
+        text: 'Silakan coba lagi atau periksa data yang diinput.',
+        showConfirmButton: true
+      });
+    <?php endif; ?>
+  <?php endif; ?>
+});
+</script>
+<?php endif; ?>

@@ -9,7 +9,7 @@
     </div>
 
     <!-- Form Tambah Kegiatan -->
-    <form id="formKegiatan" class="input-berita-form" autocomplete="off">
+    <form id="formKegiatan" class="input-berita-form" action="index.php?page=store-kegiatan" method="POST" autocomplete="off">
         <div class="form-group">
             <label for="namaKegiatan">Nama Kegiatan</label>
             <input type="text" id="namaKegiatan" name="namaKegiatan" placeholder="Masukkan nama kegiatan" required>
@@ -42,7 +42,7 @@
                 <option value="Selesai">Selesai</option>
                 <option value="Ditunda">Ditunda</option>
                 <option value="Dibatalkan">Dibatalkan</option>
-                <option value="Belum Dimulai">Belum Dimulai</option>
+                <option value="Belum Dimulai" selected>Belum Dimulai</option>
             </select>
         </div>
 
@@ -57,3 +57,79 @@
         </div>
     </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set tanggal default ke hari ini
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('tanggal').value = today;
+
+    // Validasi jam
+    const jamMulai = document.getElementById('jamMulai');
+    const jamSelesai = document.getElementById('jamSelesai');
+    
+    function validateTime() {
+        if (jamMulai.value && jamSelesai.value) {
+            if (jamMulai.value >= jamSelesai.value) {
+                jamSelesai.setCustomValidity('Jam selesai harus lebih besar dari jam mulai');
+                jamSelesai.reportValidity();
+            } else {
+                jamSelesai.setCustomValidity('');
+            }
+        }
+    }
+
+    jamMulai.addEventListener('change', validateTime);
+    jamSelesai.addEventListener('change', validateTime);
+
+    // Validasi form sebelum submit
+    document.getElementById('formKegiatan').addEventListener('submit', function(e) {
+        validateTime();
+        
+        if (jamMulai.value >= jamSelesai.value) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Validasi Gagal!',
+                text: 'Jam selesai harus lebih besar dari jam mulai',
+                showConfirmButton: true
+            });
+            return false;
+        }
+    });
+});
+</script>
+
+<?php if (isset($_GET['status'])): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  <?php if ($_GET['status'] == 'success'): ?>
+    Swal.fire({
+      icon: 'success',
+      title: 'Tambah Kegiatan Sukses!',
+      text: 'Kegiatan berhasil ditambahkan ke jadwal.',
+      showConfirmButton: false,
+      timer: 2000
+    }).then(() => {
+      window.location.href = 'index.php?page=jadwal-kegiatan';
+    });
+  <?php elseif ($_GET['status'] == 'error'): ?>
+    <?php if (isset($_GET['message']) && $_GET['message'] == 'jam'): ?>
+      Swal.fire({
+        icon: 'error',
+        title: 'Validasi Gagal!',
+        text: 'Jam selesai harus lebih besar dari jam mulai.',
+        showConfirmButton: true
+      });
+    <?php else: ?>
+      Swal.fire({
+        icon: 'error',
+        title: 'Gagal Menyimpan Data!',
+        text: 'Silakan coba lagi atau periksa data yang diinput.',
+        showConfirmButton: true
+      });
+    <?php endif; ?>
+  <?php endif; ?>
+});
+</script>
+<?php endif; ?>

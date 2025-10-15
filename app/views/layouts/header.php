@@ -152,6 +152,90 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
+  // Render hasil search ke container (jadwal-kegiatan.php)
+  function renderKegiatan(data) {
+    const container = document.getElementById('kegiatanResults');
+    if (!container) return;
+
+    // Jika kosong, tampilkan pesan kosong
+    if (!data || data.length === 0) {
+      container.innerHTML = '<div class="data no-data" style="grid-column: 1 / -1; text-align: center; padding: 40px;"><span style="color: var(--text-color); font-size: 1.1rem;"><i class="uil uil-calendar-alt" style="font-size: 3rem; margin-bottom: 10px; display: block; opacity: 0.5;"></i>Belum ada kegiatan yang dijadwalkan</span></div>';
+      return;
+    }
+
+    let no = 1;
+    let html = '';
+    const columns = ['no','kegiatan','tanggal','waktu','keterangan','status','actions'];
+
+    columns.forEach(col => {
+      html += `<div class="data ${col}">`;
+
+      // Header kolom
+      if(col==='no') html += '<span class="data-title">No</span>';
+      else if(col==='kegiatan') html += '<span class="data-title">Nama Kegiatan</span>';
+      else if(col==='tanggal') html += '<span class="data-title">Tanggal</span>';
+      else if(col==='waktu') html += '<span class="data-title">Waktu</span>';
+      else if(col==='keterangan') html += '<span class="data-title">Keterangan</span>';
+      else if(col==='status') html += '<span class="data-title">Status</span>';
+      else if(col==='actions') html += '<span class="data-title">Aksi</span>';
+
+      // Isi data
+      data.forEach(kegiatan => {
+        if(col==='no') html += `<span class="data-list">${no++}</span>`;
+        else if(col==='kegiatan') html += `<span class="data-list">${kegiatan.nama_kegiatan}</span>`;
+        else if(col==='tanggal') html += `<span class="data-list">${formatDateKegiatan(kegiatan.tanggal)}</span>`;
+        else if(col==='waktu') html += `<span class="data-list">${formatTimeKegiatan(kegiatan.jam_mulai)}-${formatTimeKegiatan(kegiatan.jam_selesai)}</span>`;
+        else if(col==='keterangan') html += `<span class="data-list">${kegiatan.keterangan ? (kegiatan.keterangan.length > 50 ? kegiatan.keterangan.substring(0, 50) + '...' : kegiatan.keterangan) : '-'}</span>`;
+        else if(col==='status') {
+          const statusInfo = getDynamicStatusKegiatan(kegiatan);
+          html += `<span class="data-list ${statusInfo.class}" data-status="${kegiatan.status}" data-tanggal="${kegiatan.tanggal}" data-jam-mulai="${kegiatan.jam_mulai}" data-jam-selesai="${kegiatan.jam_selesai}">${statusInfo.text}</span>`;
+        }
+        else if(col==='actions') html += `<span class="data-list">
+          <button class="btn-action-aksi view" onclick="showKeterangan('${kegiatan.keterangan || ''}')"><i class="uil uil-eye"></i></button>
+          <button class="btn-action-aksi edit" onclick="window.location.href='index.php?page=edit-kegiatan&id=${kegiatan.id_kegiatan}'"><i class="uil uil-edit"></i></button>
+          <button class="btn-action-aksi delete" onclick="hapusKegiatan(${kegiatan.id_kegiatan}, '${kegiatan.nama_kegiatan.replace(/'/g, "\\'")}')"><i class="uil uil-trash-alt"></i></button>
+        </span>`;
+      });
+
+      html += '</div>';
+    });
+
+    container.innerHTML = html;
+  }
+
+  // Helper functions untuk kegiatan
+  function formatDateKegiatan(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('id-ID');
+  }
+
+  function formatTimeKegiatan(timeStr) {
+    return timeStr.substring(0, 5); // HH:MM
+  }
+
+  function getDynamicStatusKegiatan(kegiatan) {
+    const now = new Date();
+    const jamMulai = new Date(kegiatan.tanggal + ' ' + kegiatan.jam_mulai);
+    const jamSelesai = new Date(kegiatan.tanggal + ' ' + kegiatan.jam_selesai);
+    
+    if (!['Selesai', 'Ditunda', 'Dibatalkan'].includes(kegiatan.status)) {
+      if (now > jamSelesai) {
+        return { text: 'Selesai', class: 'status-selesai' };
+      } else if (now >= jamMulai && now <= jamSelesai) {
+        return { text: 'Sedang Berlangsung', class: 'status-berlangsung' };
+      } else {
+        return { text: 'Belum Dimulai', class: 'status-belum' };
+      }
+    } else {
+      switch(kegiatan.status) {
+        case 'Selesai': return { text: 'Selesai', class: 'status-selesai' };
+        case 'Ditunda': return { text: 'Ditunda', class: 'status-ditunda' };
+        case 'Dibatalkan': return { text: 'Dibatalkan', class: 'status-dibatalkan' };
+        default: return { text: kegiatan.status, class: 'status-belum' };
+      }
+    }
+  }
+
   // Event listener live search
   document.querySelectorAll('.live-search').forEach(input=>{
     input.addEventListener('input', function(){
@@ -172,11 +256,37 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       
+      if(page==='jadwal-kegiatan') {
+        // Gunakan pagination system untuk jadwal kegiatan
+        console.log('Live search for jadwal-kegiatan:', query);
+        if(typeof window.setCurrentFiltersKegiatan === 'function') {
+          console.log('setCurrentFiltersKegiatan function available');
+          console.log('Calling setCurrentFiltersKegiatan with:', query);
+          window.setCurrentFiltersKegiatan({ search: query });
+        } else {
+          console.log('setCurrentFiltersKegiatan function not available');
+        }
+        return;
+      }
+      
+      if(page==='pengguna') {
+        // Gunakan pagination system untuk pengguna
+        console.log('Live search for pengguna:', query);
+        if(typeof window.setCurrentFiltersPengguna === 'function') {
+          console.log('setCurrentFiltersPengguna function available');
+          console.log('Calling setCurrentFiltersPengguna with:', query);
+          window.setCurrentFiltersPengguna({ search: query });
+        } else {
+          console.log('setCurrentFiltersPengguna function not available');
+        }
+        return;
+      }
+      
       // Untuk halaman lain, gunakan sistem lama
       if(query==='') return renderArsip(null);
 
       let url = '';
-      // nanti tambah else if untuk pengguna / jadwal-kegiatan
+      // nanti tambah else if untuk pengguna
 
       if(url==='') return;
       fetch(url)
