@@ -45,11 +45,13 @@ function is_active($pageName) {
         <li><a href="<?= $BASE ?>/index.php?page=rekap-konten" class="<?= is_active('rekap-konten') ?>"><i class="uil uil-database"></i><span class="link-name">Rekap Konten</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=arsip" class="<?= is_active('arsip') ?>"><i class="uil uil-archive"></i><span class="link-name">Arsip</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=jadwal-kegiatan" class="<?= is_active('jadwal-kegiatan') ?>"><i class="uil uil-schedule"></i><span class="link-name">Jadwal Kegiatan</span></a></li>
+        <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'Admin'): ?>
         <li><a href="<?= $BASE ?>/index.php?page=pengguna" class="<?= is_active('pengguna') ?>"><i class="uil uil-users-alt"></i><span class="link-name">Pengguna</span></a></li>
+        <?php endif; ?>
       </ul>
 
       <ul class="logout-mode">
-        <li><a href="#"><i class="uil uil-signout"></i><span class="link-name">Logout</span></a></li>
+        <li><a href="<?= $BASE ?>/index.php?page=logout"><i class="uil uil-signout"></i><span class="link-name">Logout</span></a></li>
         <li class="mode">
           <a href="#"><i class="uil uil-moon"></i><span class="link-name">Dark Mode</span></a>
           <div class="mode-toggle"><span class="switch"></span></div>
@@ -78,9 +80,15 @@ function is_active($pageName) {
         </div>
       <?php endif; ?>
 
-      <a href="<?= $BASE ?>/index.php?page=edit-profil">
-        <img src="<?= $BASE ?>/images/user.jpg" alt="Profile" class="profile-link" />
-      </a>
+      <div class="profile-info">
+        <span class="user-info">
+          <?= isset($_SESSION['user']) ? htmlspecialchars($_SESSION['user']['nama']) : 'User' ?>
+          <small>(<?= isset($_SESSION['user']) ? $_SESSION['user']['role'] : 'Guest' ?>)</small>
+        </span>
+        <a href="<?= $BASE ?>/index.php?page=edit-profil">
+            <img src="<?= $BASE ?>/Images/<?= !empty($_SESSION['user']['foto']) && $_SESSION['user']['foto'] !== 'user.jpg' ? 'users/' . $_SESSION['user']['foto'] : 'user.jpg' ?>" alt="Profile" class="profile-link" />
+        </a>
+      </div>
     </div>
 
     <div class="dash-content">
@@ -296,5 +304,93 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+});
+</script>
+
+<!-- Session Timeout Management -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let sessionTimeout = 15 * 60 * 1000; // 15 menit dalam milidetik
+    let warningTime = 2 * 60 * 1000; // Warning 2 menit sebelum timeout
+    let lastActivity = Date.now();
+    let warningShown = false;
+    
+    // Update aktivitas saat user melakukan aksi
+    function updateActivity() {
+        lastActivity = Date.now();
+        warningShown = false;
+        
+        // Kirim AJAX request untuk update session
+        fetch('index.php?page=update-activity', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'update_activity=1'
+        }).catch(error => {
+            console.log('Activity update failed:', error);
+        });
+    }
+    
+    // Event listeners untuk aktivitas user
+    const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
+    activityEvents.forEach(event => {
+        document.addEventListener(event, updateActivity, true);
+    });
+    
+    // Cek timeout setiap 30 detik
+    setInterval(function() {
+        const now = Date.now();
+        const timeSinceActivity = now - lastActivity;
+        const timeUntilTimeout = sessionTimeout - timeSinceActivity;
+        
+        // Warning 2 menit sebelum timeout
+        if (timeUntilTimeout <= warningTime && timeUntilTimeout > 0 && !warningShown) {
+            warningShown = true;
+            const minutesLeft = Math.ceil(timeUntilTimeout / 60000);
+            
+            Swal.fire({
+                title: 'Peringatan Sesi',
+                html: `Sesi Anda akan berakhir dalam <strong>${minutesLeft} menit</strong> karena tidak ada aktivitas.<br><br>Klik "Perpanjang Sesi" untuk melanjutkan.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Perpanjang Sesi',
+                cancelButtonText: 'Logout',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                timer: warningTime,
+                timerProgressBar: true,
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    updateActivity();
+                    Swal.fire({
+                        title: 'Sesi Diperpanjang!',
+                        text: 'Sesi Anda telah diperpanjang.',
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    window.location.href = 'index.php?page=logout';
+                }
+            });
+        }
+        
+        // Auto logout jika timeout
+        if (timeUntilTimeout <= 0) {
+            Swal.fire({
+                title: 'Sesi Berakhir',
+                text: 'Sesi Anda telah berakhir karena tidak ada aktivitas selama 15 menit.',
+                icon: 'info',
+                confirmButtonText: 'Login Kembali',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then(() => {
+                window.location.href = 'index.php?page=login&timeout=1';
+            });
+        }
+    }, 30000); // Cek setiap 30 detik
 });
 </script>

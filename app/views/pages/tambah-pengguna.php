@@ -58,7 +58,7 @@
                 <select id="role" name="role" required>
                     <option value="">-- Pilih Role --</option>
                     <option value="Admin" <?= (($_POST['role'] ?? '') === 'Admin') ? 'selected' : '' ?>>Admin</option>
-                    <option value="Operator" <?= (($_POST['role'] ?? '') === 'Operator') ? 'selected' : '' ?>>User</option>
+                    <option value="Operator" <?= (($_POST['role'] ?? '') === 'Operator') ? 'selected' : '' ?>>Operator</option>
                 </select>
             </div>
 

@@ -1029,6 +1029,25 @@ body.dark .filter-select:hover {
  transform: scale(1.05);
 }
 
+
+/* Arsip Aksi Column Alignment */
+.arsip-page .data.actions .data-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.arsip-page .data.actions .data-title {
+  text-align: center;
+}
+
+/* Styling untuk tombol aksi */
+.arsip-page .btn-action-aksi {
+  margin: 0 3px;
+}
+
+
 /* Modal */
 .modal-img {
     display: none;
@@ -1312,6 +1331,26 @@ body.dark .arsip-page .activity-data::-webkit-scrollbar-thumb:hover {
 }
 .upload-container input[type="file"] {
   display: none;
+}
+
+/* Profile Info Styles */
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-info {
+  color: var(--text-color);
+  font-weight: 500;
+  text-align: right;
+}
+
+.user-info small {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-light);
+  font-weight: 400;
 }
 
 /* versi dark tambah pengguna */

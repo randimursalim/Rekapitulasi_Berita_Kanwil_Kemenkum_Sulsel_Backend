@@ -59,7 +59,7 @@ class PenggunaController {
         // Handle foto upload
         $foto = 'user.jpg'; // Default foto
         if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = __DIR__ . '/../../public/Images/';
+            $uploadDir = __DIR__ . '/../../public/Images/users/';
             $fileExtension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
             $fileName = 'user_' . time() . '_' . rand(1000, 9999) . '.' . $fileExtension;
             $uploadPath = $uploadDir . $fileName;
@@ -125,7 +125,7 @@ class PenggunaController {
         $nama = trim($_POST['nama'] ?? '');
         $username = trim($_POST['username'] ?? '');
         $password = $_POST['password'] ?? '';
-        $confirmPassword = $_POST['confirm-password'] ?? '';
+        $confirmPassword = $_POST['confirm_password'] ?? '';
         $role = $_POST['role'] ?? 'Operator';
 
         // Validasi
@@ -153,7 +153,7 @@ class PenggunaController {
         // Handle foto upload
         $foto = 'user.jpg'; // Default foto
         if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
-            $uploadDir = __DIR__ . '/../../public/Images/';
+            $uploadDir = __DIR__ . '/../../public/Images/users/';
             $fileExtension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
             $fileName = 'user_' . $id . '_' . time() . '.' . $fileExtension;
             $uploadPath = $uploadDir . $fileName;
@@ -201,6 +201,27 @@ class PenggunaController {
             exit;
         }
 
+        // Ambil data pengguna sebelum dihapus untuk mendapatkan info foto
+        $pengguna = $this->model->getPenggunaById($id);
+        if (!$pengguna) {
+            echo json_encode(['success' => false, 'message' => 'Pengguna tidak ditemukan']);
+            exit;
+        }
+
+        // Hapus foto profil jika bukan foto default
+        $fileDeleted = true;
+        if (!empty($pengguna['foto']) && $pengguna['foto'] !== 'user.jpg') {
+            $filePath = __DIR__ . '/../../public/Images/users/' . $pengguna['foto'];
+            if (file_exists($filePath)) {
+                $fileDeleted = unlink($filePath);
+                if (!$fileDeleted) {
+                    error_log("[WARNING] Gagal hapus foto profil: " . $filePath);
+                    // Tidak exit, tetap lanjut hapus dari database
+                }
+            }
+        }
+
+        // Hapus pengguna dari database
         if ($this->model->hapusPengguna($id)) {
             echo json_encode(['success' => true, 'message' => 'Pengguna berhasil dihapus']);
         } else {

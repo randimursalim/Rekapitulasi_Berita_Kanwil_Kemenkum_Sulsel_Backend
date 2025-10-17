@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="data-title">Dokumentasi</span>
         ${data.map(k => `
           <span class="data-list">
-            ${k.dokumentasi ? `<img src="${k.dokumentasi}" alt="Foto" class="preview-img" style="width:60px;cursor:pointer;">` : '-'}
+            ${k.dokumentasi ? `<img src="${k.dokumentasi}" alt="Foto" style="width:60px;cursor:pointer;">` : '-'}
           </span>
         `).join('')}
       </div>
@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Image preview
-    const previewImgs = container.querySelectorAll('.preview-img');
+    const previewImgs = container.querySelectorAll('img[style*="cursor:pointer"]');
     previewImgs.forEach(img => {
       img.addEventListener('click', function() {
         const modal = document.getElementById('imgModal');

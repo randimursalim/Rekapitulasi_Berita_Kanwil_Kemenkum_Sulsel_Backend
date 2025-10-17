@@ -15,7 +15,7 @@
             
             <!-- Upload Foto -->
             <div class="upload-container">
-                <img id="previewImage" src="<?= $BASE ?>/Images/<?= !empty($pengguna['foto']) ? $pengguna['foto'] : 'user.jpg' ?>" alt="Preview Foto">
+                <img id="previewImage" src="<?= $BASE ?>/Images/<?= !empty($pengguna['foto']) && $pengguna['foto'] !== 'user.jpg' ? 'users/' . $pengguna['foto'] : 'user.jpg' ?>" alt="Preview Foto">
                 <br>
                 <label for="foto"><i class="uil uil-image-plus"></i> Ubah Foto</label>
                 <input type="file" id="foto" name="foto" accept="image/*">
@@ -55,7 +55,7 @@
                 <label for="role">Role</label>
                 <select id="role" name="role" required>
                     <option value="Admin" <?= ($pengguna['role'] === 'Admin') ? 'selected' : '' ?>>Admin</option>
-                    <option value="Operator" <?= ($pengguna['role'] === 'Operator') ? 'selected' : '' ?>>User</option>
+                    <option value="Operator" <?= ($pengguna['role'] === 'Operator') ? 'selected' : '' ?>>Operator</option>
                 </select>
             </div>
 

@@ -14,7 +14,7 @@
             
             <!-- Upload Foto -->
             <div class="upload-container">
-                <img id="previewImage" src="<?= $BASE ?>/images/user.jpg" alt="Preview Foto">
+                <img id="previewImage" src="<?= $BASE ?>/Images/<?= !empty($_SESSION['user']['foto']) && $_SESSION['user']['foto'] !== 'user.jpg' ? 'users/' . $_SESSION['user']['foto'] : 'user.jpg' ?>" alt="Preview Foto">
                 <br>
                 <label for="foto"><i class="uil uil-image-plus"></i> Ganti Foto</label>
                 <input type="file" id="foto" name="foto" accept="image/*">
@@ -22,22 +22,32 @@
 
             <div class="form-group">
                 <label for="nama">Nama Lengkap</label>
-                <input type="text" id="nama" name="nama" placeholder="Masukkan nama lengkap" required>
+                <input type="text" id="nama" name="nama" value="<?= htmlspecialchars($_SESSION['user']['nama'] ?? '') ?>" placeholder="Masukkan nama lengkap" required>
             </div>
 
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Masukkan username" required>
+                <input type="text" id="username" name="username" value="<?= htmlspecialchars($_SESSION['user']['username'] ?? '') ?>" placeholder="Masukkan username" required>
             </div>
 
             <div class="form-group">
                 <label for="password">Password Baru</label>
-                <input type="password" id="password" name="password" placeholder="Masukkan password baru">
+                <div class="password-input-container">
+                    <input type="password" id="password" name="password" placeholder="Masukkan password baru">
+                    <span class="password-toggle" onclick="togglePassword('password')">
+                        <i class="uil uil-eye" id="password-eye"></i>
+                    </span>
+                </div>
             </div>
 
             <div class="form-group">
                 <label for="konfirmasi">Konfirmasi Password</label>
-                <input type="password" id="konfirmasi" name="konfirmasi" placeholder="Ulangi password baru">
+                <div class="password-input-container">
+                    <input type="password" id="konfirmasi" name="konfirmasi" placeholder="Ulangi password baru">
+                    <span class="password-toggle" onclick="togglePassword('konfirmasi')">
+                        <i class="uil uil-eye" id="konfirmasi-eye"></i>
+                    </span>
+                </div>
             </div>
 
             <div style="text-align:center; margin-top:20px;">
@@ -49,7 +59,7 @@
     <!-- End Form -->
 </div>
 
-<!-- Script preview foto -->
+<!-- Script preview foto dan password toggle -->
 <script>
 const fotoInput = document.getElementById('foto');
 const previewImage = document.getElementById('previewImage');
@@ -64,8 +74,24 @@ if (fotoInput) {
             }
             reader.readAsDataURL(file);
         } else {
-            previewImage.src = '<?= $BASE ?>/images/user.jpg';
+            previewImage.src = '<?= $BASE ?>/Images/<?= !empty($_SESSION['user']['foto']) && $_SESSION['user']['foto'] !== 'user.jpg' ? 'users/' . $_SESSION['user']['foto'] : 'user.jpg' ?>';
         }
     });
+}
+
+// Function untuk toggle password visibility
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const eyeIcon = document.getElementById(inputId + '-eye');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        eyeIcon.classList.remove('uil-eye');
+        eyeIcon.classList.add('uil-eye-slash');
+    } else {
+        input.type = 'password';
+        eyeIcon.classList.remove('uil-eye-slash');
+        eyeIcon.classList.add('uil-eye');
+    }
 }
 </script>
