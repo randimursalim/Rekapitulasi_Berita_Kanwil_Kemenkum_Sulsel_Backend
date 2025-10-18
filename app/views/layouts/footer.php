@@ -16,45 +16,61 @@ const detailMedsos = <?= json_encode($detailMedsos ?? []) ?>;
 const modalDashboard = document.getElementById("detailModal");
 const modalTitle = document.getElementById("modalTitle");
 const modalList = document.getElementById("modalList");
-const closeBtnDashboard = modalDashboard.querySelector(".close");
 
-function showDetail(type) {
-    modalList.innerHTML = '';
-    let data = [];
+// Cek apakah modal elements ada sebelum mengaksesnya
+if (modalDashboard && modalTitle && modalList) {
+    const closeBtnDashboard = modalDashboard.querySelector(".close");
 
-    if (type === 'berita') {
-        modalTitle.textContent = "Rincian Total Berita";
-        data = detailBerita;
-    } else if (type === 'medsos') {
-        modalTitle.textContent = "Rincian Postingan Medsos";
-        data = detailMedsos;
+    function showDetail(type) {
+        modalList.innerHTML = '';
+        let data = [];
+
+        if (type === 'berita') {
+            modalTitle.textContent = "Rincian Total Berita";
+            data = detailBerita;
+        } else if (type === 'medsos') {
+            modalTitle.textContent = "Rincian Postingan Medsos";
+            data = detailMedsos;
+        }
+
+        data.forEach(item => {
+            const li = document.createElement("li");
+            li.textContent = `${item.name}: ${item.value}`;
+            modalList.appendChild(li);
+        });
+
+        modalDashboard.style.display = "block";
     }
 
-    data.forEach(item => {
-        const li = document.createElement("li");
-        li.textContent = `${item.name}: ${item.value}`;
-        modalList.appendChild(li);
+    function closeModalDashboard() {
+        modalDashboard.style.display = "none";
+    }
+
+    // Event listeners hanya dipasang jika closeBtnDashboard ada
+    if (closeBtnDashboard) {
+        closeBtnDashboard.addEventListener("click", closeModalDashboard);
+    }
+    
+    window.addEventListener("click", function(e) {
+        if (e.target === modalDashboard) closeModalDashboard();
     });
 
-    modalDashboard.style.display = "block";
+    // Expose function globally untuk digunakan di halaman lain
+    window.showDetail = showDetail;
+    window.closeModalDashboard = closeModalDashboard;
 }
 
-function closeModalDashboard() {
-    modalDashboard.style.display = "none";
-}
-
-closeBtnDashboard.addEventListener("click", closeModalDashboard);
-window.addEventListener("click", function(e) {
-    if (e.target === modalDashboard) closeModalDashboard();
-});
-
-// Event listener box dashboard
-document.querySelectorAll(".boxes .box[data-type]").forEach(box => {
-    box.addEventListener("click", () => {
-        const type = box.getAttribute("data-type");
-        showDetail(type);
+// Event listener box dashboard (hanya jika modal ada)
+if (modalDashboard && modalTitle && modalList) {
+    document.querySelectorAll(".boxes .box[data-type]").forEach(box => {
+        box.addEventListener("click", () => {
+            const type = box.getAttribute("data-type");
+            if (window.showDetail) {
+                window.showDetail(type);
+            }
+        });
     });
-});
+}
 
 // === Toggle form berdasarkan jenis konten ===
 // const jenisSelect = document.getElementById("jenis");
@@ -160,27 +176,5 @@ function to24HourFormat(timeStr) {
     return hour.padStart(2, "0") + "." + minute.padStart(2, "0");
 }
 
-const formKegiatan = document.getElementById("formKegiatan");
-if(formKegiatan){
-    formKegiatan.addEventListener("submit", function(e) {
-        e.preventDefault();
-
-        const nama = document.getElementById("namaKegiatan").value.trim();
-        const tanggal = document.getElementById("tanggal").value;
-        const jamMulai = document.getElementById("jamMulai").value;
-        const jamSelesai = document.getElementById("jamSelesai").value;
-        const keterangan = document.getElementById("keterangan").value.trim();
-        const status = document.getElementById("status").value;
-
-        const waktuGabung = `${to24HourFormat(jamMulai)}-${to24HourFormat(jamSelesai)}`;
-
-        const kegiatanBaru = { nama, tanggal, waktu: waktuGabung, keterangan, status };
-        let dataKegiatan = JSON.parse(localStorage.getItem("jadwalKegiatan")) || [];
-        dataKegiatan.push(kegiatanBaru);
-        localStorage.setItem("jadwalKegiatan", JSON.stringify(dataKegiatan));
-
-        alert("Kegiatan berhasil disimpan!");
-        window.location.href = "index.php?page=jadwal-kegiatan";
-    });
-}
+// JavaScript untuk form kegiatan sudah dipindah ke tambah-kegiatan.php
 </script>

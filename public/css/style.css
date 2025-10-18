@@ -34,6 +34,7 @@ body{
 body.dark{
     --primary-color: #3A3B3C;
     --primary-color-dark: #2A2B2C;
+    --primary-color-light: #4A4B4C;
     --panel-color: #242526;
     --text-color: #CCC;
     --black-light-color: #CCC;
@@ -82,12 +83,60 @@ body.dark::-webkit-scrollbar-thumb:hover {
   padding-bottom: 8px;     /* beri sedikit jarak biar tidak tertutup */
 }
 
+/* 🔹 Wrapper khusus untuk form - scroll vertikal normal */
+.activity-wrapper.form-wrapper {
+  overflow-x: visible;     /* tidak ada scroll horizontal */
+  overflow-y: auto;        /* scroll vertikal normal */
+  max-height: calc(100vh - 200px); /* batasi tinggi untuk scrolling */
+  padding-bottom: 20px;     /* jarak lebih besar untuk form */
+}
+
 /* 🔹 Area dalamnya - tidak ada scroll vertikal */
 .activity {
   max-height: none;        /* tidak ada batasan tinggi */
   overflow-y: visible;     /* tidak ada scroll vertikal */
   overflow-x: visible;     /* biarkan scroll horizontal dari child */
   width: 100%;             /* lebar penuh */
+}
+
+/* 🔹 Area khusus untuk form - scroll vertikal normal */
+.activity.form-activity {
+  max-height: none;        /* tidak ada batasan tinggi */
+  overflow-y: visible;     /* tidak ada scroll vertikal */
+  overflow-x: visible;     /* tidak ada scroll horizontal */
+  width: 100%;             /* lebar penuh */
+}
+
+/* 🔹 Scrollbar untuk form wrapper */
+.activity-wrapper.form-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.activity-wrapper.form-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.activity-wrapper.form-wrapper::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.activity-wrapper.form-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 🔹 Dark mode scrollbar untuk form */
+body.dark .activity-wrapper.form-wrapper::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+
+body.dark .activity-wrapper.form-wrapper::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+body.dark .activity-wrapper.form-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #777;
 }
 
 /* 🔹 Grid tabel untuk arsip */
@@ -930,7 +979,7 @@ body.dark .chart-container button {
 }
 
 body.dark .chart-container button:hover {
-  background: #0077ff;
+  background: var(--primary-color-light);
   color: #fff;
   opacity: 1;
 }

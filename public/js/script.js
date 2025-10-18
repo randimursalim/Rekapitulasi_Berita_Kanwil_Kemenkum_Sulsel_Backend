@@ -12,24 +12,12 @@ if (getMode === "dark") body.classList.add("dark");
 let getStatus = localStorage.getItem("status");
 if (getStatus === "close") sidebar.classList.add("close");
 
-// Fungsi update tema chart (jika ada chart)
-function updateChartTheme() {
-  if (typeof rekapChart !== "undefined") {
-    const isDark = body.classList.contains("dark");
-    rekapChart.options.plugins.legend.labels.color = isDark ? "#fff" : "#333";
-    rekapChart.options.plugins.datalabels.color = isDark ? "#fff" : "#000";
-    rekapChart.options.scales.x.ticks.color = isDark ? "#fff" : "#333";
-    rekapChart.options.scales.y.ticks.color = isDark ? "#fff" : "#333";
-    rekapChart.update();
-  }
-}
-
 // Toggle dark mode
 if (modeToggle) {
   modeToggle.addEventListener("click", () => {
     body.classList.toggle("dark");
     localStorage.setItem("mode", body.classList.contains("dark") ? "dark" : "light");
-    updateChartTheme();
+    // Chart theme akan diupdate oleh MutationObserver di rekap.js
   });
 }
 

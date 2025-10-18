@@ -3,8 +3,12 @@
         <i class="uil uil-edit"></i>
         <span class="text">Edit Konten</span>
     </div>
+</div>
 
-    <div class="form-container">
+<!-- Form Edit Konten -->
+<div class="activity-wrapper form-wrapper">
+    <div class="activity form-activity">
+        <div class="form-container">
         <!-- FORM EDIT KONTEN -->
         <form id="editKontenForm" action="index.php?page=update-konten" method="POST" class="input-berita-form" autocomplete="off" enctype="multipart/form-data">
             <!-- Hidden field untuk ID -->
@@ -103,6 +107,7 @@
                 <button type="button" class="btn-batal" onclick="window.location.href='index.php?page=arsip'"><i class="uil uil-times"></i> Batal</button>
             </div>
         </form>
+        </div>
     </div>
 </div>
 

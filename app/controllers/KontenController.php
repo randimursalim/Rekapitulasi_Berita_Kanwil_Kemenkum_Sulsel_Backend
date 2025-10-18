@@ -77,6 +77,11 @@ class KontenController {
     // === CEK HASIL ===
     if ($detailSaved) {
         // ✅ jika sukses simpan semua
+        // Tambahkan log aktivitas
+        require_once __DIR__ . '/../models/HomeModel.php';
+        $homeModel = new HomeModel();
+        $homeModel->addLogAktivitas("Menambahkan konten: " . $judul);
+        
         header('Location: index.php?page=input-konten&status=success');
         exit;
     } else {
@@ -303,6 +308,11 @@ class KontenController {
         // === CEK HASIL ===
         if ($detailUpdated) {
             // ✅ jika sukses update semua
+            // Tambahkan log aktivitas
+            require_once __DIR__ . '/../models/HomeModel.php';
+            $homeModel = new HomeModel();
+            $homeModel->addLogAktivitas("Mengedit konten: " . $judul);
+            
             header('Location: index.php?page=arsip&status=update_success');
             exit;
         } else {
@@ -361,6 +371,11 @@ class KontenController {
             $result = $this->model->deleteKonten($idKonten);
             
             if ($result) {
+                // Tambahkan log aktivitas
+                require_once __DIR__ . '/../models/HomeModel.php';
+                $homeModel = new HomeModel();
+                $homeModel->addLogAktivitas("Menghapus konten: " . $konten['judul']);
+                
                 echo json_encode(['success' => true, 'message' => 'Konten berhasil dihapus']);
             } else {
                 echo json_encode(['success' => false, 'error' => 'Gagal menghapus konten dari database']);

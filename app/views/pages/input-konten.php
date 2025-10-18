@@ -6,10 +6,13 @@
         <i class="uil uil-file-plus"></i>
         <span class="text">Input Konten</span>
     </div>
+</div>
 
-    <!-- Form Input Konten -->
-    <div class="form-container">
-        <form action="index.php?page=store-konten" method="POST" class="input-berita-form" autocomplete="off" enctype="multipart/form-data">
+<!-- Form Input Konten -->
+<div class="activity-wrapper form-wrapper">
+    <div class="activity form-activity">
+        <div class="form-container">
+            <form action="index.php?page=store-konten" method="POST" class="input-berita-form" autocomplete="off" enctype="multipart/form-data">
 
             <!-- Pilih Jenis Konten -->
             <div class="form-group">
@@ -108,7 +111,8 @@
                     <i class="uil uil-times"></i> Batal
                 </button>
             </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 <script>

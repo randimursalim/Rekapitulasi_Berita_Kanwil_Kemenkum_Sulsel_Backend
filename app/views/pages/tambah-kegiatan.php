@@ -7,9 +7,13 @@
         <i class="uil uil-plus"></i>
         <span class="text">Tambah Kegiatan</span>
     </div>
+</div>
 
-    <!-- Form Tambah Kegiatan -->
-    <form id="formKegiatan" class="input-berita-form" action="index.php?page=store-kegiatan" method="POST" autocomplete="off">
+<!-- Form Tambah Kegiatan -->
+<div class="activity-wrapper form-wrapper">
+    <div class="activity form-activity">
+        <div class="form-container">
+            <form id="formKegiatan" class="input-berita-form" action="index.php?page=store-kegiatan" method="POST" autocomplete="off">
         <div class="form-group">
             <label for="namaKegiatan">Nama Kegiatan</label>
             <input type="text" id="namaKegiatan" name="namaKegiatan" placeholder="Masukkan nama kegiatan" required>
@@ -56,6 +60,8 @@
             </button>
         </div>
     </form>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -96,6 +102,24 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             return false;
         }
+        
+        // Konfirmasi sebelum submit
+        e.preventDefault();
+        Swal.fire({
+            title: 'Konfirmasi Tambah',
+            text: 'Apakah kamu yakin untuk menambahkan kegiatan ini?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Tambahkan!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit form jika dikonfirmasi
+                this.submit();
+            }
+        });
     });
 });
 </script>

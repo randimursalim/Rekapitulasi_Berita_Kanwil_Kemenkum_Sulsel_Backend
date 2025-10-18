@@ -7,9 +7,13 @@
         <i class="uil uil-edit"></i>
         <span class="text">Edit Kegiatan</span>
     </div>
+</div>
 
-    <!-- Form Edit Kegiatan -->
-    <form id="formKegiatan" class="input-berita-form" action="index.php?page=update-kegiatan" method="POST" autocomplete="off">
+<!-- Form Edit Kegiatan -->
+<div class="activity-wrapper form-wrapper">
+    <div class="activity form-activity">
+        <div class="form-container">
+            <form id="formKegiatan" class="input-berita-form" action="index.php?page=update-kegiatan" method="POST" autocomplete="off">
         <input type="hidden" name="id" value="<?= htmlspecialchars($kegiatan['id_kegiatan']) ?>">
         
         <div class="form-group">
@@ -64,6 +68,8 @@
             </button>
         </div>
     </form>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -100,6 +106,24 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             return false;
         }
+        
+        // Konfirmasi sebelum submit
+        e.preventDefault();
+        Swal.fire({
+            title: 'Konfirmasi Update',
+            text: 'Apakah kamu yakin untuk mengupdate kegiatan ini?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Update!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Submit form jika dikonfirmasi
+                this.submit();
+            }
+        });
     });
 });
 </script>
@@ -135,5 +159,4 @@ document.addEventListener('DOMContentLoaded', function () {
     <?php endif; ?>
   <?php endif; ?>
 });
-</script>
-<?php endif; ?>
+</script><?php endif; ?>

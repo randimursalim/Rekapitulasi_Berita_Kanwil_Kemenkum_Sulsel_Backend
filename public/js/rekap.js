@@ -29,13 +29,20 @@ if (canvas) {
           align: "center",
           labels: {
             padding: 20,
-            color: "#333"
+            color: function(context) {
+              const isDark = document.body.classList.contains('dark');
+              return isDark ? '#ffffff' : '#333333';
+            }
           }
         },
         datalabels: {
           anchor: "end",
           align: "top",
-          color: "#000",
+          color: function(context) {
+            // Ambil warna dari CSS variable atau default
+            const isDark = document.body.classList.contains('dark');
+            return isDark ? '#ffffff' : '#000000';
+          },
           font: { weight: "bold" },
           formatter: (value) => value
         }
@@ -44,8 +51,23 @@ if (canvas) {
         padding: { top: 20 }
       },
       scales: {
-        x: { ticks: { color: "#333" } },
-        y: { beginAtZero: true, ticks: { color: "#333" } }
+        x: { 
+          ticks: { 
+            color: function(context) {
+              const isDark = document.body.classList.contains('dark');
+              return isDark ? '#ffffff' : '#333333';
+            }
+          } 
+        },
+        y: { 
+          beginAtZero: true, 
+          ticks: { 
+            color: function(context) {
+              const isDark = document.body.classList.contains('dark');
+              return isDark ? '#ffffff' : '#333333';
+            }
+          } 
+        }
       }
     },
     plugins: [ChartDataLabels]
@@ -215,9 +237,42 @@ if (canvas) {
     }
   }
 
+  // Fungsi untuk update warna chart berdasarkan mode dark/light
+  function updateChartColors() {
+    const isDark = document.body.classList.contains('dark');
+    const textColor = isDark ? '#ffffff' : '#333333';
+    
+    // Update legend color
+    rekapChart.options.plugins.legend.labels.color = textColor;
+    
+    // Update datalabels color
+    rekapChart.options.plugins.datalabels.color = textColor;
+    
+    // Update scales ticks color
+    rekapChart.options.scales.x.ticks.color = textColor;
+    rekapChart.options.scales.y.ticks.color = textColor;
+    
+    // Update chart dengan animasi smooth
+    rekapChart.update('active');
+  }
+
   // Load data awal
   fetchRekapData('monthly');
   loadAvailablePeriods();
+  
+  // Listen untuk perubahan mode dark/light
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+        updateChartColors();
+      }
+    });
+  });
+  
+  observer.observe(document.body, {
+    attributes: true,
+    attributeFilter: ['class']
+  });
 
   // Filter waktu
   document.querySelectorAll(".filter-btn").forEach(btn => {
@@ -306,11 +361,52 @@ if (canvas) {
   const downloadJPG = document.getElementById("downloadJPG");
   if (downloadJPG) {
     downloadJPG.addEventListener("click", () => {
-      const url = canvas.toDataURL("image/jpeg", 1.0);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "rekap-konten.jpg";
-      link.click();
+      // Simpan konfigurasi asli (hanya warna yang perlu disimpan)
+      const originalLegendColor = rekapChart.options.plugins.legend.labels.color;
+      const originalDatalabelsColor = rekapChart.options.plugins.datalabels.color;
+      const originalXTicksColor = rekapChart.options.scales.x.ticks.color;
+      const originalYTicksColor = rekapChart.options.scales.y.ticks.color;
+      
+      // Set konfigurasi untuk export dengan background terang
+      rekapChart.options.plugins.legend.labels.color = "#333333";
+      rekapChart.options.plugins.datalabels.color = "#000000";
+      rekapChart.options.scales.x.ticks.color = "#333333";
+      rekapChart.options.scales.y.ticks.color = "#333333";
+      
+      // Update chart untuk export
+      rekapChart.update('none');
+      
+      // Tunggu chart ter-render
+      setTimeout(() => {
+        // Buat canvas temporary dengan background putih
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        // Set ukuran canvas
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        
+        // Fill background putih
+        tempCtx.fillStyle = '#ffffff';
+        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+        
+        // Draw chart ke canvas temporary
+        tempCtx.drawImage(canvas, 0, 0);
+        
+        // Export dengan quality tinggi
+        const url = tempCanvas.toDataURL("image/jpeg", 0.95);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "rekap-konten-" + new Date().toISOString().split('T')[0] + ".jpg";
+        link.click();
+        
+        // Restore konfigurasi asli
+        rekapChart.options.plugins.legend.labels.color = originalLegendColor;
+        rekapChart.options.plugins.datalabels.color = originalDatalabelsColor;
+        rekapChart.options.scales.x.ticks.color = originalXTicksColor;
+        rekapChart.options.scales.y.ticks.color = originalYTicksColor;
+        rekapChart.update('none');
+      }, 100);
     });
   }
 
@@ -318,16 +414,81 @@ if (canvas) {
   const downloadPDF = document.getElementById("downloadPDF");
   if (downloadPDF) {
     downloadPDF.addEventListener("click", () => {
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF("landscape");
-      const imgData = canvas.toDataURL("image/png", 1.0);
-      pdf.setFontSize(16);
-      pdf.text("Rekap Konten - KEMENKUM SULSEL", 15, 20);
-      pdf.addImage(imgData, "PNG", 15, 30, 260, 120);
-      const total = rekapChart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-      pdf.setFontSize(12);
-      pdf.text("Total Konten: " + total, 15, 160);
-      pdf.save("rekap-konten.pdf");
+      // Simpan konfigurasi asli (hanya warna yang perlu disimpan)
+      const originalLegendColor = rekapChart.options.plugins.legend.labels.color;
+      const originalDatalabelsColor = rekapChart.options.plugins.datalabels.color;
+      const originalXTicksColor = rekapChart.options.scales.x.ticks.color;
+      const originalYTicksColor = rekapChart.options.scales.y.ticks.color;
+      
+      // Set konfigurasi untuk export dengan background terang
+      rekapChart.options.plugins.legend.labels.color = "#333333";
+      rekapChart.options.plugins.datalabels.color = "#000000";
+      rekapChart.options.scales.x.ticks.color = "#333333";
+      rekapChart.options.scales.y.ticks.color = "#333333";
+      
+      // Update chart untuk export
+      rekapChart.update('none');
+      
+      // Tunggu chart ter-render
+      setTimeout(() => {
+        try {
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF("landscape");
+          
+          // Buat canvas temporary dengan background putih untuk PDF
+          const tempCanvas = document.createElement('canvas');
+          const tempCtx = tempCanvas.getContext('2d');
+          
+          // Set ukuran canvas
+          tempCanvas.width = canvas.width;
+          tempCanvas.height = canvas.height;
+          
+          // Fill background putih
+          tempCtx.fillStyle = '#ffffff';
+          tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+          
+          // Draw chart ke canvas temporary
+          tempCtx.drawImage(canvas, 0, 0);
+          
+          // Convert ke image data
+          const imgData = tempCanvas.toDataURL("image/png", 1.0);
+          
+          // Set PDF content
+          pdf.setFontSize(16);
+          pdf.setTextColor(0, 0, 0); // Hitam
+          pdf.text("Rekap Konten - KEMENKUM SULSEL", 15, 20);
+          
+          // Add image dengan background putih
+          pdf.addImage(imgData, "PNG", 15, 30, 260, 120);
+          
+          // Add total konten
+          const total = rekapChart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+          pdf.setFontSize(12);
+          pdf.setTextColor(0, 0, 0); // Hitam
+          pdf.text("Total Konten: " + total, 15, 160);
+          
+          // Save PDF
+          pdf.save("rekap-konten-" + new Date().toISOString().split('T')[0] + ".pdf");
+          
+          // Restore konfigurasi asli
+          rekapChart.options.plugins.legend.labels.color = originalLegendColor;
+          rekapChart.options.plugins.datalabels.color = originalDatalabelsColor;
+          rekapChart.options.scales.x.ticks.color = originalXTicksColor;
+          rekapChart.options.scales.y.ticks.color = originalYTicksColor;
+          rekapChart.update('none');
+          
+        } catch (error) {
+          console.error('Error exporting PDF:', error);
+          alert('Gagal mengexport PDF. Silakan coba lagi.');
+          
+          // Restore konfigurasi asli jika error
+          rekapChart.options.plugins.legend.labels.color = originalLegendColor;
+          rekapChart.options.plugins.datalabels.color = originalDatalabelsColor;
+          rekapChart.options.scales.x.ticks.color = originalXTicksColor;
+          rekapChart.options.scales.y.ticks.color = originalYTicksColor;
+          rekapChart.update('none');
+        }
+      }, 100);
     });
   }
 
