@@ -58,7 +58,7 @@ class HomeModel {
                         COALESCE(p.nama, la.user) as user,
                         la.status
                     FROM log_aktivitas la
-                    LEFT JOIN pengguna p ON la.id_user = p.id_pengguna
+                    LEFT JOIN pengguna p ON la.id_pengguna = p.id_pengguna
                     ORDER BY la.tanggal DESC, la.waktu DESC 
                     LIMIT 10
                 ");
@@ -73,91 +73,17 @@ class HomeModel {
                 }
 
                 return $logs;
+            } else {
+                // Jika tabel tidak ada, return dummy
+                return [
+                    ['aktivitas'=>'Tabel log_aktivitas belum dibuat','tanggal'=>date('Y-m-d'),'waktu'=>date('H:i'),'user'=>'System','status'=>'Info'],
+                ];
             }
         } catch (Exception $e) {
             // Log error untuk debugging
             error_log("Error in getLogAktivitas (log_aktivitas table): " . $e->getMessage());
-        }
-        
-        // Fallback ke data dari tabel konten
-        try {
-            // Cek apakah kolom created_by ada
-            $stmt = $this->db->prepare("SHOW COLUMNS FROM konten LIKE 'created_by'");
-            $stmt->execute();
-            $columnExists = $stmt->fetch();
-            
-            if ($columnExists) {
-                // Cek apakah ada kolom id_user untuk JOIN dengan tabel pengguna
-                $stmt = $this->db->prepare("SHOW COLUMNS FROM konten LIKE 'id_user'");
-                $stmt->execute();
-                $idUserExists = $stmt->fetch();
-                
-                if ($idUserExists) {
-                    // Gunakan JOIN dengan tabel pengguna untuk mendapatkan nama asli
-                    $stmt = $this->db->prepare("
-                        SELECT 
-                            CASE 
-                                WHEN k.judul LIKE '%[EDIT]%' THEN CONCAT('Mengedit konten: ', REPLACE(k.judul, ' [EDIT]', ''))
-                                WHEN k.judul LIKE '%[DELETE]%' THEN CONCAT('Menghapus konten: ', REPLACE(k.judul, ' [DELETE]', ''))
-                                ELSE CONCAT('Menambahkan konten: ', k.judul)
-                            END as aktivitas,
-                            DATE(k.tanggal_input) as tanggal,
-                            TIME(k.tanggal_input) as waktu,
-                            COALESCE(p.nama, k.created_by, 'Admin') as user,
-                            'Berhasil' as status
-                        FROM konten k
-                        LEFT JOIN pengguna p ON k.id_user = p.id_pengguna
-                        ORDER BY k.tanggal_input DESC 
-                        LIMIT 5
-                    ");
-                } else {
-                    // Jika tidak ada id_user, gunakan created_by
-                    $stmt = $this->db->prepare("
-                        SELECT 
-                            CASE 
-                                WHEN judul LIKE '%[EDIT]%' THEN CONCAT('Mengedit konten: ', REPLACE(judul, ' [EDIT]', ''))
-                                WHEN judul LIKE '%[DELETE]%' THEN CONCAT('Menghapus konten: ', REPLACE(judul, ' [DELETE]', ''))
-                                ELSE CONCAT('Menambahkan konten: ', judul)
-                            END as aktivitas,
-                            DATE(tanggal_input) as tanggal,
-                            TIME(tanggal_input) as waktu,
-                            COALESCE(created_by, 'Admin') as user,
-                            'Berhasil' as status
-                        FROM konten 
-                        ORDER BY tanggal_input DESC 
-                        LIMIT 5
-                    ");
-                }
-            } else {
-                // Jika kolom created_by belum ada, gunakan query sederhana
-                $stmt = $this->db->prepare("
-                    SELECT 
-                        CONCAT('Menambahkan konten: ', judul) as aktivitas,
-                        DATE(tanggal_input) as tanggal,
-                        TIME(tanggal_input) as waktu,
-                        'Admin' as user,
-                        'Berhasil' as status
-                    FROM konten 
-                    ORDER BY tanggal_input DESC 
-                    LIMIT 5
-                ");
-            }
-            
-            $stmt->execute();
-            $logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            if (empty($logs)) {
-                return [
-                    ['aktivitas'=>'Belum ada aktivitas','tanggal'=>date('Y-m-d'),'waktu'=>date('H:i'),'user'=>'System','status'=>'Info'],
-                ];
-            }
-
-            return $logs;
-        } catch (Exception $e2) {
-            // Log error untuk debugging
-            error_log("Error in getLogAktivitas (fallback): " . $e2->getMessage());
             return [
-                ['aktivitas'=>'Error loading logs: ' . $e2->getMessage(),'tanggal'=>date('Y-m-d'),'waktu'=>date('H:i'),'user'=>'System','status'=>'Error'],
+                ['aktivitas'=>'Error loading logs','tanggal'=>date('Y-m-d'),'waktu'=>date('H:i'),'user'=>'System','status'=>'Error'],
             ];
         }
     }
@@ -258,7 +184,7 @@ class HomeModel {
             }
 
             $stmt = $this->db->prepare("
-                INSERT INTO log_aktivitas (aktivitas, tanggal, waktu, user, status, id_user) 
+                INSERT INTO log_aktivitas (aktivitas, tanggal, waktu, user, status, id_pengguna) 
                 VALUES (?, CURDATE(), CURTIME(), ?, ?, ?)
             ");
             $stmt->execute([$aktivitas, $currentUser, $status, $id_user]);

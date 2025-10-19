@@ -583,29 +583,51 @@ body.dark .activity-data::-webkit-scrollbar-thumb:hover {
 
 /* awal dashboard */
 /* Warna untuk status log aktivitas */
-.data-list.status-tambah {
-  color: #2ecc71 !important; /* hijau terang, tambah */
+/* 🔹 Status colors untuk log aktivitas */
+.status-berhasil {
+  color: #28a745 !important;
   font-weight: 600;
 }
 
-.data-list.status-edit {
-  color: #3498db !important; /* biru, edit */
+.status-pending {
+  color: #ffc107 !important;
   font-weight: 600;
 }
 
-.data-list.status-hapus {
-  color: #e74c3c !important; /* merah, hapus */
+.status-gagal {
+  color: #dc3545 !important;
   font-weight: 600;
 }
 
-.data-list.status-login {
-  color: #9b59b6 !important; /* teal, login */
+.status-info {
+  color: #17a2b8 !important;
   font-weight: 600;
 }
 
-.data-list.status-logout {
-  color: #7f8c8d !important; /* abu netral, logout */
+.status-error {
+  color: #dc3545 !important;
   font-weight: 600;
+}
+
+/* 🔹 Dark mode status colors */
+body.dark .status-berhasil {
+  color: #4caf50 !important;
+}
+
+body.dark .status-pending {
+  color: #ff9800 !important;
+}
+
+body.dark .status-gagal {
+  color: #f44336 !important;
+}
+
+body.dark .status-info {
+  color: #00bcd4 !important;
+}
+
+body.dark .status-error {
+  color: #f44336 !important;
 }
 
 /* Tooltip saat hover */
@@ -1469,10 +1491,6 @@ small {
   }
 }
 
-/* 🔹 Scrollbar untuk modal keterangan */
-#modalText::-webkit-scrollbar {
-  width: 8px;
-}
 
 #modalText::-webkit-scrollbar-track {
   background: #f1f1f1;
