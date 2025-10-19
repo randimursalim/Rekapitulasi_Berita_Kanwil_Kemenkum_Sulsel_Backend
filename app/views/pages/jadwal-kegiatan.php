@@ -42,7 +42,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h3>Detail Keterangan Kegiatan</h3>
-            <p id="modalText"></p>
+            <div id="modalText" style="white-space: pre-wrap; max-height: 400px; overflow-y: auto; padding: 15px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; margin: 15px 0; color: var(--text-color); line-height: 1.6; font-size: 14px;"></div>
         </div>
     </div>
 
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="data-title">Aksi</span>
         ${data.map((k, index) => `
           <span class="data-list">
-            <button class="btn-action-aksi view" onclick="showKeterangan('${k.keterangan || ''}')">
+            <button class="btn-action-aksi view" onclick="showKeterangan('${k.keterangan ? k.keterangan.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r') : ''}')">
               <i class="uil uil-eye"></i>
             </button>
             <button class="btn-action-aksi edit" onclick="window.location.href='index.php?page=edit-kegiatan&id=${k.id_kegiatan}'">
@@ -332,8 +332,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Fungsi tampilkan modal
   function showKeterangan(keterangan) {
-    document.getElementById("modalText").textContent = keterangan || 'Tidak ada keterangan';
-  document.getElementById("keteranganModal").style.display = "block";
+    // Decode escape characters untuk display
+    const decodedKeterangan = keterangan
+      .replace(/\\n/g, '\n')
+      .replace(/\\r/g, '\r')
+      .replace(/\\'/g, "'")
+      .replace(/\\"/g, '"');
+    
+    document.getElementById("modalText").textContent = decodedKeterangan || 'Tidak ada keterangan';
+    document.getElementById("keteranganModal").style.display = "block";
 }
 
 // Fungsi tutup modal

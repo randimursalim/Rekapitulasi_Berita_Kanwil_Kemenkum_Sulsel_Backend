@@ -139,6 +139,8 @@ body.dark .activity-wrapper.form-wrapper::-webkit-scrollbar-thumb:hover {
   background: #777;
 }
 
+
+
 /* 🔹 Grid tabel untuk arsip */
 .activity-data {
   display: grid;
@@ -1465,6 +1467,38 @@ small {
   100% {
     opacity: 1;
   }
+}
+
+/* 🔹 Scrollbar untuk modal keterangan */
+#modalText::-webkit-scrollbar {
+  width: 8px;
+}
+
+#modalText::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+#modalText::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+#modalText::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* 🔹 Dark mode scrollbar untuk modal keterangan */
+body.dark #modalText::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+
+body.dark #modalText::-webkit-scrollbar-thumb {
+  background: #555;
+}
+
+body.dark #modalText::-webkit-scrollbar-thumb:hover {
+  background: #777;
 }
 
 
