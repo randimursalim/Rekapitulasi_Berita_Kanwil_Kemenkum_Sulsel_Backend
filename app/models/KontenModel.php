@@ -693,6 +693,55 @@ class KontenModel {
                 'periods' => []
             ];
         }
-}
+    }
+
+    // === GALLERY PHOTOS ===
+    public function getGalleryPhotos($limit = 15) {
+        try {
+            $stmt = $this->db->prepare("
+                SELECT 
+                    id_konten,
+                    judul,
+                    dokumentasi,
+                    jenis
+                FROM konten 
+                WHERE dokumentasi IS NOT NULL 
+                AND dokumentasi != '' 
+                AND dokumentasi != 'user.jpg'
+                ORDER BY id_konten DESC
+                LIMIT :limit
+            ");
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            
+            $photos = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                // Only include if dokumentasi looks like an image file
+                $dokumentasi = $row['dokumentasi'];
+                $isImage = (
+                    strpos($dokumentasi, '.jpg') !== false ||
+                    strpos($dokumentasi, '.jpeg') !== false ||
+                    strpos($dokumentasi, '.png') !== false ||
+                    strpos($dokumentasi, '.gif') !== false
+                );
+                
+                if ($isImage) {
+                    $photos[] = [
+                        'id' => $row['id_konten'],
+                        'title' => $row['judul'],
+                        'image' => $dokumentasi,
+                        'type' => $row['jenis'],
+                        'date' => date('Y-m-d'), // Use current date as fallback
+                        'category' => ucfirst($row['jenis'])
+                    ];
+                }
+            }
+            
+            return $photos;
+        } catch (PDOException $e) {
+            error_log("[ERROR] Get Gallery Photos: " . $e->getMessage());
+            return [];
+        }
+    }
 
 }

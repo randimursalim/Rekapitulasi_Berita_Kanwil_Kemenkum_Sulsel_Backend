@@ -156,32 +156,21 @@
   </div>
 </section>
 
+<!-- Gallery Foto Section -->
 <section id="gallery-foto" class="section white-background">
   <div class="section-content portfolio">
-    <div class="full-height ">
+    <div class="full-height">
       <header class="section-header">
         <h2>Gallery Foto</h2>
-        <p>Koleksi foto dokumentasi kegiatan dan konten visual.</p>
+        <p>Koleksi foto dokumentasi kegiatan oleh humas kanwil sulsel</p>
       </header>
 
-      <div class="grid-section">
-        <div class="gallery-images">
-          <img src="https://source.unsplash.com/random/800x800?nature&sig=1" alt="Dokumentasi Kegiatan" />
-        </div>
-        <div class="gallery-images">
-          <img src="https://source.unsplash.com/random/900x900?business&sig=2" alt="Presentasi" />
-        </div>
-        <div class="gallery-images">
-          <img src="https://source.unsplash.com/random/500x500?meeting&sig=3" alt="Rapat" />
-        </div>
-        <div class="gallery-images">
-          <img src="https://source.unsplash.com/random/801x801?office&sig=4" alt="Kantor" />
-        </div>
-        <div class="gallery-images">
-          <img src="https://source.unsplash.com/random/904x904?team&sig=5" alt="Tim" />
-        </div>
-        <div class="gallery-images">
-          <img src="https://source.unsplash.com/random/505x505?event&sig=6" alt="Event" />
+      <div class="gallery-container">
+        <div class="gallery-grid" id="galleryGrid">
+          <!-- Photos will be loaded dynamically -->
+          <div class="gallery-loading">
+            <p>Memuat foto...</p>
+          </div>
         </div>
       </div>
     </div>
@@ -448,7 +437,186 @@
         }
       });
     }, 100);
+    
+    // Load gallery photos
+    loadGalleryPhotos();
   });
+
+  // Load gallery photos from database
+  async function loadGalleryPhotos() {
+    const galleryGrid = document.getElementById('galleryGrid');
+    if (!galleryGrid) return;
+    
+    try {
+      console.log('Loading gallery photos...');
+      const response = await fetch('ajax/gallery_photos.php');
+      const result = await response.json();
+      
+      console.log('Gallery API Response:', result);
+      
+      if (result.success && result.data.length > 0) {
+        console.log('Rendering database photos:', result.data.length);
+        console.log('Photos data:', result.data);
+        renderGalleryPhotos(result.data);
+      } else {
+        console.log('No database photos found, using placeholders');
+        console.log('API result:', result);
+        renderPlaceholderPhotos();
+      }
+    } catch (error) {
+      console.error('Error loading gallery photos:', error);
+      renderPlaceholderPhotos();
+    }
+  }
+
+  // Render photos from database
+  function renderGalleryPhotos(photos) {
+    const galleryGrid = document.getElementById('galleryGrid');
+    
+    console.log('Rendering photos:', photos);
+    
+    const photosHTML = photos.map((photo, index) => {
+      // Handle image path - fix path for storage/uploads
+      let imageSrc = photo.image;
+      if (!imageSrc.startsWith('http') && !imageSrc.startsWith('/')) {
+        // If path starts with storage/uploads, use it directly
+        if (imageSrc.startsWith('storage/uploads/')) {
+          imageSrc = imageSrc; // Use as is
+        } else {
+          imageSrc = 'Images/' + imageSrc;
+        }
+      }
+      
+      console.log(`Photo ${index}:`, {
+        original: photo.image,
+        processed: imageSrc,
+        title: photo.title
+      });
+      
+      return `
+        <div class="gallery-item" data-index="${index}">
+          <div class="gallery-image">
+            <img src="${imageSrc}" alt="${photo.title}" loading="lazy" onerror="console.error('Image failed to load:', '${imageSrc}'); this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
+            <div class="gallery-overlay">
+              <div class="gallery-info">
+                <h3>${photo.title}</h3>
+                <p>${photo.type === 'berita' ? 'Berita' : 'Media Sosial'}</p>
+                <span class="gallery-date">${formatDate(photo.date)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    
+    galleryGrid.innerHTML = photosHTML;
+    initializeGalleryInteractions();
+  }
+
+  // Render placeholder photos if no database photos
+  function renderPlaceholderPhotos() {
+    const galleryGrid = document.getElementById('galleryGrid');
+    
+    const placeholderPhotos = [
+      { src: 'https://source.unsplash.com/random/800x800?nature&sig=1', title: 'Dokumentasi Kegiatan' },
+      { src: 'https://source.unsplash.com/random/900x900?business&sig=2', title: 'Presentasi' },
+      { src: 'https://source.unsplash.com/random/500x500?meeting&sig=3', title: 'Rapat' },
+      { src: 'https://source.unsplash.com/random/801x801?office&sig=4', title: 'Kantor' },
+      { src: 'https://source.unsplash.com/random/904x904?team&sig=5', title: 'Tim' },
+      { src: 'https://source.unsplash.com/random/505x505?event&sig=6', title: 'Event' }
+    ];
+    
+    const photosHTML = placeholderPhotos.map((photo, index) => `
+      <div class="gallery-item" data-index="${index}">
+        <div class="gallery-image">
+          <img src="${photo.src}" alt="${photo.title}" loading="lazy">
+          <div class="gallery-overlay">
+            <div class="gallery-info">
+              <h3>${photo.title}</h3>
+              <p>Dokumentasi</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    
+    galleryGrid.innerHTML = photosHTML;
+    initializeGalleryInteractions();
+  }
+
+  // Initialize gallery interactions
+  function initializeGalleryInteractions() {
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    galleryItems.forEach((item, index) => {
+      // Add staggered animation delay
+      item.style.animationDelay = `${index * 0.1}s`;
+      
+      // Add click event for modal
+      item.addEventListener('click', function() {
+        const img = this.querySelector('img');
+        const title = this.querySelector('h3').textContent;
+        showImageModal(img.src, title);
+      });
+      
+      // Add hover effects
+      item.addEventListener('mouseenter', function() {
+        this.classList.add('hovered');
+      });
+      
+      item.addEventListener('mouseleave', function() {
+        this.classList.remove('hovered');
+      });
+    });
+  }
+
+  // Show image modal
+  function showImageModal(src, title) {
+    // Create modal if it doesn't exist
+    let modal = document.getElementById('imageModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'imageModal';
+      modal.className = 'image-modal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <span class="modal-close">&times;</span>
+          <img class="modal-image" src="" alt="">
+          <div class="modal-info">
+            <h3 class="modal-title"></h3>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      // Add close functionality
+      modal.querySelector('.modal-close').addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+      
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    }
+    
+    // Set content and show modal
+    modal.querySelector('.modal-image').src = src;
+    modal.querySelector('.modal-title').textContent = title;
+    modal.style.display = 'flex';
+  }
+
+  // Format date helper
+  function formatDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('id-ID', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  }
 </script>
 
 </body>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gallery API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .photo { margin: 10px; padding: 10px; border: 1px solid #ccc; }
+        .photo img { max-width: 200px; max-height: 200px; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Gallery Photos API Test</h1>
+    <div id="result"></div>
+    
+    <script>
+        async function testGalleryAPI() {
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                console.log('Testing gallery API...');
+                const response = await fetch('ajax/gallery_photos.php');
+                const result = await response.json();
+                
+                console.log('API Response:', result);
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `
+                        <h2 class="success">✅ API Success!</h2>
+                        <p><strong>Photos found:</strong> ${result.count}</p>
+                        <div id="photos"></div>
+                    `;
+                    
+                    if (result.data.length > 0) {
+                        const photosDiv = document.getElementById('photos');
+                        photosDiv.innerHTML = result.data.map(photo => `
+                            <div class="photo">
+                                <h3>${photo.title}</h3>
+                                <p><strong>Type:</strong> ${photo.type}</p>
+                                <p><strong>Date:</strong> ${photo.date}</p>
+                                <p><strong>Image:</strong> ${photo.image}</p>
+                                <img src="Images/${photo.image}" alt="${photo.title}" onerror="this.src='https://via.placeholder.com/200x200?text=Image+Not+Found'">
+                            </div>
+                        `).join('');
+                    } else {
+                        resultDiv.innerHTML += '<p class="error">❌ No photos found in database</p>';
+                    }
+                } else {
+                    resultDiv.innerHTML = `
+                        <h2 class="error">❌ API Error</h2>
+                        <p><strong>Error:</strong> ${result.error}</p>
+                    `;
+                }
+            } catch (error) {
+                console.error('Test error:', error);
+                resultDiv.innerHTML = `
+                    <h2 class="error">❌ Network Error</h2>
+                    <p><strong>Error:</strong> ${error.message}</p>
+                `;
+            }
+        }
+        
+        testGalleryAPI();
+    </script>
+</body>
+</html>
