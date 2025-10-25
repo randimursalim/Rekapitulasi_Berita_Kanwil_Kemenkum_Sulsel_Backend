@@ -187,6 +187,15 @@ switch ($page) {
         $controller->editProfilPengguna();
         break;
 
+    case 'update-profil':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin(); // Semua user bisa update profil sendiri
+        
+        require_once __DIR__ . '/../app/controllers/PenggunaController.php';
+        $controller = new PenggunaController();
+        $controller->updateProfilPengguna();
+        break;
+
     // === KEGIATAN ===
     case 'jadwal-kegiatan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';

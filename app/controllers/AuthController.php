@@ -42,6 +42,9 @@ class AuthController
             $user = $this->model->getUserByUsername($username);
 
                 if ($user && $this->model->verifyPassword($password, $user['password'])) {
+                    // Regenerate session ID untuk security
+                    session_regenerate_id(true);
+                    
                     // Login berhasil
                     $_SESSION['user'] = [
                         'id' => $user['id_pengguna'],
@@ -53,6 +56,9 @@ class AuthController
                     
                     // Set waktu aktivitas awal
                     $_SESSION['last_activity'] = time();
+                    $_SESSION['login_time'] = time();
+                    $_SESSION['ip_address'] = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+                    $_SESSION['user_agent'] = $_SERVER['HTTP_USER_AGENT'] ?? 'unknown';
 
                     // Update last login
                     $this->model->updateLastLogin($user['id_pengguna']);
@@ -73,6 +79,19 @@ class AuthController
     // === Logout ===
     public function logout()
     {
+        // Clear all session data
+        $_SESSION = array();
+        
+        // Destroy session cookie
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
+        
+        // Destroy session
         session_destroy();
         header('Location: index.php?page=login');
         exit;
@@ -86,8 +105,48 @@ class AuthController
             exit;
         }
         
+        // Cek session security
+        self::validateSessionSecurity();
+        
         // Cek session timeout (15 menit)
         self::checkSessionTimeout();
+    }
+    
+    // === Validasi session security ===
+    public static function validateSessionSecurity()
+    {
+        // Cek IP address consistency
+        if (isset($_SESSION['ip_address']) && $_SESSION['ip_address'] !== ($_SERVER['REMOTE_ADDR'] ?? 'unknown')) {
+            self::destroySessionAndRedirect('IP address changed');
+            return;
+        }
+        
+        // Cek User Agent consistency
+        if (isset($_SESSION['user_agent']) && $_SESSION['user_agent'] !== ($_SERVER['HTTP_USER_AGENT'] ?? 'unknown')) {
+            self::destroySessionAndRedirect('User agent changed');
+            return;
+        }
+        
+        // Cek session hijacking (login time terlalu lama)
+        if (isset($_SESSION['login_time']) && (time() - $_SESSION['login_time']) > 86400) { // 24 jam
+            self::destroySessionAndRedirect('Session expired');
+            return;
+        }
+    }
+    
+    // === Destroy session dan redirect ===
+    private static function destroySessionAndRedirect($reason = 'Security violation')
+    {
+        // Log security violation
+        error_log("Session security violation: " . $reason . " - User: " . ($_SESSION['user']['username'] ?? 'unknown'));
+        
+        // Clear session
+        $_SESSION = array();
+        session_destroy();
+        
+        // Redirect ke login
+        header('Location: index.php?page=login&error=security');
+        exit;
     }
     
     // === Cek session timeout ===

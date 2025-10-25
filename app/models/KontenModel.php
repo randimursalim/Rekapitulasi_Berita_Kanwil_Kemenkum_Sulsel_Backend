@@ -698,26 +698,31 @@ class KontenModel {
     // === GALLERY PHOTOS ===
     public function getGalleryPhotos($limit = 15) {
         try {
+            // First, get all unique photos (no duplicates)
             $stmt = $this->db->prepare("
                 SELECT 
-                    id_konten,
-                    judul,
-                    dokumentasi,
-                    jenis
-                FROM konten 
-                WHERE dokumentasi IS NOT NULL 
-                AND dokumentasi != '' 
-                AND dokumentasi != 'user.jpg'
-                ORDER BY id_konten DESC
-                LIMIT :limit
+                    k.id_konten,
+                    k.judul,
+                    k.dokumentasi,
+                    k.jenis
+                FROM konten k
+                JOIN konten_berita kb ON k.id_konten = kb.id_konten
+                WHERE k.dokumentasi IS NOT NULL 
+                AND k.dokumentasi != '' 
+                AND k.dokumentasi != 'user.jpg'
+                AND k.jenis = 'berita'
+                ORDER BY k.id_konten DESC
             ");
-            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
             $stmt->execute();
             
+            $allPhotos = [];
+            $uniqueFiles = []; // Track unique file names
             $photos = [];
+            
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                // Only include if dokumentasi looks like an image file
                 $dokumentasi = $row['dokumentasi'];
+                
+                // Check if it's an image file
                 $isImage = (
                     strpos($dokumentasi, '.jpg') !== false ||
                     strpos($dokumentasi, '.jpeg') !== false ||
@@ -726,14 +731,26 @@ class KontenModel {
                 );
                 
                 if ($isImage) {
-                    $photos[] = [
-                        'id' => $row['id_konten'],
-                        'title' => $row['judul'],
-                        'image' => $dokumentasi,
-                        'type' => $row['jenis'],
-                        'date' => date('Y-m-d'), // Use current date as fallback
-                        'category' => ucfirst($row['jenis'])
-                    ];
+                    // Extract filename without path for comparison
+                    $filename = basename($dokumentasi);
+                    
+                    // Check if we already have this filename
+                    if (!in_array($filename, $uniqueFiles)) {
+                        $uniqueFiles[] = $filename;
+                        $photos[] = [
+                            'id' => $row['id_konten'],
+                            'title' => $row['judul'],
+                            'image' => $dokumentasi,
+                            'type' => $row['jenis'],
+                            'date' => date('Y-m-d'),
+                            'category' => ucfirst($row['jenis'])
+                        ];
+                        
+                        // Stop if we have enough unique photos
+                        if (count($photos) >= $limit) {
+                            break;
+                        }
+                    }
                 }
             }
             
@@ -743,5 +760,53 @@ class KontenModel {
             return [];
         }
     }
+
+    // === GET LATEST NEWS FOR PORTAL ===
+    public function getLatestNews($limit = 10) {
+        try {
+            $stmt = $this->db->prepare("
+                SELECT 
+                    k.id_konten,
+                    k.judul,
+                    k.jenis,
+                    k.dokumentasi,
+                    k.tanggal_input,
+                    kb.tanggal_berita,
+                    kb.link_berita,
+                    kb.sumber_berita,
+                    kb.jenis_berita,
+                    kb.ringkasan
+                FROM konten k
+                JOIN konten_berita kb ON k.id_konten = kb.id_konten
+                WHERE k.jenis = 'berita' 
+                AND kb.jenis_berita = 'website_kanwil'
+                ORDER BY k.id_konten DESC
+                LIMIT :limit
+            ");
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+
+            $news = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $news[] = [
+                    'id' => $row['id_konten'],
+                    'judul' => $row['judul'],
+                    'isi' => $row['ringkasan'], // Gunakan ringkasan sebagai isi
+                    'jenis' => $row['jenis'],
+                    'dokumentasi' => $row['dokumentasi'],
+                    'tanggal' => $row['tanggal_berita'] ?: $row['tanggal_input'],
+                    'link' => $row['link_berita'],
+                    'sumber' => $row['sumber_berita'],
+                    'ringkasan' => $row['ringkasan'],
+                    'jenis_berita' => $row['jenis_berita']
+                ];
+            }
+            
+            return $news;
+        } catch (PDOException $e) {
+            error_log("[ERROR] Get Latest News: " . $e->getMessage());
+            return [];
+        }
+}
 
 }

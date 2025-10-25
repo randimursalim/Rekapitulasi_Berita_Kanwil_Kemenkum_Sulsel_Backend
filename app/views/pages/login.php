@@ -72,6 +72,12 @@
 						</button>
 					</div>
 
+					<div class="text-center p-t-20">
+						<a href="landing.php" class="btn-back-to-landing">
+							<i class="fa fa-home"></i> Kembali ke Beranda
+						</a>
+					</div>
+
 					<div class="text-center p-t-12">
 						<span class="txt1">
 							<!-- Forgot -->
@@ -105,13 +111,9 @@
 	<script src="/rekap-konten/public/vendor/select2/select2.min.js"></script>
 <!--===============================================================================================-->
 	<script src="/rekap-konten/public/vendor/tilt/tilt.jquery.min.js"></script>
-	<script >
-		$('.js-tilt').tilt({
-			scale: 1.1
-		})
-	</script>
 <!--===============================================================================================-->
 	<script src="/rekap-konten/public/js/main.js"></script>
+	<script src="/rekap-konten/public/js/login.js"></script>
 
 	<style>
 		.password-toggle-login {
@@ -137,24 +139,35 @@
 		.wrap-input100 {
 			position: relative;
 		}
+
+		.btn-back-to-landing {
+			display: inline-block;
+			padding: 12px 24px;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: white;
+			text-decoration: none;
+			border-radius: 25px;
+			font-weight: 500;
+			font-size: 14px;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+			border: none;
+			cursor: pointer;
+		}
+
+		.btn-back-to-landing:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+			background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+			color: white;
+			text-decoration: none;
+		}
+
+		.btn-back-to-landing i {
+			margin-right: 8px;
+		}
 	</style>
 
-	<script>
-		function togglePasswordLogin() {
-			const input = document.getElementById('password');
-			const eyeIcon = document.getElementById('password-eye-login');
-			
-			if (input.type === 'password') {
-				input.type = 'text';
-				eyeIcon.classList.remove('fa-eye');
-				eyeIcon.classList.add('fa-eye-slash');
-			} else {
-				input.type = 'password';
-				eyeIcon.classList.remove('fa-eye-slash');
-				eyeIcon.classList.add('fa-eye');
-			}
-		}
-	</script>
 
 </body>
 </html>

@@ -1,0 +1,27 @@
+# Protect database directory
+# Deny all access to database directory
+
+Order Allow,Deny
+Deny from all
+
+# Prevent access to SQL files
+<Files "*.sql">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Prevent access to all files
+<Files "*">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Prevent directory browsing
+Options -Indexes
+
+# Additional security
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options nosniff
+    Header set X-Frame-Options DENY
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>

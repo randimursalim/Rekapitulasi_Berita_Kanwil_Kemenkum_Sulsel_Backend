@@ -179,8 +179,8 @@ class HomeModel {
             }
             
             // Jika id_user tidak diberikan, ambil dari session
-            if ($id_user === null && session_status() == PHP_SESSION_ACTIVE && isset($_SESSION['user']['id_pengguna'])) {
-                $id_user = $_SESSION['user']['id_pengguna'];
+            if ($id_user === null && session_status() == PHP_SESSION_ACTIVE && isset($_SESSION['user']['id'])) {
+                $id_user = $_SESSION['user']['id'];
             }
 
             $stmt = $this->db->prepare("

@@ -90,11 +90,9 @@ if (canvas) {
       if (result.success) {
         updateChart(result.data);
       } else {
-        console.error('Error fetching rekap data:', result.error);
         showError('Gagal memuat data rekap');
       }
     } catch (error) {
-      console.error('Error fetching rekap data:', error);
       showError('Terjadi kesalahan saat memuat data');
     }
   }
@@ -156,11 +154,9 @@ if (canvas) {
 
       if (result.success) {
         populateDropdowns(result.data);
-      } else {
-        console.error('Error loading periods:', result.error);
       }
     } catch (error) {
-      console.error('Error loading periods:', error);
+      // Error handling tanpa console log
     }
   }
 
@@ -478,7 +474,6 @@ if (canvas) {
           rekapChart.update('none');
           
         } catch (error) {
-          console.error('Error exporting PDF:', error);
           alert('Gagal mengexport PDF. Silakan coba lagi.');
           
           // Restore konfigurasi asli jika error
@@ -503,13 +498,10 @@ if (canvas) {
       const result = await response.json();
 
       if (result.success) {
-        console.log('Tabel data received:', result.data);
         updateTabel(result.data);
-      } else {
-        console.error('Error fetching tabel data:', result.error);
       }
     } catch (error) {
-      console.error('Error fetching tabel data:', error);
+      // Error handling tanpa console log
     }
   }
 

@@ -4,7 +4,7 @@
 
 <div class="overview">
     <div class="title">
-        <i class="uil uil-plus"></i>
+        <i class="fas fa-plus"></i>
         <span class="text">Tambah Kegiatan</span>
     </div>
 </div>
@@ -53,10 +53,10 @@
         <!-- Tombol Aksi -->
         <div class="form-actions" style="text-align:center; margin-top:20px;">
             <button type="submit" class="btn-simpan">
-                <i class="uil uil-save"></i> Simpan
+                <i class="fas fa-save"></i> Simpan
             </button>
             <button type="button" class="btn-batal" onclick="window.location.href='index.php?page=jadwal-kegiatan'">
-                <i class="uil uil-times"></i> Batal
+                <i class="fas fa-times"></i> Batal
             </button>
         </div>
     </form>
@@ -64,65 +64,7 @@
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Set tanggal default ke hari ini
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('tanggal').value = today;
-
-    // Validasi jam
-    const jamMulai = document.getElementById('jamMulai');
-    const jamSelesai = document.getElementById('jamSelesai');
-    
-    function validateTime() {
-        if (jamMulai.value && jamSelesai.value) {
-            if (jamMulai.value >= jamSelesai.value) {
-                jamSelesai.setCustomValidity('Jam selesai harus lebih besar dari jam mulai');
-                jamSelesai.reportValidity();
-            } else {
-                jamSelesai.setCustomValidity('');
-            }
-        }
-    }
-
-    jamMulai.addEventListener('change', validateTime);
-    jamSelesai.addEventListener('change', validateTime);
-
-    // Validasi form sebelum submit
-    document.getElementById('formKegiatan').addEventListener('submit', function(e) {
-        validateTime();
-        
-        if (jamMulai.value >= jamSelesai.value) {
-            e.preventDefault();
-            Swal.fire({
-                icon: 'error',
-                title: 'Validasi Gagal!',
-                text: 'Jam selesai harus lebih besar dari jam mulai',
-                showConfirmButton: true
-            });
-            return false;
-        }
-        
-        // Konfirmasi sebelum submit
-        e.preventDefault();
-        Swal.fire({
-            title: 'Konfirmasi Tambah',
-            text: 'Apakah kamu yakin untuk menambahkan kegiatan ini?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Tambahkan!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Submit form jika dikonfirmasi
-                this.submit();
-            }
-        });
-    });
-});
-</script>
+<script src="/rekap-konten/public/js/tambah-kegiatan.js"></script>
 
 <?php if (isset($_GET['status'])): ?>
 <script>

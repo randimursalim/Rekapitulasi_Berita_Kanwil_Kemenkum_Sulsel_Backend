@@ -24,37 +24,37 @@
       <ul class="nav-links">
         <li>
           <a href="index.html" class="active">
-            <i class="uil uil-estate"></i>
+            <i class="fas fa-home"></i>
             <span class="link-name">Dashboard</span>
           </a>
         </li>
         <li>
           <a href="input-konten.html">
-            <i class="uil uil-file-plus"></i>
+            <i class="fas fa-plus-circle"></i>
             <span class="link-name">Input Konten</span>
           </a>
         </li>
         <li>
           <a href="rekap-konten.html">
-            <i class="uil uil-database"></i>
+            <i class="fas fa-database"></i>
             <span class="link-name">Rekap Konten</span>
           </a>
         </li>
         <li>
           <a href="arsip.html">
-            <i class="uil uil-archive"></i>
+            <i class="fas fa-archive"></i>
             <span class="link-name">Arsip</span>
           </a>
         </li>
         <li>
           <a href="jadwal-kegiatan.html">
-            <i class="uil uil-schedule"></i>
+            <i class="fas fa-calendar-alt"></i>
             <span class="link-name">Jadwal Kegiatan</span>
           </a>
         </li>
         <li>
           <a href="pengguna.html">
-            <i class="uil uil-users-alt"></i>
+            <i class="fas fa-users"></i>
             <span class="link-name">Pengguna</span>
           </a>
         </li>
@@ -63,13 +63,13 @@
       <ul class="logout-mode">
         <li>
           <a href="#">
-            <i class="uil uil-signout"></i>
+            <i class="fas fa-sign-out-alt"></i>
             <span class="link-name">Logout</span>
           </a>
         </li>
         <li class="mode">
           <a href="#">
-            <i class="uil uil-moon"></i>
+            <i class="fas fa-moon"></i>
             <span class="link-name">Dark Mode</span>
           </a>
           <div class="mode-toggle"><span class="switch"></span></div>
@@ -81,7 +81,7 @@
   <!-- Dashboard -->
   <section class="dashboard">
     <div class="top">
-      <i class="uil uil-bars sidebar-toggle"></i>
+      <i class="fas fa-bars sidebar-toggle"></i>
       <a href="edit-profil.html">
         <img src="images/user.jpg" alt="Profile" class="profile-link" />
       </a>
@@ -91,25 +91,25 @@
       <!-- Statistik -->
       <div class="overview">
         <div class="title">
-          <i class="uil uil-tachometer-fast-alt"></i>
+          <i class="fas fa-tachometer-alt"></i>
           <span class="text">Dashboard</span>
         </div>
 
         <div class="boxes">
           <div class="box box1" onclick="showDetail('berita')" data-tooltip="Klik untuk lihat rincian">
-            <i class="uil uil-newspaper"></i>
+            <i class="fas fa-newspaper"></i>
             <span class="text">Total Berita</span>
             <span class="number">80</span>
           </div>
 
           <div class="box box2" onclick="showDetail('medsos')" data-tooltip="Klik untuk lihat rincian">
-            <i class="uil uil-share-alt"></i>
+            <i class="fas fa-share-alt"></i>
             <span class="text">Postingan Medsos</span>
             <span class="number">34</span>
           </div>
 
           <div class="box box3">
-            <i class="uil uil-archive"></i>
+            <i class="fas fa-archive"></i>
             <span class="text">Total Arsip</span>
             <span class="number">114</span>
           </div>
@@ -128,7 +128,7 @@
       <!-- Log Aktivitas -->
       <div class="activity">
         <div class="title">
-          <i class="uil uil-history"></i>
+          <i class="fas fa-history"></i>
           <span class="text">Log Aktivitas</span>
         </div>
 

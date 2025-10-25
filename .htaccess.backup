@@ -1,0 +1,107 @@
+# REKAP-KONTEN Security Configuration
+# Root .htaccess untuk melindungi sensitive directories
+
+# Prevent access to sensitive directories
+<DirectoryMatch "^(app|config|database|storage)">
+    Order Allow,Deny
+    Deny from all
+</DirectoryMatch>
+
+# Prevent access to sensitive files
+<FilesMatch "\.(env|log|sql|bak|backup|old|tmp)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Prevent access to PHP files in sensitive directories
+<FilesMatch "^(app|config|database|storage)/.*\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Prevent directory browsing
+Options -Indexes
+
+# Prevent access to hidden files
+<FilesMatch "^\.">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Security headers
+<IfModule mod_headers.c>
+    # Prevent MIME type sniffing
+    Header always set X-Content-Type-Options nosniff
+    
+    # Prevent clickjacking
+    Header always set X-Frame-Options DENY
+    
+    # XSS Protection
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content Security Policy (basic)
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' cdnjs.cloudflare.com fonts.googleapis.com; font-src 'self' cdnjs.cloudflare.com fonts.gstatic.com; img-src 'self' data:; connect-src 'self';"
+    
+    # Remove server signature
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
+
+# Prevent access to backup files
+<FilesMatch "\.(bak|backup|old|orig|save|swp|tmp)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Prevent access to version control files
+<FilesMatch "\.(git|svn|hg|bzr)">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Prevent access to configuration files
+<FilesMatch "\.(ini|conf|config)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Allow only specific file types in public directory
+<Directory "public">
+    # Allow images
+    <FilesMatch "\.(jpg|jpeg|png|gif|ico|svg)$">
+        Order Allow,Deny
+        Allow from all
+    </FilesMatch>
+    
+    # Allow CSS
+    <FilesMatch "\.css$">
+        Order Allow,Deny
+        Allow from all
+    </FilesMatch>
+    
+    # Allow JavaScript
+    <FilesMatch "\.js$">
+        Order Allow,Deny
+        Allow from all
+    </FilesMatch>
+    
+    # Allow fonts
+    <FilesMatch "\.(ttf|otf|woff|woff2|eot)$">
+        Order Allow,Deny
+        Allow from all
+    </FilesMatch>
+    
+    # Allow PHP files (but with restrictions)
+    <FilesMatch "\.php$">
+        Order Allow,Deny
+        Allow from all
+    </FilesMatch>
+</Directory>
+
+# Error pages
+ErrorDocument 403 /rekap-konten/public/error-403.html
+ErrorDocument 404 /rekap-konten/public/error-404.html
+ErrorDocument 500 /rekap-konten/public/error-500.html

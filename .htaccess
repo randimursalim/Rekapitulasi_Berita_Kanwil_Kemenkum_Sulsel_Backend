@@ -1,0 +1,66 @@
+# REKAP-KONTEN Security Configuration
+# Root .htaccess untuk melindungi sensitive directories
+
+# Prevent directory browsing
+Options -Indexes
+
+# Prevent access to sensitive directories (using RewriteRule instead of DirectoryMatch)
+RewriteEngine On
+RewriteRule ^app/ - [F,L]
+RewriteRule ^config/ - [F,L]
+RewriteRule ^database/ - [F,L]
+RewriteRule ^storage/ - [F,L]
+
+# Prevent access to sensitive files
+<FilesMatch "\.(env|log|sql|bak|backup|old|tmp)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Prevent access to hidden files
+<FilesMatch "^\.">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Prevent access to backup files
+<FilesMatch "\.(bak|backup|old|orig|save|swp|tmp)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Prevent access to version control files
+<FilesMatch "\.(git|svn|hg|bzr)">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Prevent access to configuration files
+<FilesMatch "\.(ini|conf|config)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Basic security headers (if mod_headers is available)
+<IfModule mod_headers.c>
+    # Prevent MIME type sniffing
+    Header always set X-Content-Type-Options nosniff
+    
+    # Prevent clickjacking
+    Header always set X-Frame-Options DENY
+    
+    # XSS Protection
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Referrer Policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Remove server signature
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
+
+# Error pages
+ErrorDocument 403 /rekap-konten/public/error-403.html
+ErrorDocument 404 /rekap-konten/public/error-404.html
+ErrorDocument 500 /rekap-konten/public/error-500.html

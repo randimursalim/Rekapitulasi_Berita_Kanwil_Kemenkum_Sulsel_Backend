@@ -1,25 +1,25 @@
 <!-- Statistik -->
 <div class="overview">
   <div class="title">
-    <i class="uil uil-tachometer-fast-alt"></i>
+    <i class="fas fa-tachometer-alt"></i>
     <span class="text">Dashboard</span>
   </div>
 
   <div class="boxes">
     <div class="box box1" data-type="berita" data-tooltip="Klik untuk lihat rincian">
-      <i class="uil uil-newspaper"></i>
+      <i class="fas fa-newspaper"></i>
       <span class="text">Total Berita</span>
       <span class="number"><?= $statistik['total_berita'] ?></span>
     </div>
 
     <div class="box box2" data-type="medsos" data-tooltip="Klik untuk lihat rincian">
-      <i class="uil uil-share-alt"></i>
+      <i class="fas fa-share-alt"></i>
       <span class="text">Postingan Medsos</span>
       <span class="number"><?= $statistik['total_medsos'] ?></span>
     </div>
 
     <div class="box box3">
-      <i class="uil uil-archive"></i>
+      <i class="fas fa-archive"></i>
       <span class="text">Total Arsip</span>
       <span class="number"><?= $statistik['total_arsip'] ?></span>
     </div>
@@ -39,7 +39,7 @@
 <div class="activity-wrapper">
   <div class="activity">
     <div class="title">
-      <i class="uil uil-history"></i>
+      <i class="fas fa-history"></i>
       <span class="text">Log Aktivitas</span>
     </div>
 

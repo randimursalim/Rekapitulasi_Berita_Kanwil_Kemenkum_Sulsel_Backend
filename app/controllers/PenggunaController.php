@@ -52,6 +52,8 @@ class PenggunaController {
         }
 
         if (!empty($errors)) {
+            ob_clean();
+            header('Content-Type: application/json');
             echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
             exit;
         }
@@ -146,6 +148,8 @@ class PenggunaController {
         }
 
         if (!empty($errors)) {
+            ob_clean();
+            header('Content-Type: application/json');
             echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
             exit;
         }
@@ -238,5 +242,111 @@ class PenggunaController {
         include __DIR__ . '/../views/layouts/header.php';
         include __DIR__ . '/../views/pages/edit-profil.php';
         include __DIR__ . '/../views/layouts/footer.php';
+    }
+
+    // Proses update profil pengguna
+    public function updateProfilPengguna() {
+        // Suppress semua output sebelum JSON
+        ob_clean();
+        
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            ob_clean();
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            exit;
+        }
+
+        // Ambil ID user yang sedang login
+        $id = $_SESSION['user']['id'] ?? null;
+        if (!$id) {
+            ob_clean();
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'User tidak valid']);
+            exit;
+        }
+
+        $nama = trim($_POST['nama'] ?? '');
+        $username = trim($_POST['username'] ?? '');
+        $password = $_POST['password'] ?? '';
+        $konfirmasi = $_POST['konfirmasi'] ?? '';
+
+        // Validasi
+        $errors = [];
+        if (empty($nama)) $errors[] = 'Nama harus diisi';
+        if (empty($username)) $errors[] = 'Username harus diisi';
+        
+        // Validasi password jika diisi
+        if (!empty($password)) {
+            if (strlen($password) < 6) $errors[] = 'Password minimal 6 karakter';
+            if ($password !== $konfirmasi) $errors[] = 'Password dan konfirmasi password tidak sama';
+        }
+
+        // Cek username sudah ada (kecuali untuk user yang sama)
+        if ($this->model->isUsernameExists($username, $id)) {
+            $errors[] = 'Username sudah digunakan';
+        }
+
+        if (!empty($errors)) {
+            ob_clean();
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
+            exit;
+        }
+
+        // Handle foto upload dengan security
+        $foto = $_SESSION['user']['foto'] ?? 'user.jpg'; // Default foto dari session
+        if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+            require_once __DIR__ . '/../helpers/SecureFileUpload.php';
+            $uploadHandler = new SecureFileUpload();
+            
+            $uploadResult = $uploadHandler->uploadFile('foto', 'user');
+            
+            if ($uploadResult['success']) {
+                // Hapus foto lama jika bukan foto default
+                $fotoLama = $_SESSION['user']['foto'] ?? 'user.jpg';
+                if ($fotoLama !== 'user.jpg') {
+                    $uploadHandler->deleteFile($fotoLama);
+                }
+                $foto = $uploadResult['filename'];
+            } else {
+                // Handle upload error
+                ob_clean();
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Upload foto gagal: ' . $uploadResult['message']]);
+                exit;
+            }
+        }
+
+        // Simpan data
+        $data = [
+            'nama' => $nama,
+            'username' => $username,
+            'foto' => $foto,
+            'role' => $_SESSION['user']['role'] // Pertahankan role yang sudah ada
+        ];
+
+        // Jika password diisi, update password
+        if (!empty($password)) {
+            $data['password'] = $password;
+        }
+
+        if ($this->model->updatePengguna($id, $data)) {
+            // Update session dengan data baru (pertahankan role)
+            $_SESSION['user']['nama'] = $nama;
+            $_SESSION['user']['username'] = $username;
+            $_SESSION['user']['foto'] = $foto;
+            // Role tidak perlu diupdate karena sudah ada di session
+            
+            // Clear output buffer dan set header untuk JSON response
+            ob_clean();
+            header('Content-Type: application/json');
+            echo json_encode(['success' => true, 'message' => 'Profil berhasil diperbarui']);
+        } else {
+            // Clear output buffer dan set header untuk JSON response
+            ob_clean();
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Gagal memperbarui profil']);
+        }
+        exit;
     }
 }

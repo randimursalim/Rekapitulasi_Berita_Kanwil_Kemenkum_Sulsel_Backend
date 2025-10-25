@@ -1,0 +1,74 @@
+# Secure upload directory
+# Prevent execution of PHP files
+<Files "*.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Prevent execution of other scripts
+<Files "*.phtml">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "*.php3">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "*.php4">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "*.php5">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "*.pl">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "*.py">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "*.jsp">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "*.asp">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+<Files "*.sh">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Only allow specific image types
+<FilesMatch "\.(jpg|jpeg|png|gif)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Deny everything else
+<FilesMatch "^(?!.*\.(jpg|jpeg|png|gif)$).*$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Prevent directory browsing
+Options -Indexes
+
+# Additional security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options nosniff
+    Header set X-Frame-Options DENY
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>

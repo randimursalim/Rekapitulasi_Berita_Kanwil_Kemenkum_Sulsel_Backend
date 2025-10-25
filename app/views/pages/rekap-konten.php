@@ -1,7 +1,7 @@
 <div class="overview rekap-page">
   <!-- Judul -->
   <div class="title">
-    <i class="uil uil-chart"></i>
+    <i class="fas fa-chart-bar"></i>
     <span class="text">Rekap Konten</span>
   </div>
 

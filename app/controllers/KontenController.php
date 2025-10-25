@@ -27,22 +27,20 @@ class KontenController {
     $judul = $_POST['judul'] ?? '';
     $divisi = $_POST['divisi'] ?? '';
 
-    // Handle upload dokumentasi (opsional)
+    // Handle upload dokumentasi (opsional) dengan security
     $dokumentasi = null;
     if (!empty($_FILES['dokumentasi']['name'])) {
-        // Path folder uploads di public supaya bisa diakses browser
-        $targetDir = __DIR__ . '/../../public/storage/uploads/';
-        if (!is_dir($targetDir)) {
-            mkdir($targetDir, 0777, true);
-        }
-
-        // Nama file unik
-        $fileName = time() . '_' . basename($_FILES['dokumentasi']['name']);
-        $targetFile = $targetDir . $fileName;
-
-        if (move_uploaded_file($_FILES['dokumentasi']['tmp_name'], $targetFile)) {
-            // Path relatif untuk akses via browser
-            $dokumentasi = 'storage/uploads/' . $fileName;
+        require_once __DIR__ . '/../helpers/SecureFileUpload.php';
+        $uploadHandler = new SecureFileUpload();
+        
+        $uploadResult = $uploadHandler->uploadFile('dokumentasi', 'konten');
+        
+        if ($uploadResult['success']) {
+            $dokumentasi = $uploadResult['path'];
+        } else {
+            // Handle upload error
+            header('Location: index.php?page=input-konten&status=upload_error&message=' . urlencode($uploadResult['message']));
+            exit;
         }
     }
 
@@ -254,22 +252,27 @@ class KontenController {
         $judul = $_POST['judul'] ?? '';
         $divisi = $_POST['divisi'] ?? '';
 
-        // Handle upload dokumentasi (opsional)
+        // Handle upload dokumentasi (opsional) dengan security
         $dokumentasi = null;
         if (!empty($_FILES['dokumentasi']['name'])) {
-            // Path folder uploads di public supaya bisa diakses browser
-            $targetDir = __DIR__ . '/../../public/storage/uploads/';
-            if (!is_dir($targetDir)) {
-                mkdir($targetDir, 0777, true);
-            }
-
-            // Nama file unik
-            $fileName = time() . '_' . basename($_FILES['dokumentasi']['name']);
-            $targetFile = $targetDir . $fileName;
-
-            if (move_uploaded_file($_FILES['dokumentasi']['tmp_name'], $targetFile)) {
-                // Path relatif untuk akses via browser
-                $dokumentasi = 'storage/uploads/' . $fileName;
+            require_once __DIR__ . '/../helpers/SecureFileUpload.php';
+            $uploadHandler = new SecureFileUpload();
+            
+            $uploadResult = $uploadHandler->uploadFile('dokumentasi', 'konten');
+            
+            if ($uploadResult['success']) {
+                $dokumentasi = $uploadResult['path'];
+                
+                // Hapus file lama jika ada
+                $kontenLama = $this->model->getKontenById($idKonten);
+                if (!empty($kontenLama['dokumentasi'])) {
+                    $oldFileName = basename($kontenLama['dokumentasi']);
+                    $uploadHandler->deleteFile($oldFileName);
+                }
+            } else {
+                // Handle upload error
+                header('Location: index.php?page=edit-konten&id=' . $idKonten . '&status=upload_error&message=' . urlencode($uploadResult['message']));
+                exit;
             }
         } else {
             // Jika tidak ada file baru, ambil dokumentasi lama

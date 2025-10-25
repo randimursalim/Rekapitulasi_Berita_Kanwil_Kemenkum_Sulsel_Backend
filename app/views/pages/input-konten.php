@@ -3,7 +3,7 @@
 ?>
 <div class="overview">
     <div class="title">
-        <i class="uil uil-file-plus"></i>
+        <i class="fas fa-plus-circle"></i>
         <span class="text">Input Konten</span>
     </div>
 </div>
@@ -105,58 +105,17 @@
             <!-- Tombol -->
             <div class="form-actions" style="text-align: center; margin-top: 20px;">
                 <button type="submit" class="btn-simpan">
-                    <i class="uil uil-save"></i> Simpan
+                    <i class="fas fa-save"></i> Simpan
                 </button>
                 <button type="button" class="btn-batal" onclick="window.location.href='index.php?page=dashboard'">
-                    <i class="uil uil-times"></i> Batal
+                    <i class="fas fa-times"></i> Batal
                 </button>
             </div>
             </form>
         </div>
     </div>
 </div>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const jenisSelect = document.getElementById('jenis');
-  const formBerita = document.getElementById('form-berita');
-  const formMedsos = document.getElementById('form-medsos');
-  const jenisBerita = document.getElementById('jenisBerita'); // penting
-
-  function toggleForm() {
-    if (!jenisSelect) return;
-
-    if (jenisSelect.value === 'berita') {
-      formBerita.style.display = 'block';
-      formMedsos.style.display = 'none';
-
-      // aktifkan required hanya untuk berita
-      if (jenisBerita) jenisBerita.setAttribute('required', 'required');
-      formMedsos.querySelectorAll('input, textarea, select').forEach(el => {
-        el.removeAttribute('required');
-      });
-
-    } else if (jenisSelect.value !== '') {
-      formBerita.style.display = 'none';
-      formMedsos.style.display = 'block';
-
-      // aktifkan required untuk medsos
-      formMedsos.querySelectorAll('input, textarea, select').forEach(el => {
-        if (el.name !== 'dokumentasi') el.setAttribute('required', 'required');
-      });
-      if (jenisBerita) jenisBerita.removeAttribute('required');
-
-    } else {
-      // jika tidak pilih apa-apa
-      formBerita.style.display = 'none';
-      formMedsos.style.display = 'none';
-      if (jenisBerita) jenisBerita.removeAttribute('required');
-    }
-  }
-
-  toggleForm();
-  jenisSelect.addEventListener('change', toggleForm);
-});
-</script>
+<script src="/rekap-konten/public/js/input-konten.js"></script>
 
 <?php if (isset($_GET['status'])): ?>
 <script>

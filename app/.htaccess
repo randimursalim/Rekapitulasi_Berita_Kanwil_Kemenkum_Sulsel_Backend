@@ -1,0 +1,21 @@
+# Protect app directory
+# Deny all access to app directory
+
+Order Allow,Deny
+Deny from all
+
+# Even if someone tries to access PHP files directly
+<Files "*.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Prevent directory browsing
+Options -Indexes
+
+# Additional security
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options nosniff
+    Header set X-Frame-Options DENY
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
