@@ -68,6 +68,15 @@ function renderGalleryPhotos(photos) {
       }
     }
     
+    // Resolve date from various possible API fields without defaulting to today
+    const rawDate = 
+      photo.tanggal_berita || photo.date ||
+      photo.tanggal || photo.tanggal_upload || photo.tanggal_publikasi ||
+      photo.created_at || photo.createdAt || photo.updated_at || photo.updatedAt ||
+      photo.tanggal_input || photo.tgl || photo.tgl_upload || photo.tgl_publikasi || photo.publish_date ||
+      photo.datetime || photo.time || photo.waktu;
+    const dateHTML = rawDate ? `<span class="gallery-date">${formatDate(rawDate)}</span>` : '';
+    
     return `
       <div class="gallery-item" data-index="${index}">
         <div class="gallery-image">
@@ -76,7 +85,7 @@ function renderGalleryPhotos(photos) {
             <div class="gallery-info">
               <h3>${photo.title}</h3>
               <p>${photo.type === 'berita' ? 'Berita' : 'Media Sosial'}</p>
-              <span class="gallery-date">${formatDate(photo.date)}</span>
+              ${dateHTML}
             </div>
           </div>
         </div>
@@ -216,11 +225,12 @@ async function loadSchedule() {
     if (result.success && result.data.length > 0) {
       renderScheduleFromDatabase(result.data);
     } else {
-      renderPlaceholderSchedule();
+      // Jika tidak ada jadwal kegiatan 7 hari ke depan, tampilkan pesan
+      renderEmptySchedule();
     }
     
   } catch (error) {
-    renderPlaceholderSchedule();
+    renderEmptySchedule();
   } finally {
     isLoadingSchedule = false;
   }
@@ -366,7 +376,23 @@ function renderScheduleFromDatabase(scheduleData) {
   initializeScheduleInteractions();
 }
 
-// Render placeholder schedule
+// Render empty schedule message
+function renderEmptySchedule() {
+  const scheduleTimeline = document.getElementById('scheduleTimeline');
+  if (!scheduleTimeline) return;
+  
+  scheduleTimeline.innerHTML = `
+    <div class="schedule-empty-message">
+      <div class="empty-message-icon">
+        <i class="fas fa-calendar-times"></i>
+      </div>
+      <h3>Jadwal Kegiatan Belum Ada</h3>
+      <p>Belum ada jadwal kegiatan untuk 7 hari ke depan (termasuk hari ini)</p>
+    </div>
+  `;
+}
+
+// Render placeholder schedule (backup - not used if empty schedule detected)
 function renderPlaceholderSchedule() {
   const scheduleTimeline = document.getElementById('scheduleTimeline');
   
@@ -765,7 +791,7 @@ function renderPlaceholderNews() {
       judul: "Transparansi dan Akuntabilitas",
       isi: "Menjunjung tinggi prinsip transparansi dan akuntabilitas dalam setiap kegiatan dan program yang dilaksanakan oleh Kanwil Kemenkum Sulsel.",
       jenis: "berita",
-      dokumentasi: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUwIiBoZWlnaHQ9IjIyMCIgdmlld0JveD0iMCAwIDM1MCAyMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzNTAiIGhlaWdodD0iMjIwIiBmaWxsPSIjMTBhOTc0Ii8+Cjx0ZXh0IHg9IjE3NSIgeT0iMTEwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5KwIFRyYW5zcDwvdGV4dD4KPC9zdmc+",
+      dokumentasi: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUwIiBoZWlnaHQ9IjIyMCIgdmlld0JveD0iMCAwIDM1MCAyMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzNTAiIGhlaWdodD0iMjIwIiBmaWxsPSIjMTAhOTc0Ii8+Cjx0ZXh0IHg9IjE3NSIgeT0iMTEwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5KwIFRyYW5zcDwvdGV4dD4KPC9zdmc+",
       jenis_berita: "website_kanwil"
     },
     {

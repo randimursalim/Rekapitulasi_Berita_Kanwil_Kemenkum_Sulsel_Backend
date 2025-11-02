@@ -556,7 +556,7 @@ if (canvas) {
       const doc = new jsPDF("l", "pt", "a4"); // landscape mode
       const title = document.getElementById("tableTitle")?.innerText || "";
       doc.setFontSize(14);
-      doc.text(title, 40, 40);
+      doc.text(title, doc.internal.pageSize.getWidth() / 2, 40, { align: 'center' });
       doc.autoTable({ 
         html: "#rekapTable", 
         startY: 60, 

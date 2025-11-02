@@ -9,7 +9,25 @@ RewriteEngine On
 RewriteRule ^app/ - [F,L]
 RewriteRule ^config/ - [F,L]
 RewriteRule ^database/ - [F,L]
-RewriteRule ^storage/ - [F,L]
+# Note: Allow access to public storage uploads via rewrite below; do not block here
+
+# Route root requests to public/ without changing URL
+RewriteRule ^$ public/ [L]
+
+# Map common asset directories to public/ transparently (prioritize asset requests)
+RewriteRule ^(css|js|Images|vendor|storage|uploads|fonts)/(.*)$ public/$1/$2 [L,NC]
+
+# Prevent rewrite loop when target is already under /public
+RewriteRule ^public/ - [L]
+
+# If the requested file or directory exists in root, serve it (except for root path)
+RewriteCond %{REQUEST_URI} !^/?$ [NC]
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Send all other requests to public/
+RewriteRule ^(.*)$ public/$1 [L]
 
 # Prevent access to sensitive files
 <FilesMatch "\.(env|log|sql|bak|backup|old|tmp)$">
@@ -61,6 +79,6 @@ RewriteRule ^storage/ - [F,L]
 </IfModule>
 
 # Error pages
-ErrorDocument 403 /rekap-konten/public/error-403.html
-ErrorDocument 404 /rekap-konten/public/error-404.html
-ErrorDocument 500 /rekap-konten/public/error-500.html
+ErrorDocument 403 /public/error-403.html
+ErrorDocument 404 /public/error-404.html
+ErrorDocument 500 /public/error-500.html

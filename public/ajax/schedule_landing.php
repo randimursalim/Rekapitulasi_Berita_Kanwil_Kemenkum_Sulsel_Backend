@@ -105,63 +105,7 @@ try {
         ];
     }
     
-    // Jika tidak ada data 7 hari ke depan, ambil beberapa kegiatan terbaru
-    if (empty($formattedData)) {
-        $fallbackQuery = "
-            SELECT 
-                id_kegiatan,
-                nama_kegiatan,
-                tanggal,
-                jam_mulai,
-                jam_selesai,
-                keterangan,
-                status,
-                created_at
-            FROM kegiatan
-            ORDER BY tanggal DESC, jam_mulai ASC
-            LIMIT 25
-        ";
-        
-        $stmt = $conn->prepare($fallbackQuery);
-        $stmt->execute();
-        $fallbackData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        foreach ($fallbackData as $index => $kegiatan) {
-            // Pilih warna berdasarkan index (untuk konsistensi)
-            $colorIndex = $index % count($colors);
-            $selectedColor = $colors[$colorIndex];
-            
-            // Tentukan jenis kegiatan berdasarkan nama
-            $type = 'meeting'; // Default
-            $namaKegiatan = strtolower($kegiatan['nama_kegiatan']);
-            if (strpos($namaKegiatan, 'rapat') !== false) {
-                $type = 'meeting';
-            } elseif (strpos($namaKegiatan, 'kunjungan') !== false) {
-                $type = 'visit';
-            } elseif (strpos($namaKegiatan, 'sosialisasi') !== false) {
-                $type = 'socialization';
-            } elseif (strpos($namaKegiatan, 'evaluasi') !== false) {
-                $type = 'evaluation';
-            } elseif (strpos($namaKegiatan, 'penyuluhan') !== false) {
-                $type = 'counseling';
-            } elseif (strpos($namaKegiatan, 'upacara') !== false) {
-                $type = 'ceremony';
-            }
-            
-            $formattedData[] = [
-                'id' => $kegiatan['id_kegiatan'],
-                'title' => $kegiatan['nama_kegiatan'],
-                'date' => $kegiatan['tanggal'],
-                'time' => $kegiatan['jam_mulai'] . ' - ' . $kegiatan['jam_selesai'],
-                'description' => $kegiatan['keterangan'] ?: 'Tidak ada keterangan',
-                'status' => $kegiatan['status'],
-                'type' => $type,
-                'color' => $selectedColor
-            ];
-        }
-    }
-    
-    // Return success response
+    // Return success response (jika tidak ada data, akan return array kosong)
     echo json_encode([
         'success' => true,
         'data' => $formattedData,

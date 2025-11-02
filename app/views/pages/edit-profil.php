@@ -1,5 +1,24 @@
 <?php
 // app/views/pages/edit-profil.php
+// Auto-detect BASE_URL jika belum tersedia
+if (!isset($BASE)) {
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+    $serverName = $_SERVER['SERVER_NAME'] ?? '';
+    $httpHost = $_SERVER['HTTP_HOST'] ?? '';
+    
+    $isLocalhost = (
+        strpos($serverName, 'localhost') !== false ||
+        strpos($serverName, '127.0.0.1') !== false ||
+        strpos($httpHost, 'localhost') !== false ||
+        strpos($requestUri, '/rekap-konten/public') !== false ||
+        strpos($scriptName, '/rekap-konten/public') !== false
+    );
+    
+    $BASE = $isLocalhost ? 
+        (defined('BASE_URL') ? BASE_URL : '/rekap-konten/public') : 
+        '';
+}
 ?>
 
 <div class="overview">
@@ -60,4 +79,4 @@
 </div>
 
 <!-- Script preview foto dan password toggle -->
-<script src="/rekap-konten/public/js/edit-profil.js"></script>
+<script src="<?= $BASE ?>/js/edit-profil.js"></script>

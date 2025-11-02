@@ -55,12 +55,28 @@ function initializeScrollToTop() {
 // Format date helper
 function formatDate(dateString) {
   if (!dateString) return '';
+
+  // Handle pure date 'YYYY-MM-DD' as local date (avoid timezone shift)
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    return date.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  // Handle MySQL datetime 'YYYY-MM-DD HH:MM:SS' by using only the date part
+  const mysqlMatch = dateString.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (mysqlMatch) {
+    const year = Number(mysqlMatch[1]);
+    const month = Number(mysqlMatch[2]);
+    const day = Number(mysqlMatch[3]);
+    const date = new Date(year, month - 1, day);
+    return date.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  // Fallback for other formats
   const date = new Date(dateString);
-  return date.toLocaleDateString('id-ID', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  if (isNaN(date.getTime())) return '';
+  return date.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 // Animate number counting

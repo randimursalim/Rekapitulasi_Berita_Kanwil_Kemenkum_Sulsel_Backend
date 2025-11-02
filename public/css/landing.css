@@ -435,7 +435,7 @@ a {
   text-decoration: none;
   color: var(--primary-color);
   padding: 0 var(--spacings-small);
-  text-transform: lowercase;
+  /* text-transform: lowercase; */
   font-size: var(--font-small);
   height: 60px;
   display: flex;
@@ -678,7 +678,7 @@ a {
     padding: var(--spacings-xlarge) 0;
   }
 
-  #footer .main-header {
+  /* #footer .main-header {
     grid-template-rows: 1fr;
   }
 
@@ -694,11 +694,95 @@ a {
   #footer .main-header .main-header-form {
     order: 2;
     column-span: none;
+  } */
+
+  /* Footer styles removed here; using global footer styles below */
+
+/* === Responsif untuk layar kecil === */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
   }
 
+  .footer-logo,
+  .footer-social,
+  .footer-contact {
+    margin-bottom: 10px;
+  }
+}
+
+  
   .section-parallax-bg {
     transform: scale(1);
   }
+}
+
+/* === Footer Styling (Global) === */
+.footer-section {
+  background-color: #0a0a0a;
+  color: #fff;
+  padding: 25px 15px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  text-align: center;
+}
+
+.footer-logo {
+  flex: 1;
+  min-width: 220px;
+}
+
+.footer-logo p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.footer-social {
+  flex: 1;
+  min-width: 220px;
+}
+
+.footer-social a {
+  color: #fff;
+  margin: 0 10px;
+  font-size: 20px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.footer-social a:hover {
+  transform: scale(1.2);
+  color: #00bcd4;
+}
+
+.footer-contact {
+  flex: 1;
+  min-width: 220px;
+}
+
+.footer-contact p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.footer-contact a {
+  color: #00bcd4;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-contact a:hover {
+  text-decoration: underline;
 }
 
 /* 🔹 Navigation Login Button */
@@ -1445,6 +1529,41 @@ a {
   font-size: 1.1rem;
 }
 
+/* Empty schedule message */
+.schedule-empty-message {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  margin: 2rem auto;
+  max-width: 600px;
+}
+
+.empty-message-icon {
+  font-size: 4rem;
+  color: #94a3b8;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+.empty-message-icon i {
+  display: inline-block;
+}
+
+.schedule-empty-message h3 {
+  font-size: 1.8rem;
+  color: #1e293b;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.schedule-empty-message p {
+  font-size: 1.1rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .schedule-timeline {
@@ -1969,6 +2088,29 @@ a {
 .chat-input button:hover {
   background: #1a2a4a; /* Warna lebih gelap dari primary color */
   color: white;
+}
+
+.chat-input .chat-button-kirim,
+.chat-input a.chat-button-kirim {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  font-weight: 500;
+}
+
+.chat-input .chat-button-kirim:hover,
+.chat-input a.chat-button-kirim:hover {
+  background: #1a2a4a; /* Warna lebih gelap dari primary color */
+  color: white;
+  text-decoration: none;
 }
 
 /* 🔹 Gallery Foto Section - Masonry Style */

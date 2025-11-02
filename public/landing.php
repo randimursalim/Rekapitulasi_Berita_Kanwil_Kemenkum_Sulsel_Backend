@@ -1,10 +1,31 @@
+<?php
+// Auto-detect BASE_URL untuk localhost vs hosting
+$requestUri = $_SERVER['REQUEST_URI'] ?? '';
+$scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+$serverName = $_SERVER['SERVER_NAME'] ?? '';
+$httpHost = $_SERVER['HTTP_HOST'] ?? '';
+
+$isLocalhost = (
+    strpos($serverName, 'localhost') !== false ||
+    strpos($serverName, '127.0.0.1') !== false ||
+    strpos($httpHost, 'localhost') !== false ||
+    strpos($requestUri, '/rekap-konten/public') !== false ||
+    strpos($scriptName, '/rekap-konten/public') !== false
+);
+
+$BASE = $isLocalhost ? '/rekap-konten/public' : '';
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landing Page</title>
-    <link rel="stylesheet" href="css/landing.css">
+    <title>Landing Page - SiCakap</title>
+    <link rel="icon" type="image/png" href="<?= $BASE ?>/Images/aset_landing.png">
+    <link rel="stylesheet" href="<?= $BASE ?>/css/landing.css">
+    <link rel="stylesheet" href="<?= $BASE ?>/vendor/fontawesome/css/all.min.css">
+
+
 </head>
 <body>
 <div class="top-menu-space"></div>
@@ -20,25 +41,25 @@
     <nav>
       <ul>
         <li>
-          <a href="#intro">intro</a>
+          <a href="#intro">Intro</a>
         </li>
         <li>
-          <a href="#dashboard">dashboard</a>
+          <a href="#dashboard">Dashboard</a>
         </li>
         <li>
-          <a href="#gallery-foto">gallery foto</a>
+          <a href="#gallery-foto">Gallery Foto</a>
         </li>
         <li>
-          <a href="#portal-berita">portal berita</a>
+          <a href="#portal-berita">Portal Berita</a>
         </li>
         <li>
-          <a href="#gallery-video">gallery video</a>
+          <a href="#gallery-video">Gallery Video</a>
         </li>
         <li>
-          <a href="#chatbot">chatbot</a>
+          <a href="#chatbot">Chatbot</a>
         </li>
         <li>
-          <a href="#jadwal-kegiatan">jadwal kegiatan</a>
+          <a href="#jadwal-kegiatan">Jadwal Kegiatan</a>
         </li>
         <li>
           <a href="index.php?page=login" class="nav-login">Login</a>
@@ -281,7 +302,7 @@
             </div>
             <div class="chat-input">
               <input type="text" placeholder="Ketik pesan Anda..." >
-              <button>Kirim</button>
+              <a href="https://wa.me/6285787028737" target="_blank" rel="noopener noreferrer" class="chat-button-kirim">Kirim</a>
             </div>
           </div>
         </div>
@@ -326,12 +347,36 @@
             <!-- Content will be populated dynamically -->
             </div>
             </div>
+            </div>
+            </div>
           </div>
-    </div>
-  </div>
 </section>
 
-<p class="created-by"><a href="#">© 2025 SiCakap - Humas Kanwil Kemenkum SulSel</a></p>
+<!-- <p class="created-by"><a href="#">© 2025 SiCakap - Humas Kanwil Kemenkum SulSel</a></p> -->
+
+<footer class="footer-section">
+  <div class="footer-container">
+    <div class="footer-logo">
+      <p>© 2025 <strong>SiCakap</strong><br>Humas Kanwil Kemenkum SulSel</p>
+    </div>
+
+    <div class="footer-social">
+      <a href="https://www.instagram.com/kemenkumsulsel" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.tiktok.com/@kemenkumsulsel" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+      <a href="https://www.facebook.com/kemenkumsulsel" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.youtube.com/@kemenkumsulsel" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      <a href="https://x.com/kemenkumsulsel" target="_blank" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+    </div>
+
+    <div class="footer-contact">
+      <p>Layanan Pengaduan:</p>
+      <a href="https://wa.me/6282196735747" target="_blank"><i class="fab fa-whatsapp"></i> +62 821-9673-5747</a>
+    </div>
+
+  </div>
+</footer>
+
+
 
 <a class="back-to-top" role="button" aria-label="Back to top" title="Back to top" href="#home"></a>
 

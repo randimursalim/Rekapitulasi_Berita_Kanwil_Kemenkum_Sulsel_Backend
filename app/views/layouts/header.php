@@ -21,7 +21,30 @@ if (!headers_sent()) {
     }
 }
 
-$BASE = defined('BASE_URL') ? BASE_URL : '/rekap-konten/public';
+// Auto-detect BASE_URL untuk localhost vs hosting
+// Deteksi environment (sederhana, tanpa require config)
+$requestUri = $_SERVER['REQUEST_URI'] ?? '';
+$scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+$serverName = $_SERVER['SERVER_NAME'] ?? '';
+$httpHost = $_SERVER['HTTP_HOST'] ?? '';
+
+// Cek apakah localhost
+$isLocalhost = (
+    strpos($serverName, 'localhost') !== false ||
+    strpos($serverName, '127.0.0.1') !== false ||
+    strpos($httpHost, 'localhost') !== false ||
+    strpos($requestUri, '/rekap-konten/public') !== false ||
+    strpos($scriptName, '/rekap-konten/public') !== false
+);
+
+// Set BASE_URL berdasarkan environment
+if ($isLocalhost) {
+    // Localhost: gunakan BASE_URL dari config jika sudah defined, atau default
+    $BASE = defined('BASE_URL') ? BASE_URL : '/rekap-konten/public';
+} else {
+    // Production hosting: kosong (handled by .htaccess)
+    $BASE = '';
+}
 $currentPage = isset($_GET['page']) ? $_GET['page'] : 'dashboard'; // Halaman default
 
 function is_active($pageName) {
@@ -35,6 +58,9 @@ function is_active($pageName) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><?= ucfirst($currentPage) ?> - KEMENKUM SULSEL</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/jpeg" href="<?= $BASE ?>/Images/LOGO KEMENKUM.jpeg">
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="<?= $BASE ?>/css/style.css" />
@@ -58,7 +84,7 @@ function is_active($pageName) {
   <nav>
     <div class="logo-name">
       <div class="logo-image">
-        <img src="<?= $BASE ?>/images/LOGO KEMENKUM.jpeg" alt="Logo Kemenkum" />
+        <img src="<?= $BASE ?>/Images/LOGO KEMENKUM.jpeg" alt="Logo Kemenkum" />
       </div>
       <span class="logo_name">KEMENKUM SULSEL</span>
     </div>

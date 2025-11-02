@@ -1,5 +1,24 @@
 <?php
 // app/views/pages/pengguna.php
+// Auto-detect BASE_URL jika belum tersedia
+if (!isset($BASE)) {
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+    $serverName = $_SERVER['SERVER_NAME'] ?? '';
+    $httpHost = $_SERVER['HTTP_HOST'] ?? '';
+    
+    $isLocalhost = (
+        strpos($serverName, 'localhost') !== false ||
+        strpos($serverName, '127.0.0.1') !== false ||
+        strpos($httpHost, 'localhost') !== false ||
+        strpos($requestUri, '/rekap-konten/public') !== false ||
+        strpos($scriptName, '/rekap-konten/public') !== false
+    );
+    
+    $BASE = $isLocalhost ? 
+        (defined('BASE_URL') ? BASE_URL : '/rekap-konten/public') : 
+        '';
+}
 ?>
 <div class="overview">
     <div class="title">
@@ -32,4 +51,4 @@
     </div>
 </div>
 
-<script src="/rekap-konten/public/js/pengguna.js"></script>
+<script src="<?= $BASE ?>/js/pengguna.js"></script>

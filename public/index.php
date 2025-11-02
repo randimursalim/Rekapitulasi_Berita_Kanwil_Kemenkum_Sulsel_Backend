@@ -45,8 +45,17 @@ switch ($page) {
 
     case 'update-activity':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
+        // Clean output buffer to ensure pure JSON response
+        if (ob_get_length()) {
+            ob_clean();
+        }
+        // Set JSON header
+        header('Content-Type: application/json');
+        // Update activity
         AuthController::updateActivity();
+        // Return JSON response
         echo json_encode(['success' => true]);
+        exit;
         break;
 
         // === DASHBOARD ===

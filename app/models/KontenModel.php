@@ -704,7 +704,9 @@ class KontenModel {
                     k.id_konten,
                     k.judul,
                     k.dokumentasi,
-                    k.jenis
+                    k.jenis,
+                    k.tanggal_input,
+                    kb.tanggal_berita
                 FROM konten k
                 JOIN konten_berita kb ON k.id_konten = kb.id_konten
                 WHERE k.dokumentasi IS NOT NULL 
@@ -742,7 +744,12 @@ class KontenModel {
                             'title' => $row['judul'],
                             'image' => $dokumentasi,
                             'type' => $row['jenis'],
-                            'date' => date('Y-m-d'),
+                            'tanggal_input' => isset($row['tanggal_input']) ? $row['tanggal_input'] : null,
+                            'tanggal_berita' => isset($row['tanggal_berita']) ? $row['tanggal_berita'] : null,
+                            // Prefer tanggal_berita for gallery date, fallback ke tanggal_input
+                            'date' => isset($row['tanggal_berita']) && $row['tanggal_berita'] !== null && $row['tanggal_berita'] !== ''
+                                ? $row['tanggal_berita']
+                                : (isset($row['tanggal_input']) ? $row['tanggal_input'] : null),
                             'category' => ucfirst($row['jenis'])
                         ];
                         

@@ -1,3 +1,24 @@
+<?php
+// Auto-detect BASE_URL untuk localhost vs hosting
+if (!isset($BASE)) {
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+    $serverName = $_SERVER['SERVER_NAME'] ?? '';
+    $httpHost = $_SERVER['HTTP_HOST'] ?? '';
+    
+    $isLocalhost = (
+        strpos($serverName, 'localhost') !== false ||
+        strpos($serverName, '127.0.0.1') !== false ||
+        strpos($httpHost, 'localhost') !== false ||
+        strpos($requestUri, '/rekap-konten/public') !== false ||
+        strpos($scriptName, '/rekap-konten/public') !== false
+    );
+    
+    $BASE = $isLocalhost ? 
+        (defined('BASE_URL') ? BASE_URL : '/rekap-konten/public') : 
+        '';
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,20 +26,20 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="/rekap-konten/public/Images/LOGO KEMENKUM.jpeg"/>
+	<link rel="icon" type="image/png" href="<?= $BASE ?>/Images/LOGO KEMENKUM.jpeg"/>
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/rekap-konten/public/vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="<?= $BASE ?>/vendor/bootstrap/css/bootstrap.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/rekap-konten/public/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="<?= $BASE ?>/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/rekap-konten/public/vendor/animate/animate.css">
+	<link rel="stylesheet" type="text/css" href="<?= $BASE ?>/vendor/animate/animate.css">
 <!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="/rekap-konten/public/vendor/css-hamburgers/hamburgers.min.css">
+	<link rel="stylesheet" type="text/css" href="<?= $BASE ?>/vendor/css-hamburgers/hamburgers.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/rekap-konten/public/vendor/select2/select2.min.css">
+	<link rel="stylesheet" type="text/css" href="<?= $BASE ?>/vendor/select2/select2.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/rekap-konten/public/css/util.css">
-	<link rel="stylesheet" type="text/css" href="/rekap-konten/public/css/main.css">
+	<link rel="stylesheet" type="text/css" href="<?= $BASE ?>/css/util.css">
+	<link rel="stylesheet" type="text/css" href="<?= $BASE ?>/css/main.css">
 <!--===============================================================================================-->
 </head>
 <body>
@@ -27,12 +48,12 @@
 		<div class="container-login100">
 			<div class="wrap-login100">
 				<div class="login100-pic js-tilt" data-tilt>
-					<img src="/rekap-konten/public/Images/LOGO KEMENKUM.jpeg" alt="LOGO KEMENKUM SULSEL">
+					<img src="<?= $BASE ?>/Images/LOGO KEMENKUM.jpeg" alt="LOGO KEMENKUM SULSEL">
 				</div>
 
-				<form class="login100-form validate-form" method="POST" action="index.php?page=proses-login">
+				<form class="login100-form validate-form" method="POST" action="<?= $BASE ?>/index.php?page=proses-login">
 					<span class="login100-form-title">
-						Selamat Datang!
+						Selamat Datang di SiCakap!
 					</span>
 
 					<?php if (isset($error)): ?>
@@ -73,7 +94,7 @@
 					</div>
 
 					<div class="text-center p-t-20">
-						<a href="landing.php" class="btn-back-to-landing">
+						<a href="<?= $BASE ?>/landing.php" class="btn-back-to-landing">
 							<i class="fa fa-home"></i> Kembali ke Beranda
 						</a>
 					</div>
@@ -103,17 +124,17 @@
 
 	
 <!--===============================================================================================-->	
-	<script src="/rekap-konten/public/vendor/jquery/jquery-3.2.1.min.js"></script>
+	<script src="<?= $BASE ?>/vendor/jquery/jquery-3.2.1.min.js"></script>
 <!--===============================================================================================-->
-	<script src="/rekap-konten/public/vendor/bootstrap/js/popper.js"></script>
-	<script src="/rekap-konten/public/vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="<?= $BASE ?>/vendor/bootstrap/js/popper.js"></script>
+	<script src="<?= $BASE ?>/vendor/bootstrap/js/bootstrap.min.js"></script>
 <!--===============================================================================================-->
-	<script src="/rekap-konten/public/vendor/select2/select2.min.js"></script>
+	<script src="<?= $BASE ?>/vendor/select2/select2.min.js"></script>
 <!--===============================================================================================-->
-	<script src="/rekap-konten/public/vendor/tilt/tilt.jquery.min.js"></script>
+	<script src="<?= $BASE ?>/vendor/tilt/tilt.jquery.min.js"></script>
 <!--===============================================================================================-->
-	<script src="/rekap-konten/public/js/main.js"></script>
-	<script src="/rekap-konten/public/js/login.js"></script>
+	<script src="<?= $BASE ?>/js/main.js"></script>
+	<script src="<?= $BASE ?>/js/login.js"></script>
 
 	<style>
 		.password-toggle-login {

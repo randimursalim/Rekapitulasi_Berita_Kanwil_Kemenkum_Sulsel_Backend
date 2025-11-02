@@ -69,7 +69,7 @@ class SecureSessionHandler {
         ini_set('session.cookie_lifetime', $this->sessionLifetime);
         ini_set('session.cookie_secure', $this->isSecure ? 1 : 0);
         ini_set('session.cookie_httponly', 1); // Prevent XSS
-        ini_set('session.cookie_samesite', 'Strict'); // CSRF protection
+        ini_set('session.cookie_samesite', 'Lax'); // CSRF protection - Lax lebih fleksibel untuk navigasi normal
         
         // Session security
         ini_set('session.use_strict_mode', 1);
