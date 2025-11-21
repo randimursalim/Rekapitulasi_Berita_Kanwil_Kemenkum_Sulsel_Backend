@@ -93,7 +93,10 @@ class AuthController
         
         // Destroy session
         session_destroy();
-        header('Location: index.php?page=login');
+        
+        // Redirect ke login, dengan parameter timeout jika ada
+        $timeout = isset($_GET['timeout']) ? '&timeout=1' : '';
+        header('Location: index.php?page=login' . $timeout);
         exit;
     }
 

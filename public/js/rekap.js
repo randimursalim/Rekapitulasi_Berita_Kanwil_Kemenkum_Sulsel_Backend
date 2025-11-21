@@ -661,3 +661,628 @@ if (canvas) {
   }
 
 } // END IF canvas
+
+// ============================================
+// PENCARIAN KATA KUNCI
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+  // Global variables untuk pencarian
+  let searchKeywords = [];
+  let searchCurrentPage = 1;
+  let searchTotalPages = 1;
+  let searchTotalData = 0;
+  let searchItemsPerPage = 10;
+  let searchCurrentFilters = {
+    jenis: 'all',
+    kategori: 'all',
+    startDate: '',
+    endDate: ''
+  };
+  // searchResultsData tidak diperlukan lagi karena download akan fetch ulang semua data
+
+  // DOM elements
+  const keywordInput = document.getElementById('keywordInput');
+  const addKeywordBtn = document.getElementById('addKeywordBtn');
+  const keywordsList = document.getElementById('keywordsList');
+  const searchBtn = document.getElementById('searchBtn');
+  const resetSearchBtn = document.getElementById('resetSearchBtn');
+  const searchResultsSection = document.getElementById('searchResultsSection');
+  const searchResults = document.getElementById('searchResults');
+  const searchStartDate = document.getElementById('searchStartDate');
+  const searchEndDate = document.getElementById('searchEndDate');
+  const searchFilterJenis = document.getElementById('searchFilterJenis');
+  const searchFilterKategori = document.getElementById('searchFilterKategori');
+  const downloadSearchWord = document.getElementById('downloadSearchWord');
+  const downloadSearchExcel = document.getElementById('downloadSearchExcel');
+
+  // Check if elements exist
+  if (!keywordInput || !addKeywordBtn || !keywordsList || !searchBtn) {
+    return; // Exit if search section doesn't exist
+  }
+
+  // Helper functions (defined first)
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function formatSearchDate(dateStr) {
+    if (!dateStr || dateStr === '-') return '-';
+    try {
+      const date = new Date(dateStr);
+      // Format: DD/MM/YYYY
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
+  // Tambah keyword
+  function addKeyword() {
+    const keyword = keywordInput.value.trim();
+    if (keyword && !searchKeywords.includes(keyword)) {
+      searchKeywords.push(keyword);
+      renderKeywords();
+      keywordInput.value = '';
+      keywordInput.focus();
+    }
+  }
+
+  // Hapus keyword
+  function removeKeyword(keyword) {
+    searchKeywords = searchKeywords.filter(k => k !== keyword);
+    renderKeywords();
+  }
+
+  // Render keywords list
+  function renderKeywords() {
+    if (!keywordsList) return;
+    
+    if (searchKeywords.length === 0) {
+      keywordsList.innerHTML = '<span style="color: var(--text-color); opacity: 0.5;">Kata kunci (opsional)</span>';
+      return;
+    }
+
+    // Get computed style untuk dark mode
+    const isDark = document.body.classList.contains('dark');
+    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim() || '#3085d6';
+    
+    keywordsList.innerHTML = searchKeywords.map(keyword => `
+      <span style="display: inline-flex; align-items: center; gap: 5px; padding: 5px 10px; background: ${primaryColor}; color: white; border-radius: 20px; font-size: 14px;">
+        ${escapeHtml(keyword)}
+        <button onclick="removeSearchKeyword('${escapeHtml(keyword)}')" style="background: rgba(255,255,255,0.3); border: none; color: white; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center;">
+          ×
+        </button>
+      </span>
+    `).join('');
+  }
+
+  // Expose remove keyword function globally
+  window.removeSearchKeyword = function(keyword) {
+    removeKeyword(keyword);
+  };
+
+  // Event listeners
+  addKeywordBtn.addEventListener('click', addKeyword);
+  keywordInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addKeyword();
+    }
+  });
+
+  searchBtn.addEventListener('click', function() {
+    // Validasi: minimal harus ada kata kunci ATAU filter yang diisi
+    const hasKeywords = searchKeywords.length > 0;
+    const hasFilterJenis = searchFilterJenis.value !== 'all';
+    const hasFilterKategori = searchFilterKategori.value !== 'all';
+    const hasFilterDate = searchStartDate.value && searchEndDate.value;
+    const hasAnyFilter = hasFilterJenis || hasFilterKategori || hasFilterDate;
+    
+    if (!hasKeywords && !hasAnyFilter) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Filter Kosong',
+        text: 'Silakan tambahkan kata kunci atau pilih filter untuk pencarian',
+        showConfirmButton: true
+      });
+      return;
+    }
+    
+    searchCurrentFilters.jenis = searchFilterJenis.value;
+    searchCurrentFilters.kategori = searchFilterKategori.value;
+    searchCurrentFilters.startDate = searchStartDate.value;
+    searchCurrentFilters.endDate = searchEndDate.value;
+    searchCurrentPage = 1;
+    loadSearchResults(1);
+  });
+
+  resetSearchBtn.addEventListener('click', function() {
+    searchKeywords = [];
+    searchCurrentFilters = {
+      jenis: 'all',
+      kategori: 'all',
+      startDate: '',
+      endDate: ''
+    };
+    searchFilterJenis.value = 'all';
+    searchFilterKategori.value = 'all';
+    searchStartDate.value = '';
+    searchEndDate.value = '';
+    keywordInput.value = '';
+    renderKeywords();
+    searchResultsSection.style.display = 'none';
+  });
+
+  // Load search results
+  async function loadSearchResults(page = 1) {
+    if (!searchResults) return;
+    
+    try {
+      // Get CSS variables untuk dark mode support
+      const panelColor = getComputedStyle(document.documentElement).getPropertyValue('--panel-color').trim() || '#fff';
+      const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim() || '#333';
+      const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim() || '#3085d6';
+      
+      searchResults.innerHTML = `<div style="text-align: center; padding: 40px; max-width: 600px; width: 100%; margin: 0 auto; display: block !important; background: ${panelColor}; color: ${textColor};"><i class="fas fa-spinner fa-spin" style="font-size: 32px; color: ${primaryColor};"></i><p style="margin-top: 15px; color: ${textColor};">Memuat data...</p></div>`;
+      searchResultsSection.style.display = 'block';
+
+      // Get BASE_URL untuk path dinamis
+      const baseUrl = (typeof window.BASE_URL !== 'undefined' && window.BASE_URL) ? window.BASE_URL : '';
+      const fetchUrl = baseUrl ? (baseUrl.replace(/\/$/, '') + '/ajax/fetch_search_konten.php') : 'ajax/fetch_search_konten.php';
+
+      // Build query parameters
+      // Untuk menghitung total data, cukup fetch 1 data saja (tidak perlu semua data)
+      const params = new URLSearchParams({
+        page: 1,
+        keywords: searchKeywords.join(','),
+        filterJenis: searchCurrentFilters.jenis === 'all' ? '' : searchCurrentFilters.jenis,
+        filterKategori: searchCurrentFilters.kategori === 'all' ? '' : searchCurrentFilters.kategori,
+        startDate: searchCurrentFilters.startDate,
+        endDate: searchCurrentFilters.endDate,
+        limit: 1 // Hanya ambil 1 data untuk menghitung total, tidak perlu semua data
+      });
+
+      const response = await fetch(`${fetchUrl}?${params}`);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+
+      if (!result.success) {
+        searchResults.innerHTML = `<p style="color:red;">Gagal memuat data: ${result.error || 'Unknown error'}</p>`;
+        return;
+      }
+
+      // Hanya ambil total data dari pagination, tidak perlu simpan data
+      searchTotalPages = result.pagination.totalPages;
+      searchTotalData = result.pagination.totalData;
+      searchCurrentPage = result.pagination.currentPage;
+
+      // Render hanya jumlah data, bukan tabel
+      renderSearchResults(searchTotalData);
+
+    } catch (error) {
+      searchResults.innerHTML = '<p style="color:red;">Terjadi kesalahan saat memuat data.</p>';
+    }
+  }
+
+  // Render search results - hanya menampilkan jumlah data
+  function renderSearchResults(totalData) {
+    if (!searchResults) return;
+    
+    // Get CSS variables untuk dark mode support
+    const panelColor = getComputedStyle(document.documentElement).getPropertyValue('--panel-color').trim() || '#fff';
+    const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim() || '#333';
+    const borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() || '#ddd';
+    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim() || '#3085d6';
+    
+    if (totalData === 0) {
+      searchResults.innerHTML = `
+        <div style="text-align: center; padding: 40px; background: ${panelColor}; border-radius: 8px; border: 1px solid ${borderColor}; max-width: 600px; width: 100%; margin: 0 auto; display: block !important; color: ${textColor};">
+          <i class="fas fa-search" style="font-size: 48px; color: ${textColor}; opacity: 0.5; margin-bottom: 15px;"></i>
+          <p style="color: ${textColor}; font-size: 1.1rem; margin: 0;">Tidak ada data ditemukan</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Buat informasi filter yang digunakan
+    let filterInfo = [];
+    if (searchKeywords.length > 0) {
+      filterInfo.push(`Kata kunci: ${searchKeywords.join(', ')}`);
+    }
+    if (searchCurrentFilters.jenis !== 'all') {
+      const jenisText = searchCurrentFilters.jenis === 'berita' ? 'Berita' : 'Media Sosial';
+      filterInfo.push(`Jenis: ${jenisText}`);
+    }
+    if (searchCurrentFilters.kategori !== 'all') {
+      const kategoriText = searchCurrentFilters.kategori.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+      filterInfo.push(`Kategori: ${kategoriText}`);
+    }
+    if (searchCurrentFilters.startDate && searchCurrentFilters.endDate) {
+      filterInfo.push(`Tanggal: ${formatSearchDate(searchCurrentFilters.startDate)} - ${formatSearchDate(searchCurrentFilters.endDate)}`);
+    }
+    
+    const html = `
+      <div style="text-align: center; padding: 40px; background: ${panelColor}; border-radius: 8px; border: 1px solid ${borderColor}; max-width: 600px; width: 100%; margin: 0 auto; display: block !important; color: ${textColor};">
+        <div style="margin-bottom: 20px;">
+          <i class="fas fa-check-circle" style="font-size: 64px; color: ${primaryColor}; margin-bottom: 15px;"></i>
+          <h3 style="color: ${textColor}; font-size: 1.5rem; margin: 0 0 10px 0; font-weight: bold;">
+            ${totalData} data ditemukan
+          </h3>
+          ${filterInfo.length > 0 ? `
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid ${borderColor};">
+              <p style="color: ${textColor}; opacity: 0.8; font-size: 0.9rem; margin: 5px 0;">
+                ${filterInfo.join(' • ')}
+              </p>
+            </div>
+          ` : ''}
+        </div>
+        <p style="color: ${textColor}; opacity: 0.8; font-size: 0.95rem; margin: 20px 0 0 0;">
+          Gunakan tombol <strong style="color: ${textColor};">Download Word</strong> atau <strong style="color: ${textColor};">Download Excel</strong> untuk melihat detail data
+        </p>
+      </div>
+    `;
+
+    searchResults.innerHTML = html;
+  }
+
+  function showImageModal(src) {
+    // Create modal if doesn't exist
+    let modal = document.getElementById('searchImageModal');
+    if (!modal) {
+      modal = document.createElement('div');
+      modal.id = 'searchImageModal';
+      modal.style.cssText = 'display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:10000; text-align:center; padding-top:5%; cursor:pointer;';
+      modal.innerHTML = '<img id="searchModalImage" src="" alt="Preview" style="max-width:90%; max-height:80%; border-radius:8px;"><button style="position:absolute; top:20px; right:20px; background:white; border:none; padding:10px 15px; border-radius:50%; cursor:pointer; font-size:20px;">×</button>';
+      document.body.appendChild(modal);
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal || e.target.tagName === 'BUTTON') {
+          modal.style.display = 'none';
+        }
+      });
+    }
+    document.getElementById('searchModalImage').src = src;
+    modal.style.display = 'block';
+  }
+
+  window.showImageModal = showImageModal;
+
+  // Pagination tidak diperlukan lagi karena tidak menampilkan tabel
+  // Fungsi ini dihapus untuk menghemat resource
+
+  // Download Word - fetch all data
+  if (downloadSearchWord) {
+    downloadSearchWord.addEventListener('click', async function() {
+      // Validasi: minimal harus ada kata kunci ATAU filter yang diisi
+      const hasKeywords = searchKeywords.length > 0;
+      const hasFilterJenis = searchCurrentFilters.jenis !== 'all';
+      const hasFilterKategori = searchCurrentFilters.kategori !== 'all';
+      const hasFilterDate = searchCurrentFilters.startDate && searchCurrentFilters.endDate;
+      const hasAnyFilter = hasFilterJenis || hasFilterKategori || hasFilterDate;
+      
+      if (!hasKeywords && !hasAnyFilter) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Tidak Ada Filter',
+          text: 'Silakan lakukan pencarian terlebih dahulu',
+          showConfirmButton: true
+        });
+        return;
+      }
+
+      // Show loading
+      Swal.fire({
+        title: 'Menyiapkan Download...',
+        text: 'Mohon tunggu',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      try {
+        // Fetch all data (without pagination)
+        const baseUrl = (typeof window.BASE_URL !== 'undefined' && window.BASE_URL) ? window.BASE_URL : '';
+        const fetchUrl = baseUrl ? (baseUrl.replace(/\/$/, '') + '/ajax/fetch_search_konten.php') : 'ajax/fetch_search_konten.php';
+        
+        const params = new URLSearchParams({
+          page: 1,
+          keywords: searchKeywords.join(','),
+          filterJenis: searchCurrentFilters.jenis === 'all' ? '' : searchCurrentFilters.jenis,
+          filterKategori: searchCurrentFilters.kategori === 'all' ? '' : searchCurrentFilters.kategori,
+          startDate: searchCurrentFilters.startDate,
+          endDate: searchCurrentFilters.endDate,
+          limit: 10000 // Ambil semua data
+        });
+
+        const response = await fetch(`${fetchUrl}?${params}`);
+        const result = await response.json();
+
+        if (!result.success || !result.data || result.data.length === 0) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Tidak Ada Data',
+            text: 'Tidak ada data untuk di-download',
+            showConfirmButton: true
+          });
+          return;
+        }
+
+        const allData = result.data;
+        const hasBerita = allData.some(k => k.jenis === 'berita');
+        const showSumberMedia = hasBerita;
+
+      let tableHTML = `
+        <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse; font-size:11px;">
+          <thead>
+            <tr style="background:#f2f2f2;">
+              <th>No</th>
+              <th>Judul</th>
+              <th>Jenis</th>
+              <th>Platform</th>
+              ${showSumberMedia ? '<th>Sumber/Media</th>' : ''}
+              <th>Tanggal</th>
+              <th>Link</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+        allData.forEach((k, index) => {
+          const no = index + 1;
+          const jenis = k.jenis === 'berita' ? 'Berita' : 'Media Sosial';
+          let platform = '-';
+          if (k.jenis === 'berita') {
+            platform = k.jenis_berita ? k.jenis_berita.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : '-';
+          } else {
+            const platformNames = {
+              'instagram': 'Instagram',
+              'youtube': 'YouTube',
+              'tiktok': 'TikTok',
+              'twitter': 'Twitter',
+              'facebook': 'Facebook'
+            };
+            platform = platformNames[k.jenis] || k.jenis || '-';
+          }
+          const tanggal = formatSearchDate(k.tanggal_berita || k.tanggal_post || '-');
+          const link = k.jenis === 'berita' ? k.link_berita : k.link_post;
+          const sumberMedia = k.jenis === 'berita' ? (k.sumber_berita || '-') : '-';
+
+          tableHTML += `
+            <tr>
+              <td>${no}</td>
+              <td>${escapeHtml(k.judul || '-')}</td>
+              <td>${jenis}</td>
+              <td>${platform}</td>
+              ${showSumberMedia ? `<td>${escapeHtml(sumberMedia)}</td>` : ''}
+              <td>${tanggal}</td>
+              <td>${link ? `<a href="${escapeHtml(link)}">${escapeHtml(link)}</a>` : '-'}</td>
+            </tr>
+          `;
+        });
+
+        tableHTML += `
+          </tbody>
+        </table>
+      `;
+
+      const htmlContent = `
+        <html xmlns:o='urn:schemas-microsoft-com:office:office'
+              xmlns:w='urn:schemas-microsoft-com:office:word'
+              xmlns='http://www.w3.org/TR/REC-html40'>
+        <head>
+          <meta charset='utf-8'>
+          <title>Hasil Pencarian Konten</title>
+          <!--[if gte mso 9]>
+          <xml>
+            <w:WordDocument>
+              <w:View>Print</w:View>
+              <w:Zoom>90</w:Zoom>
+              <w:DoNotOptimizeForBrowser/>
+            </w:WordDocument>
+          </xml>
+          <![endif]-->
+          <style>
+            @page {
+              size: A4;
+              margin: 2cm;
+            }
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+            }
+            h3 {
+              text-align: center;
+              margin-bottom: 20px;
+              font-size: 16px;
+            }
+            table {
+              border-collapse: collapse;
+              width: 100%;
+              font-size: 10px;
+            }
+            table, th, td {
+              border: 1px solid #000;
+            }
+            th, td {
+              padding: 6px 8px;
+              text-align: left;
+              vertical-align: top;
+            }
+            th {
+              background: #f2f2f2;
+              font-weight: bold;
+            }
+            a {
+              color: #0066cc;
+              text-decoration: underline;
+            }
+          </style>
+        </head>
+        <body>
+          <h3>Hasil Pencarian Konten</h3>
+          <p><strong>Kata Kunci:</strong> ${searchKeywords.join(', ')}</p>
+          <p><strong>Total Data:</strong> ${allData.length}</p>
+          ${tableHTML}
+        </body>
+        </html>
+      `;
+
+        const blob = new Blob(['\ufeff', htmlContent], { type: 'application/msword' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'Hasil_Pencarian_Konten_' + new Date().toISOString().split('T')[0] + '.doc';
+        link.click();
+        
+        Swal.close();
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Terjadi kesalahan saat menyiapkan file',
+          showConfirmButton: true
+        });
+      }
+    });
+  }
+
+  // Download Excel - fetch all data
+  if (downloadSearchExcel) {
+    downloadSearchExcel.addEventListener('click', async function() {
+      // Validasi: minimal harus ada kata kunci ATAU filter yang diisi
+      const hasKeywords = searchKeywords.length > 0;
+      const hasFilterJenis = searchCurrentFilters.jenis !== 'all';
+      const hasFilterKategori = searchCurrentFilters.kategori !== 'all';
+      const hasFilterDate = searchCurrentFilters.startDate && searchCurrentFilters.endDate;
+      const hasAnyFilter = hasFilterJenis || hasFilterKategori || hasFilterDate;
+      
+      if (!hasKeywords && !hasAnyFilter) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'Tidak Ada Filter',
+          text: 'Silakan lakukan pencarian terlebih dahulu',
+          showConfirmButton: true
+        });
+        return;
+      }
+
+      // Show loading
+      Swal.fire({
+        title: 'Menyiapkan Download...',
+        text: 'Mohon tunggu',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      try {
+        // Fetch all data (without pagination)
+        const baseUrl = (typeof window.BASE_URL !== 'undefined' && window.BASE_URL) ? window.BASE_URL : '';
+        const fetchUrl = baseUrl ? (baseUrl.replace(/\/$/, '') + '/ajax/fetch_search_konten.php') : 'ajax/fetch_search_konten.php';
+        
+        const params = new URLSearchParams({
+          page: 1,
+          keywords: searchKeywords.join(','),
+          filterJenis: searchCurrentFilters.jenis === 'all' ? '' : searchCurrentFilters.jenis,
+          filterKategori: searchCurrentFilters.kategori === 'all' ? '' : searchCurrentFilters.kategori,
+          startDate: searchCurrentFilters.startDate,
+          endDate: searchCurrentFilters.endDate,
+          limit: 10000 // Ambil semua data
+        });
+
+        const response = await fetch(`${fetchUrl}?${params}`);
+        const result = await response.json();
+
+        if (!result.success || !result.data || result.data.length === 0) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Tidak Ada Data',
+            text: 'Tidak ada data untuk di-download',
+            showConfirmButton: true
+          });
+          return;
+        }
+
+        const allData = result.data;
+        const hasBerita = allData.some(k => k.jenis === 'berita');
+        const showSumberMedia = hasBerita;
+
+      // CSV format untuk Excel
+      let csvContent = '\uFEFF'; // BOM untuk UTF-8
+      
+      // Header - gabungkan Jenis dan Platform menjadi "Jenis Platform"
+      let headers = ['No', 'Judul', 'Jenis Platform'];
+      if (showSumberMedia) {
+        headers.push('Sumber/Media');
+      }
+      headers.push('Tanggal', 'Link');
+      csvContent += headers.join('\t') + '\n';
+
+        // Data
+        allData.forEach((k, index) => {
+        const no = index + 1;
+        const judul = (k.judul || '-').replace(/\t/g, ' ').replace(/\n/g, ' ').replace(/\r/g, ' ').trim();
+        
+        // Format Jenis Platform: hanya tampilkan nama platform
+        let jenisPlatform = '-';
+        if (k.jenis === 'berita') {
+          // Untuk berita, tampilkan jenis berita (Media Online, Surat Kabar, Website Kanwil)
+          jenisPlatform = k.jenis_berita ? k.jenis_berita.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Berita';
+        } else {
+          // Untuk media sosial, tampilkan nama platform saja
+          const platformNames = {
+            'instagram': 'Instagram',
+            'youtube': 'YouTube',
+            'tiktok': 'TikTok',
+            'twitter': 'Twitter',
+            'facebook': 'Facebook'
+          };
+          jenisPlatform = platformNames[k.jenis] || k.jenis || 'Media Sosial';
+        }
+        
+        const tanggal = formatSearchDate(k.tanggal_berita || k.tanggal_post || '-');
+        const link = k.jenis === 'berita' ? (k.link_berita || '-') : (k.link_post || '-');
+        const sumberMedia = k.jenis === 'berita' ? ((k.sumber_berita || '-').replace(/\t/g, ' ').replace(/\n/g, ' ').replace(/\r/g, ' ').trim()) : '-';
+
+        let row = [no, judul, jenisPlatform];
+        if (showSumberMedia) {
+          row.push(sumberMedia);
+        }
+        row.push(tanggal, link);
+        csvContent += row.join('\t') + '\n';
+      });
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'Hasil_Pencarian_Konten_' + new Date().toISOString().split('T')[0] + '.xls';
+        link.click();
+        
+        Swal.close();
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Terjadi kesalahan saat menyiapkan file',
+          showConfirmButton: true
+        });
+      }
+    });
+  }
+
+  // Initialize
+  renderKeywords();
+});

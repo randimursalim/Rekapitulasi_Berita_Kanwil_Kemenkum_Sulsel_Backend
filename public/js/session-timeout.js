@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let warningTime = 2 * 60 * 1000; // Warning 2 menit sebelum timeout
     let lastActivity = Date.now();
     let warningShown = false;
+    let timeoutShown = false; // Flag untuk mencegah popup timeout muncul berulang kali
     let lastServerUpdate = 0; // Waktu terakhir update ke server
     let updateThrottle = 60 * 1000; // Update ke server maksimal sekali setiap 60 detik (1 menit)
     let pendingUpdate = false; // Flag untuk menandakan ada update yang pending
@@ -34,8 +35,16 @@ document.addEventListener('DOMContentLoaded', function() {
         lastServerUpdate = now;
         pendingUpdate = false;
         
+        // Get BASE_URL untuk path dinamis
+        const baseUrl = (typeof window.BASE_URL !== 'undefined' && window.BASE_URL) ? window.BASE_URL : '';
+        // Build URL: jika baseUrl ada, pastikan tidak ada double slash
+        let updateUrl = 'index.php?page=update-activity';
+        if (baseUrl) {
+            updateUrl = baseUrl.replace(/\/$/, '') + '/index.php?page=update-activity';
+        }
+        
         // Kirim AJAX request untuk update session
-        fetch('index.php?page=update-activity', {
+        fetch(updateUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -112,23 +121,65 @@ document.addEventListener('DOMContentLoaded', function() {
                         showConfirmButton: false
                     });
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    window.location.href = 'index.php?page=logout';
+                    // Get BASE_URL untuk path dinamis
+                    const baseUrl = (typeof window.BASE_URL !== 'undefined' && window.BASE_URL) ? window.BASE_URL : '';
+                    let logoutUrl = 'index.php?page=logout';
+                    if (baseUrl) {
+                        logoutUrl = baseUrl.replace(/\/$/, '') + '/index.php?page=logout';
+                    }
+                    window.location.href = logoutUrl;
                 }
             });
         }
         
         // Auto logout jika timeout
-        if (timeUntilTimeout <= 0) {
+        if (timeUntilTimeout <= 0 && !timeoutShown) {
+            timeoutShown = true; // Set flag untuk mencegah popup muncul berulang
+            
+            // Get BASE_URL untuk path dinamis
+            // Coba beberapa cara untuk mendapatkan base URL
+            let baseUrl = '';
+            if (typeof window.BASE_URL !== 'undefined' && window.BASE_URL) {
+                baseUrl = window.BASE_URL;
+            } else {
+                // Fallback: dapatkan base path dari window.location
+                const path = window.location.pathname;
+                const pathParts = path.split('/');
+                if (pathParts.length > 2 && pathParts[1] === 'rekap-konten') {
+                    baseUrl = '/rekap-konten/public';
+                }
+            }
+            
+            // Build logout URL
+            let logoutUrl = 'index.php?page=logout&timeout=1';
+            if (baseUrl) {
+                logoutUrl = baseUrl.replace(/\/$/, '') + '/index.php?page=logout&timeout=1';
+            }
+            
+            // Debug (dapat dihapus di production)
+            console.debug('Session timeout - Redirecting to:', logoutUrl);
+            
+            // Tampilkan popup dan langsung setup redirect
             Swal.fire({
                 title: 'Sesi Berakhir',
-                text: 'Sesi Anda telah berakhir karena tidak ada aktivitas selama 15 menit.',
+                text: 'Sesi Anda telah berakhir karena tidak ada aktivitas selama 15 menit. Anda akan diarahkan ke halaman login.',
                 icon: 'info',
                 confirmButtonText: 'Login Kembali',
                 allowOutsideClick: false,
-                allowEscapeKey: false
-            }).then(() => {
-                window.location.href = 'index.php?page=login&timeout=1';
+                allowEscapeKey: false,
+                timer: 3000, // Auto close dalam 3 detik
+                timerProgressBar: true,
+                showConfirmButton: true
+            }).then((result) => {
+                // Redirect ke logout (yang akan destroy session) lalu redirect ke login
+                // Pastikan redirect selalu terjadi, apapun hasilnya
+                window.location.replace(logoutUrl);
             });
+            
+            // Backup: Pastikan redirect terjadi setelah 3 detik bahkan jika popup error
+            setTimeout(function() {
+                window.location.replace(logoutUrl);
+            }, 3000);
         }
     }, 30000); // Cek setiap 30 detik
 });

@@ -5,7 +5,7 @@
     <span class="text">Rekap Konten</span>
   </div>
 
-<!-- Filter -->
+<!-- Filter Chart -->
 <div class="filters" style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:20px;">
   <button class="filter-btn" data-filter="daily">Harian</button>
   <button class="filter-btn" data-filter="weekly">Mingguan</button>
@@ -104,6 +104,88 @@
   <div style="text-align:center; margin-top:20px;">
     <button id="downloadTablePDF" class="btn-simpan">Download PDF</button>
     <button id="downloadTableWord" class="btn-simpan">Download Word</button>
+  </div>
+</div>
+
+<!-- Pencarian Kata Kunci -->
+<div class="search-section" style="margin: 30px 0; padding: 20px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px;">
+  <h3 style="margin-bottom: 15px; color: var(--text-color); text-align: center;">Pencarian Kata Kunci</h3>
+  
+  <!-- Input Kata Kunci -->
+  <div style="margin-bottom: 15px;">
+    <label for="keywordInput" style="display: block; margin-bottom: 5px; color: var(--text-color);">Kata Kunci:</label>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+      <input type="text" id="keywordInput" placeholder="Masukkan kata kunci..." class="search-input" style="flex: 1; min-width: 200px; padding: 8px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--panel-color); color: var(--text-color);">
+      <button id="addKeywordBtn" class="btn-simpan" style="padding: 8px 15px;">
+        <i class="fas fa-plus"></i> Tambah Kata Kunci
+      </button>
+    </div>
+    <small style="color: var(--text-color); opacity: 0.7;">Tekan Enter atau klik tombol untuk menambahkan kata kunci (opsional)</small>
+  </div>
+
+  <!-- Daftar Kata Kunci -->
+  <div id="keywordsList" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; min-height: 30px;">
+    <!-- Kata kunci akan ditambahkan di sini -->
+  </div>
+
+  <!-- Filter Pencarian -->
+  <div class="filters" style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:15px;">
+    <label for="searchStartDate">Tanggal:</label>
+    <input type="date" id="searchStartDate" class="search-input" style="background-color: var(--panel-color); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 6px;">
+    <span>-</span>
+    <input type="date" id="searchEndDate" class="search-input" style="background-color: var(--panel-color); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 6px;">
+    
+    <label for="searchFilterJenis">Jenis Konten:</label>
+    <select id="searchFilterJenis" class="filter-select">
+      <option value="all">Semua</option>
+      <option value="berita">Berita</option>
+      <option value="medsos">Media Sosial</option>
+    </select>
+
+    <label for="searchFilterKategori">Kategori/Platform:</label>
+    <select id="searchFilterKategori" class="filter-select">
+      <option value="all">Semua</option>
+      <option value="media_online">Media Online</option>
+      <option value="surat_kabar">Surat Kabar</option>
+      <option value="website_kanwil">Website Kanwil</option>
+      <option value="facebook">Facebook</option>
+      <option value="instagram">Instagram</option>
+      <option value="tiktok">TikTok</option>
+      <option value="twitter">Twitter</option>
+      <option value="youtube">YouTube</option>
+    </select>
+
+    <button id="searchBtn" class="btn-simpan">
+      <i class="fas fa-search"></i> Cari
+    </button>
+    <button id="resetSearchBtn" class="btn-batal">
+      <i class="fas fa-times"></i> Reset
+    </button>
+  </div>
+</div>
+
+<!-- Hasil Pencarian -->
+<div id="searchResultsSection" style="display: none; margin: 30px 0;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+    <h3 style="color: var(--text-color);">Hasil Pencarian</h3>
+    <div>
+      <button id="downloadSearchWord" class="btn-simpan" style="margin-right: 10px;">
+        <i class="fas fa-file-word"></i> Download Word
+      </button>
+      <button id="downloadSearchExcel" class="btn-simpan">
+        <i class="fas fa-file-excel"></i> Download Excel
+      </button>
+    </div>
+  </div>
+
+  <!-- Hasil Pencarian (hanya menampilkan jumlah data) -->
+  <div style="margin-top: 20px; display: flex; justify-content: center; width: 100%;">
+    <div id="searchResults" style="display: block !important; width: 100%; max-width: 600px; margin: 0 auto;">
+      <!-- Data akan dimuat via AJAX -->
+      <div style="text-align: center; padding: 20px; width: 100%; background: var(--panel-color); color: var(--text-color);">
+        <p style="color: var(--text-color);">Klik tombol "Cari" untuk menampilkan hasil pencarian</p>
+      </div>
+    </div>
   </div>
 </div>
 </div>

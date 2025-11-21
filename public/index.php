@@ -260,6 +260,115 @@ switch ($page) {
         $controller->hapusKegiatan();
         break;
 
+    // === ADUAN ===
+    case 'daftar-aduan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
+        require_once __DIR__ . '/../app/controllers/AduanController.php';
+        $controller = new AduanController();
+        $controller->daftarAduan();
+        break;
+
+    case 'tambah-aduan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
+        require_once __DIR__ . '/../app/controllers/AduanController.php';
+        $controller = new AduanController();
+        $controller->tambahAduan();
+        break;
+
+    case 'edit-aduan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
+        require_once __DIR__ . '/../app/controllers/AduanController.php';
+        $controller = new AduanController();
+        $controller->editAduan();
+        break;
+
+    case 'store-aduan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
+        require_once __DIR__ . '/../app/controllers/AduanController.php';
+        $controller = new AduanController();
+        $controller->storeAduan();
+        break;
+
+    case 'update-aduan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
+        require_once __DIR__ . '/../app/controllers/AduanController.php';
+        $controller = new AduanController();
+        $controller->updateAduan();
+        break;
+
+    case 'hapus-aduan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
+        require_once __DIR__ . '/../app/controllers/AduanController.php';
+        $controller = new AduanController();
+        $controller->hapusAduan();
+        break;
+
+    // === LAYANAN PENGADUAN ===
+    case 'layanan-pengaduan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
+        require_once __DIR__ . '/../app/controllers/LayananPengaduanController.php';
+        $controller = new LayananPengaduanController();
+        $controller->daftarLayananPengaduan();
+        break;
+
+    case 'tambah-layanan-pengaduan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
+        require_once __DIR__ . '/../app/controllers/LayananPengaduanController.php';
+        $controller = new LayananPengaduanController();
+        $controller->tambahLayananPengaduan();
+        break;
+
+    case 'edit-layanan-pengaduan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
+        require_once __DIR__ . '/../app/controllers/LayananPengaduanController.php';
+        $controller = new LayananPengaduanController();
+        $controller->editLayananPengaduan();
+        break;
+
+    case 'store-layanan-pengaduan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
+        require_once __DIR__ . '/../app/controllers/LayananPengaduanController.php';
+        $controller = new LayananPengaduanController();
+        $controller->storeLayananPengaduan();
+        break;
+
+    case 'update-layanan-pengaduan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
+        require_once __DIR__ . '/../app/controllers/LayananPengaduanController.php';
+        $controller = new LayananPengaduanController();
+        $controller->updateLayananPengaduan();
+        break;
+
+    case 'hapus-layanan-pengaduan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
+        require_once __DIR__ . '/../app/controllers/LayananPengaduanController.php';
+        $controller = new LayananPengaduanController();
+        $controller->hapusLayananPengaduan();
+        break;
 
     case 'store-pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';

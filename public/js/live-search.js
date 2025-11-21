@@ -179,6 +179,22 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       
+      if(page==='daftar-aduan') {
+        // Gunakan pagination system untuk daftar aduan
+        if(typeof window.setCurrentFiltersAduan === 'function') {
+          window.setCurrentFiltersAduan({ search: query });
+        }
+        return;
+      }
+      
+      if(page==='layanan-pengaduan') {
+        // Gunakan pagination system untuk layanan pengaduan
+        if(typeof window.setCurrentFiltersLayananPengaduan === 'function') {
+          window.setCurrentFiltersLayananPengaduan({ search: query });
+        }
+        return;
+      }
+      
       // Untuk halaman lain, gunakan sistem lama
       if(query==='') return renderArsip(null);
 

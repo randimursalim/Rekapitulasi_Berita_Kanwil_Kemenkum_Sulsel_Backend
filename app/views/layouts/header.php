@@ -75,6 +75,12 @@ function is_active($pageName) {
   <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   
+  <!-- Base URL for JavaScript -->
+  <script>
+    // Set BASE_URL untuk JavaScript (untuk path dinamis)
+    window.BASE_URL = '<?= $BASE ?>';
+  </script>
+  
   <!-- Custom Scripts -->
   <script src="<?= $BASE ?>/js/console-suppress.js"></script>
   <script src="<?= $BASE ?>/js/live-search.js"></script>
@@ -96,6 +102,8 @@ function is_active($pageName) {
         <li><a href="<?= $BASE ?>/index.php?page=rekap-konten" class="<?= is_active('rekap-konten') ?>"><i class="fas fa-database"></i><span class="link-name">Rekap Konten</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=arsip" class="<?= is_active('arsip') ?>"><i class="fas fa-archive"></i><span class="link-name">Arsip</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=jadwal-kegiatan" class="<?= is_active('jadwal-kegiatan') ?>"><i class="fas fa-calendar-alt"></i><span class="link-name">Jadwal Kegiatan</span></a></li>
+        <li><a href="<?= $BASE ?>/index.php?page=daftar-aduan" class="<?= is_active('daftar-aduan') ?>"><i class="fas fa-exclamation-triangle"></i><span class="link-name">Daftar Aduan</span></a></li>
+        <li><a href="<?= $BASE ?>/index.php?page=layanan-pengaduan" class="<?= is_active('layanan-pengaduan') ?>"><i class="fas fa-gavel"></i><span class="link-name">Layanan Pengaduan</span></a></li>
         <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'Admin'): ?>
         <li><a href="<?= $BASE ?>/index.php?page=pengguna" class="<?= is_active('pengguna') ?>"><i class="fas fa-users"></i><span class="link-name">Pengguna</span></a></li>
         <?php endif; ?>
@@ -118,7 +126,7 @@ function is_active($pageName) {
 
       <?php
       // Tampilkan search box di halaman tertentu
-      $showSearch = in_array($currentPage, ['arsip', 'jadwal-kegiatan', 'pengguna']);
+      $showSearch = in_array($currentPage, ['arsip', 'jadwal-kegiatan', 'pengguna', 'daftar-aduan', 'layanan-pengaduan']);
       ?>
 
       <?php if ($showSearch): ?>

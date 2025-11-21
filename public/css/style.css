@@ -1115,9 +1115,84 @@ body.dark .filter-select:hover {
   text-align: center;
 }
 
-/* Styling untuk tombol aksi */
-.arsip-page .btn-action-aksi {
+/* Styling untuk tombol aksi - pastikan warna sama dengan jadwal-kegiatan */
+.arsip-page .btn-action-aksi,
+.arsip-page .data.actions .btn-action-aksi,
+.arsip-page .data-list .btn-action-aksi {
   margin: 0 3px;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.arsip-page .btn-action-aksi.view,
+.arsip-page .data.actions .btn-action-aksi.view,
+.arsip-page .data-list .btn-action-aksi.view,
+.arsip-page .btn-action-aksi.view i,
+.arsip-page .data.actions .btn-action-aksi.view i,
+.arsip-page .data-list .btn-action-aksi.view i {
+  color: #3498db !important; /* biru - sama dengan jadwal-kegiatan */
+}
+
+.arsip-page .btn-action-aksi.edit,
+.arsip-page .data.actions .btn-action-aksi.edit,
+.arsip-page .data-list .btn-action-aksi.edit,
+.arsip-page .btn-action-aksi.edit i,
+.arsip-page .data.actions .btn-action-aksi.edit i,
+.arsip-page .data-list .btn-action-aksi.edit i {
+  color: #f39c12 !important; /* oranye - sama dengan jadwal-kegiatan */
+}
+
+.arsip-page .btn-action-aksi.delete,
+.arsip-page .data.actions .btn-action-aksi.delete,
+.arsip-page .data-list .btn-action-aksi.delete,
+.arsip-page .btn-action-aksi.delete i,
+.arsip-page .data.actions .btn-action-aksi.delete i,
+.arsip-page .data-list .btn-action-aksi.delete i {
+  color: #e74c3c !important; /* merah - sama dengan jadwal-kegiatan */
+}
+
+.arsip-page .btn-action-aksi:hover,
+.arsip-page .data.actions .btn-action-aksi:hover,
+.arsip-page .data-list .btn-action-aksi:hover {
+  background: rgba(0,0,0,0.1) !important;
+}
+
+/* Dark mode untuk tombol aksi di arsip */
+body.dark .arsip-page .btn-action-aksi.view,
+body.dark .arsip-page .data.actions .btn-action-aksi.view,
+body.dark .arsip-page .data-list .btn-action-aksi.view,
+body.dark .arsip-page .btn-action-aksi.view i,
+body.dark .arsip-page .data.actions .btn-action-aksi.view i,
+body.dark .arsip-page .data-list .btn-action-aksi.view i {
+  color: #3498db !important;
+}
+
+body.dark .arsip-page .btn-action-aksi.edit,
+body.dark .arsip-page .data.actions .btn-action-aksi.edit,
+body.dark .arsip-page .data-list .btn-action-aksi.edit,
+body.dark .arsip-page .btn-action-aksi.edit i,
+body.dark .arsip-page .data.actions .btn-action-aksi.edit i,
+body.dark .arsip-page .data-list .btn-action-aksi.edit i {
+  color: #f39c12 !important;
+}
+
+body.dark .arsip-page .btn-action-aksi.delete,
+body.dark .arsip-page .data.actions .btn-action-aksi.delete,
+body.dark .arsip-page .data-list .btn-action-aksi.delete,
+body.dark .arsip-page .btn-action-aksi.delete i,
+body.dark .arsip-page .data.actions .btn-action-aksi.delete i,
+body.dark .arsip-page .data-list .btn-action-aksi.delete i {
+  color: #e74c3c !important;
+}
+
+body.dark .arsip-page .btn-action-aksi:hover,
+body.dark .arsip-page .data.actions .btn-action-aksi:hover,
+body.dark .arsip-page .data-list .btn-action-aksi:hover {
+  background: rgba(255,255,255,0.1) !important;
 }
 
 
@@ -1254,11 +1329,50 @@ body.dark .filters span {
 
 .arsip-page .activity-data {
   display: grid !important;  /* override CSS lain */
-  grid-template-columns: 50px 1fr 150px 150px 120px 120px 150px;
-  min-width: 1000px;
-  gap: 0;
+  grid-template-columns: 50px 1fr 150px 150px 120px 120px 150px !important;
+  min-width: 1000px !important;
+  gap: 0 !important;
   overflow-x: auto;        /* scroll horizontal jika perlu */
   overflow-y: visible;    /* tidak ada scroll vertikal */
+}
+
+/* Pastikan arsip-page tidak terpengaruh styling searchResults dari rekap-page */
+.arsip-page #searchResults {
+  display: grid !important;
+}
+
+/* Pastikan tombol aksi tidak ter-override oleh color inherit */
+.arsip-page #searchResults .data-title,
+.arsip-page #searchResults .data-list:not(.btn-action-aksi):not(.btn-action-aksi *) {
+  color: var(--text-color);
+}
+
+/* Override khusus untuk tombol aksi agar warnanya tetap */
+.arsip-page #searchResults .btn-action-aksi.view,
+.arsip-page #searchResults .data.actions .btn-action-aksi.view,
+.arsip-page #searchResults .data-list .btn-action-aksi.view,
+.arsip-page #searchResults .btn-action-aksi.view i,
+.arsip-page #searchResults .data.actions .btn-action-aksi.view i,
+.arsip-page #searchResults .data-list .btn-action-aksi.view i {
+  color: #3498db !important;
+}
+
+.arsip-page #searchResults .btn-action-aksi.edit,
+.arsip-page #searchResults .data.actions .btn-action-aksi.edit,
+.arsip-page #searchResults .data-list .btn-action-aksi.edit,
+.arsip-page #searchResults .btn-action-aksi.edit i,
+.arsip-page #searchResults .data.actions .btn-action-aksi.edit i,
+.arsip-page #searchResults .data-list .btn-action-aksi.edit i {
+  color: #f39c12 !important;
+}
+
+.arsip-page #searchResults .btn-action-aksi.delete,
+.arsip-page #searchResults .data.actions .btn-action-aksi.delete,
+.arsip-page #searchResults .data-list .btn-action-aksi.delete,
+.arsip-page #searchResults .btn-action-aksi.delete i,
+.arsip-page #searchResults .data.actions .btn-action-aksi.delete i,
+.arsip-page #searchResults .data-list .btn-action-aksi.delete i {
+  color: #e74c3c !important;
 }
 
 /* 🔹 CSS Khusus untuk Halaman Rekap Konten */
@@ -1542,7 +1656,178 @@ body.dark #modalText::-webkit-scrollbar-thumb:hover {
     min-width: 100px; /* Beri ruang khusus untuk platform */
 }
 
-/* Responsive untuk layar kecil */
+/* Akhir jadwal kegiatan */
+
+
+
+
+/* Password Toggle Styles */
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-container input {
+    width: 100%;
+    padding-right: 40px; /* Space for the eye icon */
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-color);
+    font-size: 18px;
+    transition: color 0.3s ease;
+    z-index: 10;
+}
+
+.password-toggle:hover {
+    color: var(--primary-color);
+}
+
+.password-toggle i {
+    pointer-events: none;
+}
+
+/* ===== Styling untuk Pencarian Kata Kunci ===== */
+.search-section {
+    background: var(--panel-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.search-section input[type="text"],
+.search-section input[type="date"] {
+    background-color: var(--panel-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.search-section input[type="text"]:focus,
+.search-section input[type="date"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: var(--panel-color);
+    color: var(--text-color);
+}
+
+.search-section input[type="text"]::placeholder {
+    color: var(--text-color);
+    opacity: 0.5;
+}
+
+.search-section select.filter-select {
+    background-color: var(--panel-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.search-section select.filter-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.search-section select.filter-select option {
+    background-color: var(--panel-color);
+    color: var(--text-color);
+}
+
+/* Dark mode untuk input date */
+body.dark .search-section input[type="date"] {
+    color-scheme: dark;
+}
+
+/* Styling untuk kotak hasil pencarian di REKAP-KONTEN saja - override semua inline style */
+.rekap-page #searchResults > div,
+.rekap-page #searchResults div[style*="background"],
+.rekap-page #searchResults div[style*="padding"] {
+    background: var(--panel-color) !important;
+    border: 1px solid var(--border-color) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+/* Dark mode khusus untuk searchResults di rekap-konten */
+body.dark .rekap-page #searchResults > div,
+body.dark .rekap-page #searchResults div[style*="background"],
+body.dark .rekap-page #searchResults div[style*="padding"] {
+    background: var(--panel-color) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+.rekap-page #searchResults h3,
+.rekap-page #searchResults h3[style*="color"] {
+    color: var(--text-color) !important;
+}
+
+.rekap-page #searchResults p,
+.rekap-page #searchResults p[style*="color"] {
+    color: var(--text-color) !important;
+}
+
+.rekap-page #searchResults strong,
+.rekap-page #searchResults strong[style*="color"] {
+    color: var(--text-color) !important;
+}
+
+/* Pastikan semua elemen di dalam searchResults di rekap-konten menggunakan warna yang benar */
+.rekap-page #searchResults * {
+    color: inherit;
+}
+
+.rekap-page #searchResults i[class*="fa-"] {
+    color: var(--primary-color) !important;
+}
+
+/* ===== PRIORITAS TERTINGGI: Warna tombol aksi di arsip ===== */
+/* Pastikan warna tombol aksi di arsip sama dengan jadwal-kegiatan */
+.arsip-page .activity-data .data.actions .data-list .btn-action-aksi.view,
+.arsip-page .activity-data .data.actions .data-list .btn-action-aksi.view i,
+.arsip-page #searchResults .data.actions .data-list .btn-action-aksi.view,
+.arsip-page #searchResults .data.actions .data-list .btn-action-aksi.view i {
+    color: #3498db !important; /* biru */
+}
+
+.arsip-page .activity-data .data.actions .data-list .btn-action-aksi.edit,
+.arsip-page .activity-data .data.actions .data-list .btn-action-aksi.edit i,
+.arsip-page #searchResults .data.actions .data-list .btn-action-aksi.edit,
+.arsip-page #searchResults .data.actions .data-list .btn-action-aksi.edit i {
+    color: #f39c12 !important; /* oranye */
+}
+
+.arsip-page .activity-data .data.actions .data-list .btn-action-aksi.delete,
+.arsip-page .activity-data .data.actions .data-list .btn-action-aksi.delete i,
+.arsip-page #searchResults .data.actions .data-list .btn-action-aksi.delete,
+.arsip-page #searchResults .data.actions .data-list .btn-action-aksi.delete i {
+    color: #e74c3c !important; /* merah */
+}
+
+body.dark .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.view,
+body.dark .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.view i,
+body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.view,
+body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.view i {
+    color: #3498db !important; /* biru */
+}
+
+body.dark .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.edit,
+body.dark .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.edit i,
+body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.edit,
+body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.edit i {
+    color: #f39c12 !important; /* oranye */
+}
+
+body.dark .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.delete,
+body.dark .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.delete i,
+body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.delete,
+body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.delete i {
+    color: #e74c3c !important; /* merah */
+}
+
+/* ===== RESPONSIVE UNTUK ARSIP PAGE ===== */
 @media (max-width: 1200px) {
     .arsip-page .activity-data {
         min-width: 1100px; /* Lebih lebar untuk layar kecil */
@@ -1578,11 +1863,9 @@ body.dark #modalText::-webkit-scrollbar-thumb:hover {
         min-width: 80px;
     }
 }
+/* ===== AKHIR RESPONSIVE ARSIP PAGE ===== */
 
-/* Akhir jadwal kegiatan */
-
-
-
+/* ===== RESPONSIVE UNTUK NAVIGASI DAN DASHBOARD ===== */
 @media (max-width: 1000px) {
     nav{
         width: 73px;
@@ -1633,11 +1916,13 @@ body.dark #modalText::-webkit-scrollbar-thumb:hover {
         margin-top: 15px;
     }
 }
+
 @media (max-width: 560px) {
     .dash-content .boxes .box{
         width: 100% ;
     }
 }
+
 @media (max-width: 400px) {
     nav{
         width: 0px;
@@ -1678,35 +1963,4 @@ body.dark #modalText::-webkit-scrollbar-thumb:hover {
         width: 100%;
     }
 }
-
-/* Password Toggle Styles */
-.password-input-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.password-input-container input {
-    width: 100%;
-    padding-right: 40px; /* Space for the eye icon */
-}
-
-.password-toggle {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: var(--text-color);
-    font-size: 18px;
-    transition: color 0.3s ease;
-    z-index: 10;
-}
-
-.password-toggle:hover {
-    color: var(--primary-color);
-}
-
-.password-toggle i {
-    pointer-events: none;
-}
+/* ===== AKHIR RESPONSIVE NAVIGASI DAN DASHBOARD ===== */
