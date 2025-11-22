@@ -40,9 +40,14 @@ async function loadGalleryPhotos() {
   
   try {
     const response = await fetch('ajax/gallery_photos.php');
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
     const result = await response.json();
     
-    if (result.success && result.data.length > 0) {
+    if (result.success && result.data && Array.isArray(result.data) && result.data.length > 0) {
       renderGalleryPhotos(result.data);
     } else {
       renderPlaceholderPhotos();
@@ -55,8 +60,42 @@ async function loadGalleryPhotos() {
 // Render photos from database
 function renderGalleryPhotos(photos) {
   const galleryGrid = document.getElementById('galleryGrid');
+  if (!galleryGrid) {
+    return;
+  }
   
-  const photosHTML = photos.map((photo, index) => {
+  if (!photos || photos.length === 0) {
+    renderPlaceholderPhotos();
+    return;
+  }
+  
+  // Additional deduplication on client side (backup)
+  const seenImages = new Set();
+  const uniquePhotos = [];
+  
+  photos.forEach((photo) => {
+    // Normalize image path for comparison
+    let imagePath = photo.image || '';
+    
+    if (!imagePath || imagePath.trim() === '') {
+      return; // Skip photos without image path
+    }
+    
+    // Extract filename (case-insensitive)
+    const filename = imagePath.split('/').pop().split('\\').pop().toLowerCase();
+    
+    if (!filename || filename.trim() === '') {
+      return; // Skip photos with empty filename
+    }
+    
+    // Check if we've seen this filename before
+    if (!seenImages.has(filename)) {
+      seenImages.add(filename);
+      uniquePhotos.push(photo);
+    }
+  });
+  
+  const photosHTML = uniquePhotos.map((photo, index) => {
     // Handle image path - fix path for storage/uploads
     let imageSrc = photo.image;
     if (!imageSrc.startsWith('http') && !imageSrc.startsWith('/')) {

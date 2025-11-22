@@ -18,11 +18,12 @@ try {
     
     echo json_encode([
         'success' => true,
-        'data' => $photos,
+        'data' => $photos ? $photos : [],
         'count' => count($photos)
     ]);
 } catch (Exception $e) {
     error_log("Gallery Photos Error: " . $e->getMessage());
+    error_log("Gallery Photos Error Trace: " . $e->getTraceAsString());
     echo json_encode([
         'success' => false,
         'error' => $e->getMessage(),

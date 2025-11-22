@@ -698,7 +698,11 @@ class KontenModel {
     // === GALLERY PHOTOS ===
     public function getGalleryPhotos($limit = 15) {
         try {
-            // First, get all unique photos (no duplicates)
+            // Get photos from berita with jenis_berita = 'website_kanwil' only
+            $photos = [];
+            $uniqueFiles = [];
+            
+            // Query: Only berita with jenis_berita = 'website_kanwil'
             $stmt = $this->db->prepare("
                 SELECT 
                     k.id_konten,
@@ -706,66 +710,72 @@ class KontenModel {
                     k.dokumentasi,
                     k.jenis,
                     k.tanggal_input,
-                    kb.tanggal_berita
+                    kb.tanggal_berita as tanggal,
+                    kb.jenis_berita
                 FROM konten k
                 JOIN konten_berita kb ON k.id_konten = kb.id_konten
                 WHERE k.dokumentasi IS NOT NULL 
                 AND k.dokumentasi != '' 
                 AND k.dokumentasi != 'user.jpg'
                 AND k.jenis = 'berita'
+                AND kb.jenis_berita = 'website_kanwil'
+                AND (
+                    k.dokumentasi LIKE '%.jpg' OR
+                    k.dokumentasi LIKE '%.jpeg' OR
+                    k.dokumentasi LIKE '%.png' OR
+                    k.dokumentasi LIKE '%.gif'
+                )
                 ORDER BY k.id_konten DESC
+                LIMIT :limit
             ");
+            $stmt->bindValue(':limit', $limit * 2, PDO::PARAM_INT); // Get more to account for duplicates
             $stmt->execute();
-            
-            $allPhotos = [];
-            $uniqueFiles = []; // Track unique file names
-            $photos = [];
             
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $dokumentasi = $row['dokumentasi'];
+                if (empty($dokumentasi)) continue;
                 
-                // Check if it's an image file
-                $isImage = (
-                    strpos($dokumentasi, '.jpg') !== false ||
-                    strpos($dokumentasi, '.jpeg') !== false ||
-                    strpos($dokumentasi, '.png') !== false ||
-                    strpos($dokumentasi, '.gif') !== false
-                );
+                // Deduplicate by filename (case-insensitive)
+                $filename = strtolower(basename(str_replace('\\', '/', $dokumentasi)));
+                if (empty($filename)) continue;
                 
-                if ($isImage) {
-                    // Extract filename without path for comparison
-                    $filename = basename($dokumentasi);
+                // Skip if this filename already exists
+                if (!in_array($filename, $uniqueFiles)) {
+                    $uniqueFiles[] = $filename;
+                    $photos[] = [
+                        'id' => $row['id_konten'],
+                        'title' => $row['judul'],
+                        'image' => $dokumentasi,
+                        'type' => 'berita',
+                        'tanggal_input' => $row['tanggal_input'] ?? null,
+                        'tanggal_berita' => $row['tanggal'] ?? null,
+                        'date' => $row['tanggal'] ?? $row['tanggal_input'] ?? null,
+                        'category' => 'Berita'
+                    ];
                     
-                    // Check if we already have this filename
-                    if (!in_array($filename, $uniqueFiles)) {
-                        $uniqueFiles[] = $filename;
-                        $photos[] = [
-                            'id' => $row['id_konten'],
-                            'title' => $row['judul'],
-                            'image' => $dokumentasi,
-                            'type' => $row['jenis'],
-                            'tanggal_input' => isset($row['tanggal_input']) ? $row['tanggal_input'] : null,
-                            'tanggal_berita' => isset($row['tanggal_berita']) ? $row['tanggal_berita'] : null,
-                            // Prefer tanggal_berita for gallery date, fallback ke tanggal_input
-                            'date' => isset($row['tanggal_berita']) && $row['tanggal_berita'] !== null && $row['tanggal_berita'] !== ''
-                                ? $row['tanggal_berita']
-                                : (isset($row['tanggal_input']) ? $row['tanggal_input'] : null),
-                            'category' => ucfirst($row['jenis'])
-                        ];
-                        
-                        // Stop if we have enough unique photos
-                        if (count($photos) >= $limit) {
-                            break;
-                        }
-                    }
+                    // Stop if we have enough unique photos
+                    if (count($photos) >= $limit) break;
                 }
             }
             
             return $photos;
         } catch (PDOException $e) {
+            error_log("[ERROR] Get Gallery Photos PDO: " . $e->getMessage());
+            error_log("[ERROR] Get Gallery Photos PDO Trace: " . $e->getTraceAsString());
+            return [];
+        } catch (Exception $e) {
             error_log("[ERROR] Get Gallery Photos: " . $e->getMessage());
+            error_log("[ERROR] Get Gallery Photos Trace: " . $e->getTraceAsString());
             return [];
         }
+    }
+    
+    // Helper method to normalize image path for deduplication
+    private function normalizeImagePath($path) {
+        // Remove common path prefixes and normalize
+        $path = str_replace('\\', '/', $path); // Normalize slashes
+        $path = preg_replace('#^(storage/uploads|Images|images|storage|uploads)/+#i', '', $path); // Remove common prefixes
+        return $path;
     }
 
     // === GET LATEST NEWS FOR PORTAL ===
