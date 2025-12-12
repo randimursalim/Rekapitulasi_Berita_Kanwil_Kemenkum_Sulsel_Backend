@@ -140,12 +140,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
       <div class="data nama">
         <span class="data-title">Nama</span>
-        ${data.map(lp => `<span class="data-list">${lp.nama || '-'}</span>`).join('')}
+        ${data.map(lp => {
+          const nama = lp.nama || '-';
+          const namaDisplay = nama.length > 25 ? nama.substring(0, 25) + '...' : nama;
+          return `<span class="data-list" title="${escapeHtml(nama)}"><span class="text-content">${escapeHtml(namaDisplay)}</span></span>`;
+        }).join('')}
       </div>
 
       <div class="data judul">
         <span class="data-title">Judul Laporan</span>
-        ${data.map(lp => `<span class="data-list">${lp.judul_laporan ? (lp.judul_laporan.length > 50 ? lp.judul_laporan.substring(0, 50) + '...' : lp.judul_laporan) : '-'}</span>`).join('')}
+        ${data.map(lp => {
+          const judul = lp.judul_laporan || '-';
+          const judulDisplay = judul.length > 35 ? judul.substring(0, 35) + '...' : judul;
+          return `<span class="data-list" title="${escapeHtml(judul)}"><span class="text-content">${escapeHtml(judulDisplay)}</span></span>`;
+        }).join('')}
       </div>
 
       <div class="data tanggal">
@@ -163,11 +171,21 @@ document.addEventListener('DOMContentLoaded', function() {
         ${data.map(lp => `<span class="data-list">${lp.jenis_aduan || '-'}</span>`).join('')}
       </div>
 
+      <div class="data tindak-lanjut">
+        <span class="data-title">Tindak Lanjut</span>
+        ${data.map(lp => {
+          const status = lp.tindak_lanjut || 'belum diproses';
+          const statusClass = status === 'selesai' ? 'status-selesai' : status === 'proses' ? 'status-proses' : 'status-belum';
+          const statusText = status === 'selesai' ? 'Selesai' : status === 'proses' ? 'Proses' : 'Belum Diproses';
+          return `<span class="data-list"><span class="status-badge ${statusClass}">${statusText}</span></span>`;
+        }).join('')}
+      </div>
+
       <div class="data actions">
         <span class="data-title">Aksi</span>
         ${data.map((lp, index) => `
           <span class="data-list">
-            <button class="btn-action-aksi view" onclick="showDetailLayananPengaduan(${lp.id}, '${escapeHtml(lp.no_register_pengaduan || '')}', '${escapeHtml(lp.nama || '')}', '${escapeHtml(lp.alamat || '')}', '${lp.jenis_tanda_pengenal || ''}', '${escapeHtml(lp.jenis_tanda_pengenal_lainnya || '')}', '${escapeHtml(lp.no_tanda_pengenal || '')}', '${escapeHtml(lp.no_telp || '')}', '${escapeHtml(lp.judul_laporan || '')}', '${escapeHtml(lp.isi_laporan || '')}', '${formatDate(lp.tanggal_kejadian)}', '${escapeHtml(lp.lokasi_kejadian || '')}', '${lp.kategori_laporan || ''}', '${lp.jenis_aduan || ''}', '${escapeHtml(lp.jenis_aduan_lainnya || '')}', '${formatDate(lp.tanggal_pengaduan)}')">
+            <button class="btn-action-aksi view" data-keterangan="${btoa(unescape(encodeURIComponent(lp.keterangan || '')))}" onclick="showDetailLayananPengaduanFromButton(this, ${lp.id}, '${escapeHtml(lp.no_register_pengaduan || '')}', '${escapeHtml(lp.nama || '')}', '${escapeHtml(lp.alamat || '')}', '${lp.jenis_tanda_pengenal || ''}', '${escapeHtml(lp.jenis_tanda_pengenal_lainnya || '')}', '${escapeHtml(lp.no_tanda_pengenal || '')}', '${escapeHtml(lp.no_telp || '')}', '${escapeHtml(lp.judul_laporan || '')}', '${escapeHtml(lp.isi_laporan || '')}', '${formatDate(lp.tanggal_kejadian)}', '${escapeHtml(lp.lokasi_kejadian || '')}', '${lp.kategori_laporan || ''}', '${lp.jenis_aduan || ''}', '${escapeHtml(lp.jenis_aduan_lainnya || '')}', '${formatDate(lp.tanggal_pengaduan)}', '${lp.tindak_lanjut || 'belum diproses'}')">
               <i class="fas fa-eye"></i>
             </button>
             <button class="btn-action-aksi edit" onclick="window.location.href='index.php?page=edit-layanan-pengaduan&id=${lp.id}'">
@@ -196,6 +214,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r');
+  }
+
+  function basename(path) {
+    return path.split('/').pop().split('\\').pop();
   }
 
   // Render pagination
@@ -257,36 +279,149 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // Fungsi tampilkan modal detail (dari button dengan data attribute)
+  function showDetailLayananPengaduanFromButton(button, id, noRegister, nama, alamat, jenisTandaPengenal, jenisTandaPengenalLainnya, noTandaPengenal, noTelp, judulLaporan, isiLaporan, tanggalKejadian, lokasiKejadian, kategoriLaporan, jenisAduan, jenisAduanLainnya, tanggalPengaduan, tindakLanjut) {
+    // Ambil keterangan dari data attribute (base64 encoded)
+    const keteranganEncoded = button.getAttribute('data-keterangan') || '';
+    let keterangan = '';
+    if (keteranganEncoded) {
+      try {
+        keterangan = decodeURIComponent(escape(atob(keteranganEncoded)));
+      } catch (e) {
+        // Error decoding keterangan - handled silently
+        keterangan = '';
+      }
+    }
+    showDetailLayananPengaduan(id, noRegister, nama, alamat, jenisTandaPengenal, jenisTandaPengenalLainnya, noTandaPengenal, noTelp, judulLaporan, isiLaporan, tanggalKejadian, lokasiKejadian, kategoriLaporan, jenisAduan, jenisAduanLainnya, tanggalPengaduan, tindakLanjut, keterangan);
+  }
+  
+  // Expose fungsi ke global scope untuk digunakan dari onclick
+  window.showDetailLayananPengaduanFromButton = showDetailLayananPengaduanFromButton;
+
   // Fungsi tampilkan modal detail
-  function showDetailLayananPengaduan(id, noRegister, nama, alamat, jenisTandaPengenal, jenisTandaPengenalLainnya, noTandaPengenal, noTelp, judulLaporan, isiLaporan, tanggalKejadian, lokasiKejadian, kategoriLaporan, jenisAduan, jenisAduanLainnya, tanggalPengaduan) {
+  function showDetailLayananPengaduan(id, noRegister, nama, alamat, jenisTandaPengenal, jenisTandaPengenalLainnya, noTandaPengenal, noTelp, judulLaporan, isiLaporan, tanggalKejadian, lokasiKejadian, kategoriLaporan, jenisAduan, jenisAduanLainnya, tanggalPengaduan, tindakLanjut, keterangan) {
     const modalContent = document.getElementById('modalContent');
     if (!modalContent) return;
 
-    let content = `No. Register Pengaduan: ${noRegister || '-'}\n`;
-    content += `Tanggal Pengaduan: ${tanggalPengaduan}\n\n`;
-    content += `DATA PELAPOR:\n`;
-    content += `Nama: ${nama || '-'}\n`;
-    content += `Alamat: ${alamat || '-'}\n`;
+    // Build HTML content untuk support file download
+    let htmlContent = '';
+    
+    htmlContent += `<strong>No. Register Pengaduan:</strong> ${noRegister || '-'}<br>`;
+    htmlContent += `<strong>Tanggal Pengaduan:</strong> ${tanggalPengaduan}<br><br>`;
+    
+    htmlContent += `<strong>DATA PELAPOR:</strong><br>`;
+    htmlContent += `Nama: ${nama || '-'}<br>`;
+    htmlContent += `Alamat: ${alamat || '-'}<br>`;
     if (jenisTandaPengenal === 'LAINNYA' && jenisTandaPengenalLainnya) {
-      content += `Jenis Tanda Pengenal: ${jenisTandaPengenal} - ${jenisTandaPengenalLainnya}\n`;
+      htmlContent += `Jenis Tanda Pengenal: ${jenisTandaPengenal} - ${jenisTandaPengenalLainnya}<br>`;
     } else {
-      content += `Jenis Tanda Pengenal: ${jenisTandaPengenal || '-'}\n`;
+      htmlContent += `Jenis Tanda Pengenal: ${jenisTandaPengenal || '-'}<br>`;
     }
-    content += `No. Tanda Pengenal: ${noTandaPengenal || '-'}\n`;
-    content += `No. Telepon: ${noTelp || '-'}\n\n`;
-    content += `DATA LAPORAN:\n`;
-    content += `Judul Laporan: ${judulLaporan || '-'}\n`;
-    content += `Isi Laporan:\n${isiLaporan || '-'}\n\n`;
-    content += `Tanggal Kejadian: ${tanggalKejadian}\n`;
-    content += `Lokasi Kejadian: ${lokasiKejadian || '-'}\n`;
-    content += `Kategori Laporan: ${kategoriLaporan || '-'}\n`;
+    htmlContent += `No. Tanda Pengenal: ${noTandaPengenal || '-'}<br>`;
+    htmlContent += `No. Telepon: ${noTelp || '-'}<br><br>`;
+    
+    htmlContent += `<strong>DATA LAPORAN:</strong><br>`;
+    htmlContent += `Judul Laporan: ${judulLaporan || '-'}<br>`;
+    htmlContent += `Isi Laporan:<br>${isiLaporan || '-'}<br><br>`;
+    htmlContent += `Tanggal Kejadian: ${tanggalKejadian}<br>`;
+    htmlContent += `Lokasi Kejadian: ${lokasiKejadian || '-'}<br>`;
+    htmlContent += `Kategori Laporan: ${kategoriLaporan || '-'}<br>`;
     if (jenisAduan === 'Lainnya' && jenisAduanLainnya) {
-      content += `Jenis Aduan: ${jenisAduan} - ${jenisAduanLainnya}`;
+      htmlContent += `Jenis Aduan: ${jenisAduan} - ${jenisAduanLainnya}<br>`;
     } else {
-      content += `Jenis Aduan: ${jenisAduan || '-'}`;
+      htmlContent += `Jenis Aduan: ${jenisAduan || '-'}<br>`;
     }
-
-    modalContent.textContent = content;
+    
+    htmlContent += `<br><strong>TINDAK LANJUT:</strong><br>`;
+    const statusText = tindakLanjut === 'selesai' ? 'Selesai' : tindakLanjut === 'proses' ? 'Proses' : 'Belum Diproses';
+    const statusClass = tindakLanjut === 'selesai' ? 'status-selesai' : tindakLanjut === 'proses' ? 'status-proses' : 'status-belum';
+    htmlContent += `Status: <span class="status-badge ${statusClass}">${statusText}</span><br>`;
+    
+    // Handle keterangan (bisa teks saja, file saja, atau teks + file)
+    if (keterangan) {
+      htmlContent += `<br><strong>KETERANGAN:</strong><br>`;
+      
+      // Parse keterangan: format bisa "TEXT\nFILE: path" atau hanya teks atau hanya file
+      let keteranganText = '';
+      let filePath = '';
+      
+      // Pastikan keterangan adalah string
+      if (typeof keterangan !== 'string') {
+        keterangan = String(keterangan || '');
+      }
+      
+      // Decode HTML entities jika ada
+      let decodedKeterangan = keterangan;
+      if (keterangan.includes('&lt;') || keterangan.includes('&gt;') || keterangan.includes('&amp;') || keterangan.includes('&quot;')) {
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = keterangan;
+        decodedKeterangan = tempDiv.textContent || tempDiv.innerText || keterangan;
+      }
+      
+      // Replace escaped newlines (\n) dengan actual newline
+      decodedKeterangan = decodedKeterangan.replace(/\\n/g, '\n');
+      
+      // Cek apakah ada "FILE:" di keterangan (case insensitive)
+      const filePattern = /FILE:\s*/i;
+      const fileMatch = decodedKeterangan.match(filePattern);
+      
+      if (fileMatch) {
+        // Format: "TEXT\nFILE: path|original_name" atau "FILE: path|original_name"
+        const fileIndex = fileMatch.index;
+        keteranganText = decodedKeterangan.substring(0, fileIndex).trim();
+        filePath = decodedKeterangan.substring(fileIndex + fileMatch[0].length).trim();
+      } else if (decodedKeterangan.includes('storage/uploads/') || decodedKeterangan.match(/\.(pdf|jpg|jpeg|png|doc|docx)$/i)) {
+        // Format lama: hanya file (tanpa prefix FILE:)
+        filePath = decodedKeterangan.trim();
+      } else {
+        // Hanya teks
+        keteranganText = decodedKeterangan.trim();
+      }
+      
+      // Parse filePath untuk dapatkan path dan original name (format: "path|original_name")
+      let filePathOnly = filePath;
+      let originalFileName = '';
+      if (filePath.includes('|')) {
+        const fileParts = filePath.split('|');
+        filePathOnly = fileParts[0];
+        originalFileName = fileParts[1] || basename(filePathOnly);
+      } else {
+        originalFileName = basename(filePathOnly);
+      }
+      
+      // Tampilkan teks jika ada
+      if (keteranganText) {
+        htmlContent += `<div style="margin: 10px 0; padding: 10px; background: #f9f9f9; border-radius: 5px; white-space: pre-wrap;">${escapeHtml(keteranganText).replace(/\n/g, '<br>')}</div>`;
+      }
+      
+      // Tampilkan file jika ada
+      if (filePath) {
+        // Gunakan originalFileName jika ada, jika tidak gunakan basename dari path
+        const displayFileName = originalFileName || filePathOnly.split('/').pop().split('\\').pop();
+        const baseUrl = (typeof window.BASE_URL !== 'undefined' && window.BASE_URL) ? window.BASE_URL : '';
+        
+        // Gunakan endpoint download untuk proper file handling dengan nama file asli
+        const downloadUrl = baseUrl ? 
+          `${baseUrl}/index.php?page=download-keterangan&file=${encodeURIComponent(filePath)}` : 
+          `index.php?page=download-keterangan&file=${encodeURIComponent(filePath)}`;
+        
+        // Deteksi tipe file untuk icon berdasarkan original name atau extension
+        const fileExt = displayFileName.split('.').pop().toLowerCase();
+        let fileIcon = 'fa-file';
+        if (fileExt === 'pdf') fileIcon = 'fa-file-pdf';
+        else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExt)) fileIcon = 'fa-file-image';
+        else if (['doc', 'docx'].includes(fileExt)) fileIcon = 'fa-file-word';
+        
+        htmlContent += `<div style="margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 5px; border-left: 4px solid #0E4BF1;">`;
+        htmlContent += `<p style="margin: 0 0 10px 0;"><i class="fas ${fileIcon}" style="color: #0E4BF1; margin-right: 8px;"></i><strong>${escapeHtml(displayFileName)}</strong></p>`;
+        htmlContent += `<a href="${downloadUrl}" style="display: inline-block; padding: 10px 20px; background: #0E4BF1; color: white; text-decoration: none; border-radius: 5px; font-weight: 500; transition: all 0.3s ease;">`;
+        htmlContent += `<i class="fas fa-download" style="margin-right: 8px;"></i>Download File`;
+        htmlContent += `</a>`;
+        htmlContent += `</div>`;
+      }
+    }
+    
+    modalContent.innerHTML = htmlContent;
     document.getElementById('detailModal').style.display = 'block';
   }
 
@@ -363,7 +498,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Expose functions globally
+  // Expose functions lainnya ke global scope
   window.showDetailLayananPengaduan = showDetailLayananPengaduan;
   window.hapusLayananPengaduan = hapusLayananPengaduan;
 });

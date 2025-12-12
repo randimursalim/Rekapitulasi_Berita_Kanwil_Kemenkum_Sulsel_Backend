@@ -63,8 +63,12 @@ class AuthController
                     // Update last login
                     $this->model->updateLastLogin($user['id_pengguna']);
 
-                    // Redirect ke dashboard
-                    header('Location: index.php?page=dashboard');
+                    // Redirect berdasarkan role
+                    if ($user['role'] === 'p3h') {
+                        header('Location: index.php?page=harmonisasi');
+                    } else {
+                        header('Location: index.php?page=dashboard');
+                    }
                     exit;
             } else {
                 $error = "Username atau password salah!";
@@ -280,6 +284,37 @@ class AuthController
         if ($_SESSION['user']['role'] !== 'Admin') {
             header('Location: index.php?page=dashboard');
             exit;
+        }
+    }
+
+    // === Middleware untuk cek role p3h (hanya bisa akses harmonisasi) ===
+    public static function requireP3HOrAdmin()
+    {
+        self::requireLogin();
+        $role = $_SESSION['user']['role'] ?? '';
+        if (!in_array($role, ['Admin', 'Operator', 'p3h'])) {
+            header('Location: index.php?page=dashboard');
+            exit;
+        }
+    }
+
+    // === Middleware untuk cek apakah user p3h (redirect jika bukan p3h atau admin) ===
+    public static function restrictP3HAccess()
+    {
+        self::requireLogin();
+        $role = $_SESSION['user']['role'] ?? '';
+        // Jika role p3h, hanya bisa akses harmonisasi dan rekap-harmonisasi
+        if ($role === 'p3h') {
+            $allowedPages = ['harmonisasi', 'rekap-harmonisasi', 'tambah-harmonisasi', 'edit-harmonisasi', 
+                           'store-harmonisasi', 'update-harmonisasi', 'hapus-harmonisasi',
+                           'get-rekap-data-harmonisasi', 'get-rekap-tabel-harmonisasi', 
+                           'get-available-periods-harmonisasi', 'edit-profil', 'update-profil', 'dashboard'];
+            $currentPage = $_GET['page'] ?? 'dashboard';
+            
+            if (!in_array($currentPage, $allowedPages)) {
+                header('Location: index.php?page=harmonisasi');
+                exit;
+            }
         }
     }
 }

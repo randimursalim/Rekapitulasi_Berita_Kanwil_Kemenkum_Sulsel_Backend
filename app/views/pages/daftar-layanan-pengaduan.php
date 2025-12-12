@@ -21,7 +21,7 @@ if (!isset($BASE)) {
 }
 ?>
 
-<div class="overview">
+<div class="overview layanan-pengaduan-page">
     <div class="title">
         <i class="fas fa-gavel"></i>
         <span class="text">Layanan Pengaduan</span>
@@ -61,7 +61,7 @@ if (!isset($BASE)) {
         <div class="modal-content">
             <span class="close">&times;</span>
             <h3>Detail Layanan Pengaduan</h3>
-            <div id="modalContent" style="white-space: pre-wrap; max-height: 400px; overflow-y: auto; padding: 15px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; margin: 15px 0; color: var(--text-color); line-height: 1.6; font-size: 14px;"></div>
+            <div id="modalContent" style="max-height: 500px; overflow-y: auto; padding: 15px; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 8px; margin: 15px 0; color: var(--text-color); line-height: 1.6; font-size: 14px; white-space: pre-wrap;"></div>
         </div>
     </div>
 

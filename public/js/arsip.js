@@ -184,11 +184,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
       <div class="data dokumentasi">
         <span class="data-title">Dokumentasi</span>
-        ${data.map(k => `
+        ${data.map(k => {
+          const imgUrl = k.dokumentasi ? getImageUrl(k.dokumentasi) : null;
+          return `
           <span class="data-list">
-            ${k.dokumentasi ? `<img src="${k.dokumentasi}" alt="Foto" style="width:60px;cursor:pointer;">` : '-'}
+            ${imgUrl ? `<img src="${imgUrl}" alt="Foto" style="width:60px;cursor:pointer;" onerror="this.style.display='none'; this.parentElement.innerHTML='-';" onload="this.style.display='block';">` : '-'}
           </span>
-        `).join('')}
+        `;
+        }).join('')}
       </div>
 
       <div class="data actions">

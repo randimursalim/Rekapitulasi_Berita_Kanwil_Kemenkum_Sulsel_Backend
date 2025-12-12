@@ -152,6 +152,387 @@ body.dark .activity-wrapper.form-wrapper::-webkit-scrollbar-thumb:hover {
   width: 100%;             /* lebar penuh container */
 }
 
+/* CSS khusus untuk halaman Layanan Pengaduan - sama seperti arsip-page */
+.layanan-pengaduan-page .activity-wrapper {
+  overflow-x: auto;        /* hanya scroll horizontal */
+  overflow-y: visible;    /* tidak ada scroll vertikal */
+  max-height: none;        /* tidak ada batasan tinggi */
+}
+
+.layanan-pengaduan-page .activity {
+  max-height: none;        /* tidak ada batasan tinggi */
+  overflow-y: visible;    /* tidak ada scroll vertikal */
+}
+
+.layanan-pengaduan-page .activity-data {
+  display: grid !important;  /* override CSS lain */
+  grid-template-columns: 50px 140px 170px 350px 140px 130px 130px 160px 150px !important;
+  min-width: 1520px !important;
+  gap: 0 !important;
+  overflow-x: auto;        /* scroll horizontal jika perlu */
+  overflow-y: visible;    /* tidak ada scroll vertikal */
+}
+
+/* Pastikan layanan-pengaduan-page tidak terpengaruh styling dari rekap-page */
+.layanan-pengaduan-page #layananPengaduanResults {
+  display: grid !important;
+}
+
+/* Styling untuk data-title - sama persis seperti arsip-page, dengan wrap untuk header panjang */
+.layanan-pengaduan-page .data-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-color);
+  padding: 0 15px;
+  text-align: center;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  background: var(--panel-color) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 999 !important; /* Z-index sangat tinggi agar tidak tertutup saat scroll */
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  height: auto;
+  word-wrap: break-word;
+  line-height: 1.3;
+  hyphens: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow untuk efek sticky */
+}
+
+/* Pastikan wrapper tidak mengganggu sticky */
+.layanan-pengaduan-page .activity-wrapper {
+  position: relative;
+  z-index: 1;
+}
+
+.layanan-pengaduan-page .activity {
+  position: relative;
+  z-index: 1;
+}
+
+/* Styling untuk data-list - sama persis seperti arsip-page dengan ellipsis */
+.layanan-pengaduan-page .data-list {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 0 15px;
+  margin: 0;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  text-align: center;
+  white-space: nowrap; /* Default nowrap untuk truncation */
+  border: none !important;
+  border-bottom: none !important;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Ellipsis untuk teks panjang */
+  max-width: 100%;
+  justify-content: center;
+}
+
+/* Kolom Judul Laporan - center align dengan truncation seperti jadwal-kegiatan */
+.layanan-pengaduan-page .data.judul .data-list {
+  text-align: center;
+  justify-content: center;
+  padding: 0 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 1.4;
+  height: 60px;
+  align-items: center;
+}
+
+/* Pastikan semua kolom menggunakan ellipsis untuk teks panjang */
+.layanan-pengaduan-page .data.no .data-list,
+.layanan-pengaduan-page .data.no-register .data-list,
+.layanan-pengaduan-page .data.nama .data-list,
+.layanan-pengaduan-page .data.tanggal .data-list,
+.layanan-pengaduan-page .data.kategori .data-list,
+.layanan-pengaduan-page .data.jenis .data-list,
+.layanan-pengaduan-page .data.tindak-lanjut .data-list {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Pastikan setiap kolom tidak overflow */
+.layanan-pengaduan-page .data {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.layanan-pengaduan-page .data.no {
+  min-width: 50px;
+  max-width: 50px;
+}
+
+.layanan-pengaduan-page .data.no-register {
+  min-width: 140px;
+  max-width: 140px;
+}
+
+.layanan-pengaduan-page .data.nama {
+  min-width: 170px;
+  max-width: 170px;
+}
+
+.layanan-pengaduan-page .data.judul {
+  min-width: 350px;
+  max-width: 350px;
+}
+
+.layanan-pengaduan-page .data.tanggal {
+  min-width: 140px;
+  max-width: 140px;
+}
+
+.layanan-pengaduan-page .data.kategori {
+  min-width: 130px;
+  max-width: 130px;
+}
+
+.layanan-pengaduan-page .data.jenis {
+  min-width: 130px;
+  max-width: 130px;
+}
+
+.layanan-pengaduan-page .data.tindak-lanjut {
+  min-width: 160px;
+  max-width: 160px;
+}
+
+.layanan-pengaduan-page .data.actions {
+  min-width: 150px;
+  max-width: 150px;
+}
+
+/* Pastikan tidak ada border dari CSS umum dan alignment konsisten - sama seperti arsip-page */
+.layanan-pengaduan-page .data {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.layanan-pengaduan-page .data .data-title {
+  margin: 0;
+  padding: 0 15px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.layanan-pengaduan-page .data .data-list {
+  margin: 0;
+  padding: 0 15px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Kolom Judul Laporan - title center align */
+.layanan-pengaduan-page .data.judul .data-title {
+  justify-content: center;
+  text-align: center;
+}
+
+.layanan-pengaduan-page .data.judul .data-list {
+  justify-content: flex-start;
+  text-align: left;
+}
+
+/* Span text-content di dalam data-list untuk judul dan nama - ellipsis */
+.layanan-pengaduan-page .activity-data .data.judul .data-list .text-content,
+.layanan-pengaduan-page .activity-data .data.nama .data-list .text-content {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Pastikan semua kolom lain center aligned */
+.layanan-pengaduan-page .data.no .data-title,
+.layanan-pengaduan-page .data.no-register .data-title,
+.layanan-pengaduan-page .data.nama .data-title,
+.layanan-pengaduan-page .data.tanggal .data-title,
+.layanan-pengaduan-page .data.kategori .data-title,
+.layanan-pengaduan-page .data.jenis .data-title,
+.layanan-pengaduan-page .data.tindak-lanjut .data-title,
+.layanan-pengaduan-page .data.actions .data-title {
+  justify-content: center;
+  text-align: center;
+}
+
+.layanan-pengaduan-page .data.no .data-list,
+.layanan-pengaduan-page .data.no-register .data-list,
+.layanan-pengaduan-page .data.nama .data-list,
+.layanan-pengaduan-page .data.tanggal .data-list,
+.layanan-pengaduan-page .data.kategori .data-list,
+.layanan-pengaduan-page .data.jenis .data-list,
+.layanan-pengaduan-page .data.tindak-lanjut .data-list {
+  justify-content: center;
+  text-align: center;
+}
+
+/* Kolom Aksi */
+.layanan-pengaduan-page .data.actions .data-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Status badge */
+.layanan-pengaduan-page .data.tindak-lanjut .data-list {
+  justify-content: center;
+}
+
+/* Styling untuk tombol aksi - sama seperti arsip-page */
+.layanan-pengaduan-page .btn-action-aksi,
+.layanan-pengaduan-page .data.actions .btn-action-aksi,
+.layanan-pengaduan-page .data-list .btn-action-aksi {
+  margin: 0 3px;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.layanan-pengaduan-page .btn-action-aksi.view,
+.layanan-pengaduan-page .data.actions .btn-action-aksi.view,
+.layanan-pengaduan-page .data-list .btn-action-aksi.view,
+.layanan-pengaduan-page .btn-action-aksi.view i,
+.layanan-pengaduan-page .data.actions .btn-action-aksi.view i,
+.layanan-pengaduan-page .data-list .btn-action-aksi.view i {
+  color: #3498db !important; /* biru */
+}
+
+.layanan-pengaduan-page .btn-action-aksi.edit,
+.layanan-pengaduan-page .data.actions .btn-action-aksi.edit,
+.layanan-pengaduan-page .data-list .btn-action-aksi.edit,
+.layanan-pengaduan-page .btn-action-aksi.edit i,
+.layanan-pengaduan-page .data.actions .btn-action-aksi.edit i,
+.layanan-pengaduan-page .data-list .btn-action-aksi.edit i {
+  color: #f39c12 !important; /* oranye */
+}
+
+.layanan-pengaduan-page .btn-action-aksi.delete,
+.layanan-pengaduan-page .data.actions .btn-action-aksi.delete,
+.layanan-pengaduan-page .data-list .btn-action-aksi.delete,
+.layanan-pengaduan-page .btn-action-aksi.delete i,
+.layanan-pengaduan-page .data.actions .btn-action-aksi.delete i,
+.layanan-pengaduan-page .data-list .btn-action-aksi.delete i {
+  color: #e74c3c !important; /* merah */
+}
+
+.layanan-pengaduan-page .btn-action-aksi:hover,
+.layanan-pengaduan-page .data.actions .btn-action-aksi:hover,
+.layanan-pengaduan-page .data-list .btn-action-aksi:hover {
+  background: rgba(0,0,0,0.1) !important;
+}
+
+/* Dark mode untuk tombol aksi */
+body.dark .layanan-pengaduan-page .btn-action-aksi.view,
+body.dark .layanan-pengaduan-page .data.actions .btn-action-aksi.view,
+body.dark .layanan-pengaduan-page .data-list .btn-action-aksi.view,
+body.dark .layanan-pengaduan-page .btn-action-aksi.view i,
+body.dark .layanan-pengaduan-page .data.actions .btn-action-aksi.view i,
+body.dark .layanan-pengaduan-page .data-list .btn-action-aksi.view i {
+  color: #3498db !important;
+}
+
+body.dark .layanan-pengaduan-page .btn-action-aksi.edit,
+body.dark .layanan-pengaduan-page .data.actions .btn-action-aksi.edit,
+body.dark .layanan-pengaduan-page .data-list .btn-action-aksi.edit,
+body.dark .layanan-pengaduan-page .btn-action-aksi.edit i,
+body.dark .layanan-pengaduan-page .data.actions .btn-action-aksi.edit i,
+body.dark .layanan-pengaduan-page .data-list .btn-action-aksi.edit i {
+  color: #f39c12 !important;
+}
+
+body.dark .layanan-pengaduan-page .btn-action-aksi.delete,
+body.dark .layanan-pengaduan-page .data.actions .btn-action-aksi.delete,
+body.dark .layanan-pengaduan-page .data-list .btn-action-aksi.delete,
+body.dark .layanan-pengaduan-page .btn-action-aksi.delete i,
+body.dark .layanan-pengaduan-page .data.actions .btn-action-aksi.delete i,
+body.dark .layanan-pengaduan-page .data-list .btn-action-aksi.delete i {
+  color: #e74c3c !important;
+}
+
+body.dark .layanan-pengaduan-page .btn-action-aksi:hover,
+body.dark .layanan-pengaduan-page .data.actions .btn-action-aksi:hover,
+body.dark .layanan-pengaduan-page .data-list .btn-action-aksi:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+
+/* Scrollbar untuk layanan pengaduan */
+.layanan-pengaduan-page .activity-data::-webkit-scrollbar {
+  height: 8px;
+  width: 0px;
+}
+
+.layanan-pengaduan-page .activity-data::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.layanan-pengaduan-page .activity-data::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+.layanan-pengaduan-page .activity-data::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color-dark);
+}
+
+/* Dark mode untuk scrollbar */
+body.dark .layanan-pengaduan-page .activity-data::-webkit-scrollbar-track {
+  background: #3A3B3C;
+}
+
+body.dark .layanan-pengaduan-page .activity-data::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+body.dark .layanan-pengaduan-page .activity-data::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color-dark);
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .layanan-pengaduan-page .activity-data {
+    min-width: 1100px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .layanan-pengaduan-page .activity-data {
+    min-width: 1000px;
+  }
+  
+  .layanan-pengaduan-page .data-title {
+    font-size: 0.85rem;
+  }
+  
+  .layanan-pengaduan-page .data-list {
+    font-size: 0.85rem;
+  }
+}
+
 /* Styling untuk scrollbar horizontal */
 .activity-data::-webkit-scrollbar {
   height: 8px;
@@ -194,12 +575,16 @@ nav{
     position: fixed;
     top: 0;
     left: 0;
-    height: 100%;
+    height: 100vh;
+    max-height: 100vh;
     width: 250px;
     padding: 10px 14px;
     background-color: var(--panel-color);
     border-right: 1px solid var(--border-color);
     transition: var(--tran-05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 nav.close{
     width: 73px;
@@ -232,10 +617,72 @@ nav.close .logo_name{
 }
 nav .menu-items{
     margin-top: 40px;
-    height: calc(100% - 90px);
+    height: calc(100vh - 90px) !important;
+    max-height: calc(100vh - 90px) !important;
+    min-height: calc(100vh - 90px) !important;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    overflow: hidden;
+}
+nav .menu-items .nav-links{
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding-right: 8px;
+    max-height: calc(100vh - 200px) !important;
+    height: auto !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: var(--primary-color) #f5f5f5 !important;
+    -webkit-overflow-scrolling: touch;
+}
+nav .menu-items .nav-links::-webkit-scrollbar {
+    width: 8px !important;
+    display: block !important;
+    -webkit-appearance: none !important;
+}
+nav .menu-items .nav-links::-webkit-scrollbar-track {
+    background: #f5f5f5 !important;
+    border-radius: 4px !important;
+    margin: 5px 0 !important;
+}
+nav .menu-items .nav-links::-webkit-scrollbar-thumb {
+    background: var(--primary-color) !important;
+    border-radius: 4px !important;
+    transition: background 0.3s ease !important;
+    min-height: 30px !important;
+}
+nav .menu-items .nav-links::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color-dark) !important;
+}
+nav .menu-items .nav-links:hover::-webkit-scrollbar-thumb {
+    background: var(--primary-color) !important;
+}
+body.dark nav .menu-items .nav-links {
+    scrollbar-color: #666 #3A3B3C !important;
+}
+body.dark nav .menu-items .nav-links::-webkit-scrollbar {
+    width: 8px !important;
+}
+body.dark nav .menu-items .nav-links::-webkit-scrollbar-track {
+    background: #3A3B3C !important;
+}
+body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb {
+    background: #666 !important;
+}
+body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color) !important;
+}
+body.dark nav .menu-items .nav-links:hover::-webkit-scrollbar-thumb {
+    background: var(--primary-color) !important;
+}
+/* Override untuk memastikan scrollbar nav-links tidak di-override oleh CSS global */
+nav .menu-items .nav-links::-webkit-scrollbar-thumb {
+    background: var(--primary-color) !important;
+}
+body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb {
+    background: #666 !important;
 }
 .menu-items li{
     list-style: none;
@@ -289,6 +736,8 @@ body.dark .nav-links li a:hover .link-name{
 .menu-items .logout-mode{
     padding-top: 10px;
     border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+    margin-top: auto;
 }
 .menu-items .mode{
     display: flex;
@@ -353,7 +802,7 @@ nav.close ~ .dashboard{
     padding: 10px 14px;
     background-color: var(--panel-color);
     transition: var(--tran-05);
-    z-index: 10;
+    z-index: 1000; /* Z-index lebih tinggi dari header tabel (999) agar foto profil tidak tertutup */
 }
 nav.close ~ .dashboard .top{
     left: 73px;
@@ -506,6 +955,23 @@ nav.close ~ .dashboard .top{
     color: var(--text-color);
 }
 
+/* Override untuk peminjaman-ruangan-page - pastikan tidak terpengaruh CSS default */
+.peminjaman-ruangan-page .activity-data .data {
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Override CSS default untuk data-title di peminjaman-ruangan-page */
+.peminjaman-ruangan-page .activity-data .data .data-title {
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+    background: #0E4BF1 !important; /* Warna biru tetap, jangan pakai var(--primary-color) */
+    background-color: #0E4BF1 !important; /* Pastikan background-color juga biru */
+    margin-top: 0 !important;
+}
+
 /* Styling scrollbar khusus untuk dashboard */
 .dash-content .activity .activity-data::-webkit-scrollbar {
     height: 8px;
@@ -555,6 +1021,14 @@ body.dark *::-webkit-scrollbar-thumb {
 
 body.dark *::-webkit-scrollbar-thumb:hover {
     background: #2A2B2C !important;
+}
+
+/* Exception: nav-links scrollbar tidak di-override oleh CSS global */
+body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb {
+    background: #555 !important;
+}
+body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color) !important;
 }
 
 /* Khusus untuk dashboard - override semua kemungkinan */
@@ -735,6 +1209,42 @@ body.dark .status-error {
   color: var(--text-color);
 }
 
+.input-berita-form textarea,
+.edit-berita-form textarea {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--panel-color-light);
+  color: var(--text-color);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Styling khusus untuk textarea tertentu agar konsisten */
+#ringkasan,
+#caption,
+#keterangan,
+#alasan_pengembalian_draf {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--panel-color-light);
+  color: var(--text-color);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-berita-form textarea::placeholder,
+.edit-berita-form textarea::placeholder {
+  color: #9ca3af; /* placeholder agak abu2 biar tidak ganggu */
+}
+
 .btn-simpan,
 .btn-batal,
 .btn-tambah {
@@ -766,6 +1276,38 @@ body.dark .edit-berita-form input {
   border: 1px solid var(--border-color);
 }
 
+/* Dark mode untuk input readonly (No. Register Pengaduan) */
+body.dark .input-berita-form input[readonly],
+body.dark .edit-berita-form input[readonly],
+body.dark input[readonly] {
+  background-color: var(--panel-color-light) !important; /* Override inline style */
+  color: var(--text-color) !important;
+  border: 1px solid var(--border-color) !important;
+  opacity: 0.8; /* Sedikit transparan untuk menunjukkan readonly */
+}
+
+/* Dark mode untuk textarea (Alamat, Isi Laporan, Keterangan) */
+body.dark .input-berita-form textarea,
+body.dark .edit-berita-form textarea,
+body.dark textarea {
+  background: var(--panel-color-light) !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+body.dark .input-berita-form textarea::placeholder,
+body.dark .edit-berita-form textarea::placeholder,
+body.dark textarea::placeholder {
+  color: #9ca3af !important; /* Placeholder agak abu2 */
+}
+
+/* Dark mode untuk small text (helper text) */
+body.dark .input-berita-form small,
+body.dark .edit-berita-form small,
+body.dark .form-group small {
+  color: #9ca3af !important; /* Warna abu-abu terang untuk dark mode */
+}
+
 body.dark .btn-simpan:hover,
 body.dark .btn-batal:hover,
 body.dark .btn-tambah:hover {
@@ -775,7 +1317,8 @@ body.dark .btn-tambah:hover {
 /* Ringkasan Berita - Dark Mode */
 body.dark #keterangan, 
 body.dark #ringkasan, 
-body.dark #caption {
+body.dark #caption,
+body.dark #alasan_pengembalian_draf {
   background-color: #2c2c2c;   /* abu gelap */
   color: #f1f1f1;              /* teks terang */
   border: 1px solid #444;      /* border lebih lembut */
@@ -783,7 +1326,8 @@ body.dark #caption {
 
 body.dark #keterangan::placeholder,
 body.dark #ringkasan::placeholder,
-body.dark #caption::placeholder {
+body.dark #caption::placeholder,
+body.dark #alasan_pengembalian_draf::placeholder {
   color: #aaa; /* warna placeholder lebih redup */
 }
 
@@ -880,6 +1424,15 @@ body.dark #caption::placeholder {
   margin-top: 20px;
   font-weight: bold;
   font-size: 18px;
+  text-align: center;
+  color: var(--text-color);
+  transition: color 0.3s;
+}
+
+#totalHarmonisasi {
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 16px;
   text-align: center;
   color: var(--text-color);
   transition: color 0.3s;
@@ -1012,6 +1565,10 @@ body.dark #totalBerita {
   color: #fff; /* putih biar jelas di dark mode */
 }
 
+body.dark #totalHarmonisasi {
+  color: #fff; /* putih biar jelas di dark mode */
+}
+
 body.dark h3{
     color: #fff;
 }
@@ -1035,15 +1592,22 @@ body.dark #endDate:hover {
     color: #fff;
 }
 
-/* body.dark .filter-select {
-  background: var(--panel-color-dark);
-  color: #fff;
+/* Dark mode untuk filter-select */
+body.dark .filter-select {
+  background: var(--panel-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
 }
 
 body.dark .filter-select:hover {
   background: var(--primary-color);
   color: #fff;
-} */
+}
+
+body.dark .filter-select option {
+  background-color: var(--panel-color);
+  color: var(--text-color);
+}
 
 /* Akhir Rekap Konten */
 
@@ -1375,6 +1939,286 @@ body.dark .filters span {
   color: #e74c3c !important;
 }
 
+/* 🔹 CSS Khusus untuk Halaman Harmonisasi - sama seperti jadwal-kegiatan */
+.harmonisasi-page .activity-wrapper {
+  overflow-x: auto;        /* hanya scroll horizontal */
+  overflow-y: visible;    /* tidak ada scroll vertikal */
+  max-height: none;        /* tidak ada batasan tinggi */
+}
+
+.harmonisasi-page .activity {
+  max-height: none;        /* tidak ada batasan tinggi */
+  overflow-y: visible;    /* tidak ada scroll vertikal */
+}
+
+.harmonisasi-page .activity-data {
+  display: grid !important;  /* override CSS lain */
+  grid-template-columns: 50px 1fr 180px 260px 180px 200px 120px 150px !important;
+  min-width: 1340px !important;
+  gap: 0 !important;
+  overflow-x: auto;        /* scroll horizontal jika perlu */
+  overflow-y: visible;     /* tidak ada scroll vertikal */
+}
+
+/* Styling khusus untuk header harmonisasi - pastikan tidak wrap */
+.harmonisasi-page .data-title {
+  font-size: 0.8rem !important;
+  font-weight: 600;
+  color: var(--text-color);
+  padding: 0 8px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  background: var(--panel-color) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 999 !important;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  min-height: 60px !important;
+  height: 60px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  line-height: 1.2;
+  word-break: keep-all;
+  hyphens: none;
+}
+
+/* Alignment untuk header Judul Rancangan dan Pemrakarsa - left */
+.harmonisasi-page .activity-data .data.judul .data-title,
+.harmonisasi-page .activity-data .data.pemrakarsa .data-title {
+  text-align: left;
+  justify-content: flex-start;
+  padding-left: 15px !important;
+}
+
+/* Alignment untuk header lainnya - center */
+.harmonisasi-page .activity-data .data.no .data-title,
+.harmonisasi-page .activity-data .data.pemerintah .data-title,
+.harmonisasi-page .activity-data .data.tanggal .data-title,
+.harmonisasi-page .activity-data .data.pemegang .data-title,
+.harmonisasi-page .activity-data .data.status .data-title,
+.harmonisasi-page .activity-data .data.actions .data-title {
+  text-align: center;
+  justify-content: center;
+}
+
+/* Alignment untuk header alasan - left */
+.harmonisasi-page .activity-data .data.alasan .data-title {
+  text-align: left;
+  justify-content: flex-start;
+  padding-left: 15px !important;
+}
+
+/* Pastikan harmonisasi-page tidak terpengaruh styling dari rekap-page */
+.harmonisasi-page #harmonisasiResults {
+  display: grid !important;
+}
+
+/* Styling untuk data-list harmonisasi - pastikan truncation bekerja */
+.harmonisasi-page .activity-data .data-list {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 0 15px;
+  margin: 0;
+  margin-top: 0 !important;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
+
+/* Kolom Judul Rancangan dan Pemrakarsa - pastikan ellipsis bekerja */
+.harmonisasi-page .activity-data .data.judul .data-list,
+.harmonisasi-page .activity-data .data.pemrakarsa .data-list {
+  text-align: left;
+  justify-content: flex-start;
+}
+
+/* Span text-content di dalam data-list untuk ellipsis */
+.harmonisasi-page .activity-data .data.judul .data-list .text-content,
+.harmonisasi-page .activity-data .data.pemrakarsa .data-list .text-content,
+.harmonisasi-page .activity-data .data.alasan .data-list .text-content {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Alignment untuk kolom lainnya - center */
+.harmonisasi-page .activity-data .data.no .data-list,
+.harmonisasi-page .activity-data .data.pemerintah .data-list,
+.harmonisasi-page .activity-data .data.tanggal .data-list,
+.harmonisasi-page .activity-data .data.pemegang .data-list,
+.harmonisasi-page .activity-data .data.status .data-list,
+.harmonisasi-page .activity-data .data.actions .data-list {
+  text-align: center;
+  justify-content: center;
+}
+
+/* Alignment untuk kolom alasan - left */
+.harmonisasi-page .activity-data .data.alasan .data-list {
+  text-align: left;
+  justify-content: flex-start;
+}
+
+/* Pastikan kolom data bisa truncate */
+.harmonisasi-page .activity-data .data {
+  min-width: 0;
+  overflow: hidden;
+  margin: 0 !important;
+}
+
+/* Kolom No - pastikan tidak terpotong */
+.harmonisasi-page .activity-data .data.no .data-list {
+  padding: 0 10px;
+}
+
+/* Status dan Actions - tidak perlu truncate */
+.harmonisasi-page .activity-data .data.status .data-list,
+.harmonisasi-page .activity-data .data.actions .data-list {
+  overflow: visible;
+  text-overflow: unset;
+}
+
+/* Styling untuk tombol aksi - sama seperti arsip-page */
+.harmonisasi-page .btn-action-aksi,
+.harmonisasi-page .data.actions .btn-action-aksi,
+.harmonisasi-page .data-list .btn-action-aksi {
+  margin: 0 3px;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.harmonisasi-page .btn-action-aksi.view,
+.harmonisasi-page .data.actions .btn-action-aksi.view,
+.harmonisasi-page .data-list .btn-action-aksi.view,
+.harmonisasi-page .btn-action-aksi.view i,
+.harmonisasi-page .data.actions .btn-action-aksi.view i,
+.harmonisasi-page .data-list .btn-action-aksi.view i {
+  color: #3498db !important; /* biru */
+}
+
+.harmonisasi-page .btn-action-aksi.edit,
+.harmonisasi-page .data.actions .btn-action-aksi.edit,
+.harmonisasi-page .data-list .btn-action-aksi.edit,
+.harmonisasi-page .btn-action-aksi.edit i,
+.harmonisasi-page .data.actions .btn-action-aksi.edit i,
+.harmonisasi-page .data-list .btn-action-aksi.edit i {
+  color: #f39c12 !important; /* oranye */
+}
+
+.harmonisasi-page .btn-action-aksi.delete,
+.harmonisasi-page .data.actions .btn-action-aksi.delete,
+.harmonisasi-page .data-list .btn-action-aksi.delete,
+.harmonisasi-page .btn-action-aksi.delete i,
+.harmonisasi-page .data.actions .btn-action-aksi.delete i,
+.harmonisasi-page .data-list .btn-action-aksi.delete i {
+  color: #e74c3c !important; /* merah */
+}
+
+.harmonisasi-page .btn-action-aksi:hover,
+.harmonisasi-page .data.actions .btn-action-aksi:hover,
+.harmonisasi-page .data-list .btn-action-aksi:hover {
+  background: rgba(0,0,0,0.1) !important;
+}
+
+/* Dark mode untuk tombol aksi di harmonisasi */
+body.dark .harmonisasi-page .btn-action-aksi.view,
+body.dark .harmonisasi-page .data.actions .btn-action-aksi.view,
+body.dark .harmonisasi-page .data-list .btn-action-aksi.view,
+body.dark .harmonisasi-page .btn-action-aksi.view i,
+body.dark .harmonisasi-page .data.actions .btn-action-aksi.view i,
+body.dark .harmonisasi-page .data-list .btn-action-aksi.view i {
+  color: #3498db !important;
+}
+
+body.dark .harmonisasi-page .btn-action-aksi.edit,
+body.dark .harmonisasi-page .data.actions .btn-action-aksi.edit,
+body.dark .harmonisasi-page .data-list .btn-action-aksi.edit,
+body.dark .harmonisasi-page .btn-action-aksi.edit i,
+body.dark .harmonisasi-page .data.actions .btn-action-aksi.edit i,
+body.dark .harmonisasi-page .data-list .btn-action-aksi.edit i {
+  color: #f39c12 !important;
+}
+
+body.dark .harmonisasi-page .btn-action-aksi.delete,
+body.dark .harmonisasi-page .data.actions .btn-action-aksi.delete,
+body.dark .harmonisasi-page .data-list .btn-action-aksi.delete,
+body.dark .harmonisasi-page .btn-action-aksi.delete i,
+body.dark .harmonisasi-page .data.actions .btn-action-aksi.delete i,
+body.dark .harmonisasi-page .data-list .btn-action-aksi.delete i {
+  color: #e74c3c !important;
+}
+
+body.dark .harmonisasi-page .btn-action-aksi:hover,
+body.dark .harmonisasi-page .data.actions .btn-action-aksi:hover,
+body.dark .harmonisasi-page .data-list .btn-action-aksi:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+
+/* Styling untuk scrollbar horizontal */
+.harmonisasi-page .activity-data::-webkit-scrollbar {
+  height: 8px;
+  width: 0px;
+}
+
+.harmonisasi-page .activity-data::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.harmonisasi-page .activity-data::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+.harmonisasi-page .activity-data::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color-dark);
+}
+
+/* Dark mode untuk scrollbar */
+body.dark .harmonisasi-page .activity-data::-webkit-scrollbar-track {
+  background: #3A3B3C;
+}
+
+body.dark .harmonisasi-page .activity-data::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+body.dark .harmonisasi-page .activity-data::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color-dark);
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .harmonisasi-page .activity-data {
+    min-width: 1000px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .harmonisasi-page .activity-data {
+    min-width: 900px;
+  }
+  
+  .harmonisasi-page .data-title {
+    font-size: 0.85rem;
+  }
+  
+  .harmonisasi-page .data-list {
+    font-size: 0.85rem;
+  }
+}
+
 /* 🔹 CSS Khusus untuk Halaman Rekap Konten */
 .rekap-page {
   overflow-x: hidden;      /* tidak ada scroll horizontal */
@@ -1569,6 +2413,9 @@ small {
 .data-list.status-selesai {
   color: #2ecc71 !important; /* hijau */
   font-weight: 600;
+  background-color: transparent !important; /* Tidak ada background */
+  border: none !important; /* Tidak ada border */
+  padding: 0 !important; /* Tidak ada padding tambahan */
 }
 
 .data-list.status-ditunda {
@@ -1584,6 +2431,9 @@ small {
 .data-list.status-belum {
   color: #3498db !important; /* biru */
   font-weight: 600;
+  background-color: transparent !important; /* Tidak ada background */
+  border: none !important; /* Tidak ada border */
+  padding: 0 !important; /* Tidak ada padding tambahan */
 }
 
 .data-list.status-berlangsung {
@@ -1964,3 +2814,341 @@ body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.d
     }
 }
 /* ===== AKHIR RESPONSIVE NAVIGASI DAN DASHBOARD ===== */
+
+/* ===== STATUS BADGE UNTUK TINDAK LANJUT ===== */
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.status-selesai {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.status-proses {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.status-belum {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+body.dark .status-selesai {
+    background-color: #1e4620;
+    color: #81c784;
+    border-color: #2e7d32;
+}
+
+body.dark .status-proses {
+    background-color: #5d4037;
+    color: #ffb74d;
+    border-color: #8d6e63;
+}
+
+body.dark .status-belum {
+    background-color: #4a1e1e;
+    color: #e57373;
+    border-color: #6d2c2c;
+}
+/* ===== AKHIR STATUS BADGE ===== */
+
+/* 🔹 CSS Khusus untuk Halaman Peminjaman Ruangan - sama seperti jadwal-kegiatan */
+.peminjaman-ruangan-page .activity-wrapper {
+  overflow-x: auto;        /* hanya scroll horizontal */
+  overflow-y: visible;    /* tidak ada scroll vertikal */
+  max-height: none;        /* tidak ada batasan tinggi */
+}
+
+.peminjaman-ruangan-page .activity {
+  max-height: none;        /* tidak ada batasan tinggi */
+  overflow-y: visible;    /* tidak ada scroll vertikal */
+}
+
+.peminjaman-ruangan-page .activity-data {
+  display: grid !important;  /* override CSS lain */
+  grid-template-columns: 60px 1.5fr 2fr 2fr 1fr 1fr 120px !important;
+  min-width: 1200px !important;
+  gap: 0 !important;
+  overflow-x: auto;        /* scroll horizontal jika perlu */
+  overflow-y: visible;     /* tidak ada scroll vertikal */
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--panel-color);
+}
+
+/* Styling khusus untuk header peminjaman ruangan - background biru dengan teks putih */
+.peminjaman-ruangan-page .activity-data .data-title,
+.peminjaman-ruangan-page .activity-data .data .data-title,
+.peminjaman-ruangan-page .activity-data .data.no .data-title,
+.peminjaman-ruangan-page .activity-data .data.peminjam .data-title,
+.peminjaman-ruangan-page .activity-data .data.ruangan .data-title,
+.peminjaman-ruangan-page .activity-data .data.kegiatan .data-title,
+.peminjaman-ruangan-page .activity-data .data.tanggal .data-title,
+.peminjaman-ruangan-page .activity-data .data.waktu .data-title,
+.peminjaman-ruangan-page .activity-data .data.actions .data-title {
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  padding: 15px 10px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  background: #0E4BF1 !important; /* Warna biru tetap, jangan pakai var(--primary-color) */
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 999 !important;
+  margin: 0 !important;
+  margin-top: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 60px !important;
+  height: 60px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  line-height: 1.2 !important;
+  word-break: keep-all !important;
+  hyphens: none !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+  text-align: center !important;
+}
+
+/* Alignment untuk header Nama Peminjam, Nama Ruangan, dan Kegiatan - left */
+.peminjaman-ruangan-page .activity-data .data.peminjam .data-title,
+.peminjaman-ruangan-page .activity-data .data.ruangan .data-title,
+.peminjaman-ruangan-page .activity-data .data.kegiatan .data-title {
+  text-align: left;
+  justify-content: flex-start;
+  padding-left: 15px !important;
+}
+
+/* Alignment untuk header lainnya - center */
+.peminjaman-ruangan-page .activity-data .data.no .data-title,
+.peminjaman-ruangan-page .activity-data .data.tanggal .data-title,
+.peminjaman-ruangan-page .activity-data .data.waktu .data-title,
+.peminjaman-ruangan-page .activity-data .data.actions .data-title {
+  text-align: center;
+  justify-content: center;
+}
+
+/* Pastikan peminjaman-ruangan-page tidak terpengaruh styling dari rekap-page */
+.peminjaman-ruangan-page #peminjamanRuanganResults {
+  display: grid !important;
+}
+
+/* Styling untuk data-list peminjaman ruangan */
+.peminjaman-ruangan-page .activity-data .data-list {
+  display: flex !important;
+  align-items: center !important;
+  height: 60px !important;
+  padding: 0 15px !important;
+  margin: 0 !important;
+  margin-top: 0 !important;
+  color: var(--text-color) !important;
+  font-size: 0.9rem !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  background: var(--panel-color) !important;
+}
+
+/* Kolom Nama Peminjam, Nama Ruangan, dan Kegiatan - pastikan ellipsis bekerja */
+.peminjaman-ruangan-page .activity-data .data.peminjam .data-list,
+.peminjaman-ruangan-page .activity-data .data.ruangan .data-list,
+.peminjaman-ruangan-page .activity-data .data.kegiatan .data-list {
+  text-align: left;
+  justify-content: flex-start;
+}
+
+/* Span text-content di dalam data-list untuk ellipsis */
+.peminjaman-ruangan-page .activity-data .data.peminjam .data-list .text-content,
+.peminjaman-ruangan-page .activity-data .data.ruangan .data-list .text-content,
+.peminjaman-ruangan-page .activity-data .data.kegiatan .data-list .text-content {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Kolom lainnya - center align */
+.peminjaman-ruangan-page .activity-data .data.no .data-list,
+.peminjaman-ruangan-page .activity-data .data.tanggal .data-list,
+.peminjaman-ruangan-page .activity-data .data.waktu .data-list,
+.peminjaman-ruangan-page .activity-data .data.actions .data-list {
+  text-align: center;
+  justify-content: center;
+}
+
+/* Styling untuk tombol aksi - sama seperti jadwal-kegiatan */
+.peminjaman-ruangan-page .btn-action-aksi,
+.peminjaman-ruangan-page .data.actions .btn-action-aksi,
+.peminjaman-ruangan-page .data-list .btn-action-aksi {
+  margin: 0 3px;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.peminjaman-ruangan-page .btn-action-aksi.edit,
+.peminjaman-ruangan-page .data.actions .btn-action-aksi.edit,
+.peminjaman-ruangan-page .data-list .btn-action-aksi.edit,
+.peminjaman-ruangan-page .btn-action-aksi.edit i,
+.peminjaman-ruangan-page .data.actions .btn-action-aksi.edit i,
+.peminjaman-ruangan-page .data-list .btn-action-aksi.edit i {
+  color: #f39c12 !important; /* oranye */
+}
+
+.peminjaman-ruangan-page .btn-action-aksi.delete,
+.peminjaman-ruangan-page .data.actions .btn-action-aksi.delete,
+.peminjaman-ruangan-page .data-list .btn-action-aksi.delete,
+.peminjaman-ruangan-page .btn-action-aksi.delete i,
+.peminjaman-ruangan-page .data.actions .btn-action-aksi.delete i,
+.peminjaman-ruangan-page .data-list .btn-action-aksi.delete i {
+  color: #e74c3c !important; /* merah */
+}
+
+.peminjaman-ruangan-page .btn-action-aksi:hover,
+.peminjaman-ruangan-page .data.actions .btn-action-aksi:hover,
+.peminjaman-ruangan-page .data-list .btn-action-aksi:hover {
+  background: rgba(0,0,0,0.1) !important;
+}
+
+/* Dark mode untuk tombol aksi */
+body.dark .peminjaman-ruangan-page .btn-action-aksi.edit,
+body.dark .peminjaman-ruangan-page .data.actions .btn-action-aksi.edit,
+body.dark .peminjaman-ruangan-page .data-list .btn-action-aksi.edit,
+body.dark .peminjaman-ruangan-page .btn-action-aksi.edit i,
+body.dark .peminjaman-ruangan-page .data.actions .btn-action-aksi.edit i,
+body.dark .peminjaman-ruangan-page .data-list .btn-action-aksi.edit i {
+  color: #f39c12 !important;
+}
+
+body.dark .peminjaman-ruangan-page .btn-action-aksi.delete,
+body.dark .peminjaman-ruangan-page .data.actions .btn-action-aksi.delete,
+body.dark .peminjaman-ruangan-page .data-list .btn-action-aksi.delete,
+body.dark .peminjaman-ruangan-page .btn-action-aksi.delete i,
+body.dark .peminjaman-ruangan-page .data.actions .btn-action-aksi.delete i,
+body.dark .peminjaman-ruangan-page .data-list .btn-action-aksi.delete i {
+  color: #e74c3c !important;
+}
+
+body.dark .peminjaman-ruangan-page .btn-action-aksi:hover,
+body.dark .peminjaman-ruangan-page .data.actions .btn-action-aksi:hover,
+body.dark .peminjaman-ruangan-page .data-list .btn-action-aksi:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+
+/* Styling untuk scrollbar horizontal */
+.peminjaman-ruangan-page .activity-data::-webkit-scrollbar {
+  height: 8px;
+  width: 0px;
+}
+
+.peminjaman-ruangan-page .activity-data::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.peminjaman-ruangan-page .activity-data::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+.peminjaman-ruangan-page .activity-data::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color-dark);
+}
+
+/* Dark mode untuk header - tetap background biru dengan teks putih */
+/* Override CSS default .activity-data .data-title yang menggunakan var(--text-color) */
+/* Gunakan selector yang sangat spesifik untuk mengoverride semua kemungkinan */
+body.dark .peminjaman-ruangan-page .activity-data .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.no .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.peminjam .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.ruangan .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.kegiatan .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.tanggal .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.waktu .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.actions .data-title,
+body.dark .peminjaman-ruangan-page .activity-data span.data-title {
+  background: #0E4BF1 !important;
+  background-color: #0E4BF1 !important;
+  color: #fff !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Dark mode untuk scrollbar */
+body.dark .peminjaman-ruangan-page .activity-data::-webkit-scrollbar-track {
+  background: #3A3B3C;
+}
+
+body.dark .peminjaman-ruangan-page .activity-data::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+body.dark .peminjaman-ruangan-page .activity-data::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color-dark);
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .peminjaman-ruangan-page .activity-data {
+    min-width: 1100px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .peminjaman-ruangan-page .activity-data {
+    min-width: 1000px;
+  }
+  
+  .peminjaman-ruangan-page .data-title {
+    font-size: 0.85rem;
+  }
+  
+  .peminjaman-ruangan-page .data-list {
+    font-size: 0.85rem;
+  }
+}
+
+/* ===== OVERRIDE FINAL DARK MODE UNTUK HEADER PEMINJAMAN RUANGAN ===== */
+/* Pastikan header tetap biru di dark mode - ditempatkan di akhir file untuk override maksimal */
+/* Gunakan selector yang sangat spesifik dengan semua kemungkinan kombinasi */
+body.dark .peminjaman-ruangan-page .activity-data .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.no .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.peminjam .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.ruangan .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.kegiatan .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.tanggal .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.waktu .data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.actions .data-title,
+body.dark .peminjaman-ruangan-page .activity-data span.data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data span.data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.no span.data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.peminjam span.data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.ruangan span.data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.kegiatan span.data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.tanggal span.data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.waktu span.data-title,
+body.dark .peminjaman-ruangan-page .activity-data .data.actions span.data-title {
+  background: #0E4BF1 !important;
+  background-color: #0E4BF1 !important;
+  color: #fff !important;
+  border-bottom-color: rgba(255, 255, 255, 0.2) !important;
+}

@@ -1,6 +1,20 @@
 // Live Search AJAX Functionality
 document.addEventListener('DOMContentLoaded', function () {
 
+  // Helper function untuk generate image URL (jika belum didefinisikan)
+  if (typeof getImageUrl === 'undefined') {
+    window.getImageUrl = function(path) {
+      if (!path) return null;
+      // Jika sudah full URL atau absolute path, return as is
+      if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) {
+        return path;
+      }
+      // Jika path relatif (storage/uploads/...), tambahkan BASE URL
+      const base = window.BASE_URL || '';
+      return base + '/' + path.replace(/^\//, '');
+    };
+  }
+
   // Format kategori berita
   function formatKategori(str) {
     if (!str) return '-';
@@ -47,7 +61,10 @@ document.addEventListener('DOMContentLoaded', function () {
         else if(col==='jenis') html += `<span class="data-list">${konten.jenis==='berita'?'Berita':'Sosial Media'}</span>`;
         else if(col==='kategori') html += `<span class="data-list">${konten.jenis==='berita'?formatKategori(konten.jenis_berita):(konten.jenis||'-')}</span>`;
         else if(col==='date') html += `<span class="data-list">${konten.jenis==='berita'?konten.tanggal_berita:konten.tanggal_post}</span>`;
-        else if(col==='dokumentasi') html += `<span class="data-list">${konten.dokumentasi?`<img src="${konten.dokumentasi}" style="width:60px;cursor:pointer;">`:'-'}</span>`;
+        else if(col==='dokumentasi') {
+          const imgUrl = konten.dokumentasi ? getImageUrl(konten.dokumentasi) : null;
+          html += `<span class="data-list">${imgUrl ? `<img src="${imgUrl}" style="width:60px;cursor:pointer;" onerror="this.style.display='none'; this.parentElement.innerHTML='-';" onload="this.style.display='block';">` : '-'}</span>`;
+        }
         else if(col==='actions') html += `<span class="data-list">
           <button class="btn-action-aksi view" onclick="window.open('${konten.jenis==='berita'?konten.link_berita:konten.link_post}','_blank')"><i class="fas fa-eye"></i></button>
           <button class="btn-action-aksi edit" onclick="window.location.href='index.php?page=edit-konten&id=${konten.id_konten}'"><i class="fas fa-edit"></i></button>
@@ -171,6 +188,14 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
       
+      if(page==='jadwal-peminjaman-ruangan') {
+        // Gunakan pagination system untuk jadwal peminjaman ruangan
+        if(typeof window.setCurrentFiltersPeminjamanRuangan === 'function') {
+          window.setCurrentFiltersPeminjamanRuangan({ search: query });
+        }
+        return;
+      }
+      
       if(page==='pengguna') {
         // Gunakan pagination system untuk pengguna
         if(typeof window.setCurrentFiltersPengguna === 'function') {
@@ -191,6 +216,14 @@ document.addEventListener('DOMContentLoaded', function () {
         // Gunakan pagination system untuk layanan pengaduan
         if(typeof window.setCurrentFiltersLayananPengaduan === 'function') {
           window.setCurrentFiltersLayananPengaduan({ search: query });
+        }
+        return;
+      }
+      
+      if(page==='harmonisasi') {
+        // Gunakan pagination system untuk harmonisasi
+        if(typeof window.setCurrentFiltersHarmonisasi === 'function') {
+          window.setCurrentFiltersHarmonisasi({ search: query });
         }
         return;
       }

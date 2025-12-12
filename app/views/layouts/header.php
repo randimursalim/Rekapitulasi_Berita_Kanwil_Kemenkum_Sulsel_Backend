@@ -65,6 +65,64 @@ function is_active($pageName) {
   <!-- Stylesheets -->
   <link rel="stylesheet" href="<?= $BASE ?>/css/style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Set BASE_URL untuk JavaScript -->
+  <script>
+    window.BASE_URL = '<?= $BASE ?>';
+    
+    // Helper function untuk generate image URL (global)
+    if (typeof getImageUrl === 'undefined') {
+      window.getImageUrl = function(path) {
+        if (!path) return null;
+        // Jika sudah full URL atau absolute path, return as is
+        if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) {
+          return path;
+        }
+        // Jika path relatif (storage/uploads/...), tambahkan BASE URL
+        const base = window.BASE_URL || '';
+        return base + '/' + path.replace(/^\//, '');
+      };
+    }
+  </script>
+  
+  <!-- Fallback CSS untuk scrollbar menu (memastikan scrollbar selalu muncul) -->
+  <style>
+    /* Fallback untuk scrollbar nav-links - memastikan scrollbar selalu muncul */
+    nav .menu-items .nav-links {
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      scrollbar-width: thin !important;
+      scrollbar-color: #0E4BF1 #f5f5f5 !important;
+    }
+    nav .menu-items .nav-links::-webkit-scrollbar {
+      width: 8px !important;
+      display: block !important;
+    }
+    nav .menu-items .nav-links::-webkit-scrollbar-track {
+      background: #f5f5f5 !important;
+      border-radius: 4px !important;
+    }
+    nav .menu-items .nav-links::-webkit-scrollbar-thumb {
+      background: #0E4BF1 !important;
+      border-radius: 4px !important;
+      min-height: 30px !important;
+    }
+    nav .menu-items .nav-links::-webkit-scrollbar-thumb:hover {
+      background: #0A3BC7 !important;
+    }
+    body.dark nav .menu-items .nav-links {
+      scrollbar-color: #666 #3A3B3C !important;
+    }
+    body.dark nav .menu-items .nav-links::-webkit-scrollbar-track {
+      background: #3A3B3C !important;
+    }
+    body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb {
+      background: #666 !important;
+    }
+    body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb:hover {
+      background: #777 !important;
+    }
+  </style>
 
   <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -79,6 +137,20 @@ function is_active($pageName) {
   <script>
     // Set BASE_URL untuk JavaScript (untuk path dinamis)
     window.BASE_URL = '<?= $BASE ?>';
+    
+    // Helper function untuk generate image URL (global)
+    if (typeof getImageUrl === 'undefined') {
+      window.getImageUrl = function(path) {
+        if (!path) return null;
+        // Jika sudah full URL atau absolute path, return as is
+        if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) {
+          return path;
+        }
+        // Jika path relatif (storage/uploads/...), tambahkan BASE URL
+        const base = window.BASE_URL || '';
+        return base + '/' + path.replace(/^\//, '');
+      };
+    }
   </script>
   
   <!-- Custom Scripts -->
@@ -97,13 +169,25 @@ function is_active($pageName) {
 
     <div class="menu-items">
       <ul class="nav-links">
+        <?php 
+        $userRole = isset($_SESSION['user']) ? $_SESSION['user']['role'] : '';
+        $isP3H = ($userRole === 'p3h');
+        ?>
+        
+        <?php if (!$isP3H): ?>
         <li><a href="<?= $BASE ?>/index.php?page=dashboard" class="<?= is_active('dashboard') ?>"><i class="fas fa-home"></i><span class="link-name">Dashboard</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=input-konten" class="<?= is_active('input-konten') ?>"><i class="fas fa-plus-circle"></i><span class="link-name">Input Konten</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=rekap-konten" class="<?= is_active('rekap-konten') ?>"><i class="fas fa-database"></i><span class="link-name">Rekap Konten</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=arsip" class="<?= is_active('arsip') ?>"><i class="fas fa-archive"></i><span class="link-name">Arsip</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=jadwal-kegiatan" class="<?= is_active('jadwal-kegiatan') ?>"><i class="fas fa-calendar-alt"></i><span class="link-name">Jadwal Kegiatan</span></a></li>
+        <li><a href="<?= $BASE ?>/index.php?page=jadwal-peminjaman-ruangan" class="<?= is_active('jadwal-peminjaman-ruangan') ?>"><i class="fas fa-door-open"></i><span class="link-name">Peminjaman Ruangan</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=daftar-aduan" class="<?= is_active('daftar-aduan') ?>"><i class="fas fa-exclamation-triangle"></i><span class="link-name">Daftar Aduan</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=layanan-pengaduan" class="<?= is_active('layanan-pengaduan') ?>"><i class="fas fa-gavel"></i><span class="link-name">Layanan Pengaduan</span></a></li>
+        <?php endif; ?>
+        
+        <li><a href="<?= $BASE ?>/index.php?page=harmonisasi" class="<?= is_active('harmonisasi') ?>"><i class="fas fa-balance-scale"></i><span class="link-name">Data Harmonisasi</span></a></li>
+        <li><a href="<?= $BASE ?>/index.php?page=rekap-harmonisasi" class="<?= is_active('rekap-harmonisasi') ?>"><i class="fas fa-chart-line"></i><span class="link-name">Rekap Harmonisasi</span></a></li>
+        
         <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'Admin'): ?>
         <li><a href="<?= $BASE ?>/index.php?page=pengguna" class="<?= is_active('pengguna') ?>"><i class="fas fa-users"></i><span class="link-name">Pengguna</span></a></li>
         <?php endif; ?>
@@ -126,7 +210,7 @@ function is_active($pageName) {
 
       <?php
       // Tampilkan search box di halaman tertentu
-      $showSearch = in_array($currentPage, ['arsip', 'jadwal-kegiatan', 'pengguna', 'daftar-aduan', 'layanan-pengaduan']);
+      $showSearch = in_array($currentPage, ['arsip', 'jadwal-kegiatan', 'jadwal-peminjaman-ruangan', 'pengguna', 'daftar-aduan', 'layanan-pengaduan', 'harmonisasi']);
       ?>
 
       <?php if ($showSearch): ?>

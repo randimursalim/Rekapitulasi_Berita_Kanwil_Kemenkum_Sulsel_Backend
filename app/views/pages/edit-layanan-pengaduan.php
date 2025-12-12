@@ -32,7 +32,7 @@ if (!isset($BASE)) {
 <div class="activity-wrapper form-wrapper">
     <div class="activity form-activity">
         <div class="form-container">
-            <form id="formLayananPengaduan" class="input-berita-form" action="index.php?page=update-layanan-pengaduan" method="POST" autocomplete="off">
+            <form id="formLayananPengaduan" class="input-berita-form" action="index.php?page=update-layanan-pengaduan" method="POST" autocomplete="off" enctype="multipart/form-data">
                 <input type="hidden" name="id" value="<?= htmlspecialchars($layananPengaduan['id']) ?>">
                 
                 <h3 style="margin-bottom: 20px; color: var(--text-color);">Data Pelapor</h3>
@@ -41,7 +41,8 @@ if (!isset($BASE)) {
                     <label for="noRegisterPengaduan">No. Register Pengaduan <span style="color: red;">*</span></label>
                     <input type="text" id="noRegisterPengaduan" name="noRegisterPengaduan" 
                            value="<?= htmlspecialchars($layananPengaduan['no_register_pengaduan']) ?>" 
-                           placeholder="Masukkan nomor register pengaduan" required>
+                           placeholder="Nomor register pengaduan" readonly style="background-color: #f0f0f0; cursor: not-allowed;">
+                    <small style="color: #666; font-size: 0.9em;">Nomor register tidak dapat diubah</small>
                 </div>
 
                 <div class="form-group">
@@ -146,6 +147,70 @@ if (!isset($BASE)) {
                     <input type="text" id="jenisAduanLainnya" name="jenisAduanLainnya" 
                            value="<?= htmlspecialchars($layananPengaduan['jenis_aduan_lainnya'] ?? '') ?>" 
                            placeholder="Masukkan jenis aduan lainnya" <?= $layananPengaduan['jenis_aduan'] === 'Lainnya' ? 'required' : '' ?>>
+                </div>
+
+                <h3 style="margin: 30px 0 20px 0; color: var(--text-color);">Tindak Lanjut</h3>
+
+                <div class="form-group">
+                    <label for="tindakLanjut">Tindak Lanjut <span style="color: red;">*</span></label>
+                    <select id="tindakLanjut" name="tindakLanjut" required>
+                        <option value="belum diproses" <?= ($layananPengaduan['tindak_lanjut'] ?? 'belum diproses') === 'belum diproses' ? 'selected' : '' ?>>Belum Diproses</option>
+                        <option value="proses" <?= ($layananPengaduan['tindak_lanjut'] ?? '') === 'proses' ? 'selected' : '' ?>>Proses</option>
+                        <option value="selesai" <?= ($layananPengaduan['tindak_lanjut'] ?? '') === 'selesai' ? 'selected' : '' ?>>Selesai</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="keterangan">Keterangan</label>
+                    <textarea id="keterangan" name="keterangan" rows="4" placeholder="Masukkan keterangan dalam bentuk teks (opsional)"><?php
+                        $keteranganLama = $layananPengaduan['keterangan'] ?? '';
+                        if (!empty($keteranganLama)) {
+                            // Parse keterangan: jika ada "FILE:", ambil bagian teks saja
+                            if (strpos($keteranganLama, 'FILE:') !== false) {
+                                $parts = explode('FILE:', $keteranganLama, 2);
+                                echo htmlspecialchars(trim($parts[0]));
+                            } else if (strpos($keteranganLama, 'storage/uploads/') !== false || preg_match('/\.(pdf|jpg|jpeg|png|doc|docx)$/i', $keteranganLama)) {
+                                // Format lama: hanya file, tidak ada teks
+                                echo '';
+                            } else {
+                                // Hanya teks
+                                echo htmlspecialchars($keteranganLama);
+                            }
+                        }
+                    ?></textarea>
+                    <small style="color: #666; font-size: 0.9em; display: block; margin-top: 5px;">Bisa diisi teks dan/atau upload file</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="keteranganFile">Upload File Keterangan (Opsional)</label>
+                    <input type="file" id="keteranganFile" name="keteranganFile" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                    <small style="color: #666; font-size: 0.9em; display: block; margin-top: 5px;">Format: PDF, JPG, PNG, DOC, DOCX (Maks. 10MB)</small>
+                    <?php
+                        $keteranganLama = $layananPengaduan['keterangan'] ?? '';
+                        $filePath = '';
+                        if (!empty($keteranganLama)) {
+                            // Parse keterangan untuk ekstrak file path
+                            if (strpos($keteranganLama, 'FILE:') !== false) {
+                                $parts = explode('FILE:', $keteranganLama, 2);
+                                $filePath = trim($parts[1] ?? '');
+                            } else if (strpos($keteranganLama, 'storage/uploads/') !== false || preg_match('/\.(pdf|jpg|jpeg|png|doc|docx)$/i', $keteranganLama)) {
+                                // Format lama: hanya file
+                                $filePath = $keteranganLama;
+                            }
+                        }
+                        if (!empty($filePath)):
+                    ?>
+                        <div style="margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 5px;">
+                            <p style="color: #666; font-size: 0.9em; margin-bottom: 5px;"><i class="fas fa-file"></i> File saat ini:</p>
+                            <a href="<?= htmlspecialchars($filePath) ?>" target="_blank" style="color: #0E4BF1; text-decoration: none;">
+                                <i class="fas fa-download"></i> <?= basename($filePath) ?>
+                            </a>
+                            <small style="display: block; color: #999; font-size: 0.85em; margin-top: 5px;">Upload file baru untuk mengganti file ini</small>
+                        </div>
+                    <?php endif; ?>
+                    <div id="keteranganFilePreview" style="margin-top: 10px; display: none;">
+                        <p style="color: #28a745; font-size: 0.9em;"><i class="fas fa-check-circle"></i> File baru dipilih: <span id="keteranganFileName"></span></p>
+                    </div>
                 </div>
 
                 <!-- Tombol Aksi -->

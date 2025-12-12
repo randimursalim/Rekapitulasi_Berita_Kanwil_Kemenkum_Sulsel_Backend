@@ -703,6 +703,7 @@ class KontenModel {
             $uniqueFiles = [];
             
             // Query: Only berita with jenis_berita = 'website_kanwil'
+            // Take 5x limit to account for duplicates (should be enough for 15 unique photos)
             $stmt = $this->db->prepare("
                 SELECT 
                     k.id_konten,
@@ -728,10 +729,13 @@ class KontenModel {
                 ORDER BY k.id_konten DESC
                 LIMIT :limit
             ");
-            $stmt->bindValue(':limit', $limit * 2, PDO::PARAM_INT); // Get more to account for duplicates
+            // Fetch 5x the limit to ensure we get enough unique photos
+            $stmt->bindValue(':limit', $limit * 5, PDO::PARAM_INT);
             $stmt->execute();
             
+            $totalFetched = 0;
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $totalFetched++;
                 $dokumentasi = $row['dokumentasi'];
                 if (empty($dokumentasi)) continue;
                 
@@ -757,6 +761,12 @@ class KontenModel {
                     if (count($photos) >= $limit) break;
                 }
             }
+            
+            // Log for debugging
+            error_log("[GALLERY] Requested: {$limit}, Fetched from DB: {$totalFetched}, Unique photos: " . count($photos));
+            
+            // Limit to requested amount (in case we got more)
+            $photos = array_slice($photos, 0, $limit);
             
             return $photos;
         } catch (PDOException $e) {

@@ -722,6 +722,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  function escapeXml(text) {
+    if (!text) return '';
+    return String(text)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;');
+  }
+
   // Tambah keyword
   function addKeyword() {
     const keyword = keywordInput.value.trim();
@@ -1219,57 +1229,79 @@ document.addEventListener('DOMContentLoaded', function() {
         const hasBerita = allData.some(k => k.jenis === 'berita');
         const showSumberMedia = hasBerita;
 
-      // CSV format untuk Excel
-      let csvContent = '\uFEFF'; // BOM untuk UTF-8
-      
-      // Header - gabungkan Jenis dan Platform menjadi "Jenis Platform"
-      let headers = ['No', 'Judul', 'Jenis Platform'];
-      if (showSumberMedia) {
-        headers.push('Sumber/Media');
-      }
-      headers.push('Tanggal', 'Link');
-      csvContent += headers.join('\t') + '\n';
-
-        // Data
-        allData.forEach((k, index) => {
-        const no = index + 1;
-        const judul = (k.judul || '-').replace(/\t/g, ' ').replace(/\n/g, ' ').replace(/\r/g, ' ').trim();
-        
-        // Format Jenis Platform: hanya tampilkan nama platform
-        let jenisPlatform = '-';
-        if (k.jenis === 'berita') {
-          // Untuk berita, tampilkan jenis berita (Media Online, Surat Kabar, Website Kanwil)
-          jenisPlatform = k.jenis_berita ? k.jenis_berita.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Berita';
-        } else {
-          // Untuk media sosial, tampilkan nama platform saja
-          const platformNames = {
-            'instagram': 'Instagram',
-            'youtube': 'YouTube',
-            'tiktok': 'TikTok',
-            'twitter': 'Twitter',
-            'facebook': 'Facebook'
-          };
-          jenisPlatform = platformNames[k.jenis] || k.jenis || 'Media Sosial';
+        // Gunakan SheetJS untuk membuat file Excel yang benar
+        if (typeof XLSX === 'undefined') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Library Excel tidak tersedia. Silakan refresh halaman.'
+          });
+          return;
         }
-        
-        const tanggal = formatSearchDate(k.tanggal_berita || k.tanggal_post || '-');
-        const link = k.jenis === 'berita' ? (k.link_berita || '-') : (k.link_post || '-');
-        const sumberMedia = k.jenis === 'berita' ? ((k.sumber_berita || '-').replace(/\t/g, ' ').replace(/\n/g, ' ').replace(/\r/g, ' ').trim()) : '-';
 
-        let row = [no, judul, jenisPlatform];
+        // Siapkan data untuk Excel
+        let excelData = [];
+        
+        // Header row
+        let headers = ['No', 'Judul', 'Jenis Platform'];
         if (showSumberMedia) {
-          row.push(sumberMedia);
+          headers.push('Sumber/Media');
         }
-        row.push(tanggal, link);
-        csvContent += row.join('\t') + '\n';
-      });
+        headers.push('Tanggal', 'Link');
+        excelData.push(headers);
 
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'Hasil_Pencarian_Konten_' + new Date().toISOString().split('T')[0] + '.xls';
-        link.click();
+        // Data rows
+        allData.forEach((k, index) => {
+          // Format Jenis Platform: hanya tampilkan nama platform
+          let jenisPlatform = '-';
+          if (k.jenis === 'berita') {
+            // Untuk berita, tampilkan jenis berita (Media Online, Surat Kabar, Website Kanwil)
+            jenisPlatform = k.jenis_berita ? k.jenis_berita.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Berita';
+          } else {
+            // Untuk media sosial, tampilkan nama platform saja
+            const platformNames = {
+              'instagram': 'Instagram',
+              'youtube': 'YouTube',
+              'tiktok': 'TikTok',
+              'twitter': 'Twitter',
+              'facebook': 'Facebook'
+            };
+            jenisPlatform = platformNames[k.jenis] || k.jenis || 'Media Sosial';
+          }
+          
+          const tanggal = formatSearchDate(k.tanggal_berita || k.tanggal_post || '-');
+          const link = k.jenis === 'berita' ? (k.link_berita || '-') : (k.link_post || '-');
+          const sumberMedia = k.jenis === 'berita' ? (k.sumber_berita || '-') : '-';
+
+          let row = [index + 1, k.judul || '-', jenisPlatform];
+          if (showSumberMedia) {
+            row.push(sumberMedia);
+          }
+          row.push(tanggal, link);
+          excelData.push(row);
+        });
+
+        // Buat workbook
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(excelData);
+        
+        // Set column widths
+        const colWidths = [
+          { wch: 5 },  // No
+          { wch: 50 }, // Judul
+          { wch: 20 }, // Jenis Platform
+        ];
+        if (showSumberMedia) {
+          colWidths.push({ wch: 25 }); // Sumber/Media
+        }
+        colWidths.push({ wch: 12 }, { wch: 50 }); // Tanggal, Link
+        ws['!cols'] = colWidths;
+
+        // Tambahkan worksheet ke workbook
+        XLSX.utils.book_append_sheet(wb, ws, 'Hasil Pencarian');
+
+        // Download file
+        XLSX.writeFile(wb, 'Hasil_Pencarian_Konten_' + new Date().toISOString().split('T')[0] + '.xlsx');
         
         Swal.close();
       } catch (error) {

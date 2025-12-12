@@ -431,6 +431,492 @@ function renderEmptySchedule() {
   `;
 }
 
+// Schedule Peminjaman Ruangan Management
+let isLoadingSchedulePeminjaman = false;
+
+async function loadSchedulePeminjaman() {
+  if (isLoadingSchedulePeminjaman) return;
+  
+  const scheduleTimeline = document.getElementById('schedulePeminjamanTimeline');
+  if (!scheduleTimeline) return;
+  
+  isLoadingSchedulePeminjaman = true;
+  
+  try {
+    // Gunakan path relatif dari landing.php
+    const response = await fetch('ajax/schedule_peminjaman_landing.php');
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const result = await response.json();
+    
+    if (result.success && result.data && result.data.length > 0) {
+      renderSchedulePeminjamanFromDatabase(result.data);
+    } else {
+      // Jika tidak ada jadwal peminjaman ruangan 7 hari ke depan, tampilkan empty state
+      renderEmptySchedulePeminjaman();
+    }
+    
+  } catch (error) {
+    // Tampilkan empty state jika error
+    renderEmptySchedulePeminjaman();
+  } finally {
+    isLoadingSchedulePeminjaman = false;
+  }
+}
+
+// Render schedule peminjaman ruangan from database
+function renderSchedulePeminjamanFromDatabase(scheduleData) {
+  const scheduleTimeline = document.getElementById('schedulePeminjamanTimeline');
+  if (!scheduleTimeline) return;
+  
+  // Group data by day of week (7 hari ke depan)
+  const weeklySchedule = {
+    'Senin': [],
+    'Selasa': [],
+    'Rabu': [],
+    'Kamis': [],
+    'Jumat': [],
+    'Sabtu': [],
+    'Minggu': []
+  };
+  
+  // Map Indonesian day names
+  const dayNames = {
+    'Monday': 'Senin',
+    'Tuesday': 'Selasa', 
+    'Wednesday': 'Rabu',
+    'Thursday': 'Kamis',
+    'Friday': 'Jumat',
+    'Saturday': 'Sabtu',
+    'Sunday': 'Minggu'
+  };
+  
+  // Group activities by day (7 hari ke depan) with deduplication
+  const uniqueActivities = [];
+  const seenIds = new Set();
+  
+  scheduleData.forEach(activity => {
+    if (!seenIds.has(activity.id)) {
+      seenIds.add(activity.id);
+      uniqueActivities.push(activity);
+    }
+  });
+  
+  uniqueActivities.forEach(activity => {
+    const date = new Date(activity.date);
+    const dayName = dayNames[date.toLocaleDateString('en-US', { weekday: 'long' })];
+    
+    if (weeklySchedule[dayName]) {
+      weeklySchedule[dayName].push({
+        id: activity.id,
+        title: activity.title,
+        date: activity.date,
+        time: activity.time,
+        description: activity.description,
+        status: activity.status,
+        type: activity.type,
+        color: activity.color,
+        ruangan: activity.ruangan || 'Tidak disebutkan',
+        peminjam: activity.peminjam || 'Tidak disebutkan'
+      });
+    }
+  });
+  
+  // Sort activities by time within each day
+  Object.keys(weeklySchedule).forEach(day => {
+    weeklySchedule[day].sort((a, b) => {
+      const timeA = a.time.split(' - ')[0];
+      const timeB = b.time.split(' - ')[0];
+      return timeA.localeCompare(timeB);
+    });
+  });
+  
+  // Generate HTML for weekly grid
+  const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+  const timeSlots = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+  
+  let scheduleHTML = `
+    <div class="schedule-grid">
+      <div class="schedule-header">
+        <div class="time-column">Waktu</div>
+        ${days.map(day => `<div class="day-header">${day}</div>`).join('')}
+      </div>
+      <div class="schedule-body">
+  `;
+  
+  // Generate time slots with better activity matching
+  timeSlots.forEach(timeSlot => {
+    scheduleHTML += `
+      <div class="schedule-row">
+        <div class="time-slot">${timeSlot}</div>
+        ${days.map(day => {
+          // Find activities that start at this time slot (exact matching)
+          const activities = weeklySchedule[day].filter(activity => {
+            const startTime = activity.time.split(' - ')[0];
+            const slotHour = timeSlot.substring(0, 2);
+            const activityHour = startTime.substring(0, 2);
+            
+            // Only match if activity starts exactly at this hour
+            return activityHour === slotHour;
+          });
+          
+            if (activities.length > 0) {
+              // Display all activities for this time slot with additional deduplication
+              const uniqueActivities = [];
+              const seenIds = new Set();
+              
+              activities.forEach(activity => {
+                if (!seenIds.has(activity.id)) {
+                  seenIds.add(activity.id);
+                  uniqueActivities.push(activity);
+                }
+              });
+              
+              const activitiesHTML = uniqueActivities.map(activity => `
+                <div class="schedule-event" 
+                     data-event-data='${JSON.stringify(activity)}'
+                     style="background-color: ${activity.color}; border-left: 4px solid ${activity.color}">
+                  <div class="event-title">${activity.title}</div>
+                  <div class="event-time">${activity.time}</div>
+                </div>
+              `).join('');
+              
+              return `
+                <div class="day-cell">
+                  ${activitiesHTML}
+                </div>
+              `;
+            } else {
+              return '<div class="day-cell"></div>';
+            }
+        }).join('')}
+      </div>
+    `;
+  });
+  
+  scheduleHTML += `
+      </div>
+    </div>
+  `;
+  
+  scheduleTimeline.innerHTML = scheduleHTML;
+  
+  // Initialize interactions for peminjaman ruangan
+  initializeSchedulePeminjamanInteractions();
+}
+
+// Render empty schedule peminjaman ruangan message
+function renderEmptySchedulePeminjaman() {
+  const scheduleTimeline = document.getElementById('schedulePeminjamanTimeline');
+  if (!scheduleTimeline) return;
+  
+  scheduleTimeline.innerHTML = `
+    <div class="schedule-empty-message">
+      <div class="empty-message-icon">
+        <i class="fas fa-calendar-times"></i>
+      </div>
+      <h3>Jadwal Peminjaman Ruangan Belum Ada</h3>
+      <p>Belum ada jadwal peminjaman ruangan untuk 7 hari ke depan (termasuk hari ini)</p>
+    </div>
+  `;
+}
+
+// Render placeholder schedule peminjaman ruangan (contoh data)
+function renderPlaceholderSchedulePeminjaman() {
+  const scheduleTimeline = document.getElementById('schedulePeminjamanTimeline');
+  if (!scheduleTimeline) return;
+  
+  // Hitung tanggal untuk 7 hari ke depan
+  const today = new Date();
+  const dayNames = {
+    'Monday': 'Senin',
+    'Tuesday': 'Selasa', 
+    'Wednesday': 'Rabu',
+    'Thursday': 'Kamis',
+    'Friday': 'Jumat',
+    'Saturday': 'Sabtu',
+    'Sunday': 'Minggu'
+  };
+  
+  // Fungsi untuk mendapatkan tanggal berdasarkan hari
+  function getDateForDay(dayName) {
+    const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+    const dayIndex = days.indexOf(dayName);
+    if (dayIndex === -1) return null;
+    
+    const currentDay = today.getDay();
+    const targetDay = dayIndex === 0 ? 1 : (dayIndex === 6 ? 0 : dayIndex + 1); // Convert to JS day (0=Sunday)
+    let diff = targetDay - currentDay;
+    if (diff <= 0) diff += 7; // Next week if already passed
+    
+    const targetDate = new Date(today);
+    targetDate.setDate(today.getDate() + diff);
+    return targetDate.toISOString().split('T')[0];
+  }
+  
+  // Weekly schedule data dengan contoh peminjaman ruangan
+  const weeklySchedule = {
+    'Senin': [
+      { 
+        id: 'placeholder-1',
+        date: getDateForDay('Senin'),
+        time: '09:00 - 11:00', 
+        title: 'Rapat Koordinasi Bulanan', 
+        type: 'meeting', 
+        color: '#3b82f6',
+        description: 'Rapat koordinasi bulanan untuk membahas program kerja dan evaluasi kinerja seluruh unit kerja.',
+        ruangan: 'Ruang Rapat Baharuddin Lopa (Kakanwil)',
+        peminjam: 'Budi Santoso'
+      },
+      { 
+        id: 'placeholder-2',
+        date: getDateForDay('Senin'),
+        time: '14:00 - 16:00', 
+        title: 'Seminar Hukum dan HAM', 
+        type: 'seminar', 
+        color: '#8b5cf6',
+        description: 'Seminar tentang perkembangan hukum dan hak asasi manusia terkini dengan narasumber ahli.',
+        ruangan: 'Aula Pancasila (Lantai 3)',
+        peminjam: 'Siti Nurhaliza'
+      }
+    ],
+    'Selasa': [
+      { 
+        id: 'placeholder-3',
+        date: getDateForDay('Selasa'),
+        time: '10:00 - 12:00', 
+        title: 'Pelatihan Digitalisasi Dokumen', 
+        type: 'training', 
+        color: '#10b981',
+        description: 'Pelatihan penggunaan sistem digitalisasi dokumen untuk meningkatkan efisiensi kerja.',
+        ruangan: 'Ruang Rapat Andi Mattalatta (Lantai 1)',
+        peminjam: 'Ahmad Fauzi'
+      }
+    ],
+    'Rabu': [
+      { 
+        id: 'placeholder-4',
+        date: getDateForDay('Rabu'),
+        time: '09:00 - 11:00', 
+        title: 'Evaluasi Program Tahunan', 
+        type: 'evaluation', 
+        color: '#6366f1',
+        description: 'Evaluasi program kerja tahunan dan perencanaan strategis tahun depan.',
+        ruangan: 'Ruang Rapat Hamid Awaluddin (Lantai 2)',
+        peminjam: 'Dewi Sartika'
+      },
+      { 
+        id: 'placeholder-5',
+        date: getDateForDay('Rabu'),
+        time: '13:00 - 15:00', 
+        title: 'Workshop Penyusunan Laporan', 
+        type: 'workshop', 
+        color: '#ef4444',
+        description: 'Workshop penyusunan laporan kinerja dan evaluasi program kerja.',
+        ruangan: 'Ruang Rapat Bhinneka Tunggal Ika (Lantai 3)',
+        peminjam: 'Rudi Hartono'
+      }
+    ],
+    'Kamis': [
+      { 
+        id: 'placeholder-6',
+        date: getDateForDay('Kamis'),
+        time: '09:30 - 11:30', 
+        title: 'Training Pegawai Baru', 
+        type: 'training', 
+        color: '#10b981',
+        description: 'Pelatihan orientasi dan pengenalan sistem kerja untuk pegawai baru.',
+        ruangan: 'Aula Pancasila (Lantai 3)',
+        peminjam: 'Maya Sari'
+      }
+    ],
+    'Jumat': [
+      { 
+        id: 'placeholder-7',
+        date: getDateForDay('Jumat'),
+        time: '10:00 - 12:00', 
+        title: 'Rapat Tim Humas', 
+        type: 'meeting', 
+        color: '#3b82f6',
+        description: 'Rapat koordinasi tim humas untuk membahas strategi komunikasi dan publikasi.',
+        ruangan: 'Ruang Rapat Baharuddin Lopa (Kakanwil)',
+        peminjam: 'Indra Gunawan'
+      }
+    ],
+    'Sabtu': [],
+    'Minggu': []
+  };
+  
+  // Generate HTML for weekly grid (sama seperti renderSchedulePeminjamanFromDatabase)
+  const days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
+  const timeSlots = ['07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+  
+  let scheduleHTML = `
+    <div class="schedule-grid">
+      <div class="schedule-header">
+        <div class="time-column">Waktu</div>
+        ${days.map(day => `<div class="day-header">${day}</div>`).join('')}
+      </div>
+      <div class="schedule-body">
+  `;
+  
+  // Generate time slots
+  timeSlots.forEach(timeSlot => {
+    scheduleHTML += `
+      <div class="schedule-row">
+        <div class="time-slot">${timeSlot}</div>
+        ${days.map(day => {
+          // Find activities that start at this time slot
+          const activities = weeklySchedule[day].filter(activity => {
+            const startTime = activity.time.split(' - ')[0];
+            const slotHour = timeSlot.substring(0, 2);
+            const activityHour = startTime.substring(0, 2);
+            return activityHour === slotHour;
+          });
+          
+          if (activities.length > 0) {
+            const activitiesHTML = activities.map(activity => `
+              <div class="schedule-event" 
+                   data-event-data='${JSON.stringify(activity)}'
+                   style="background-color: ${activity.color}; border-left: 4px solid ${activity.color}">
+                <div class="event-title">${activity.title}</div>
+                <div class="event-time">${activity.time}</div>
+              </div>
+            `).join('');
+            
+            return `
+              <div class="day-cell">
+                ${activitiesHTML}
+              </div>
+            `;
+          } else {
+            return '<div class="day-cell"></div>';
+          }
+        }).join('')}
+      </div>
+    `;
+  });
+  
+  scheduleHTML += `
+      </div>
+    </div>
+  `;
+  
+  scheduleTimeline.innerHTML = scheduleHTML;
+  
+  // Initialize interactions
+  initializeSchedulePeminjamanInteractions();
+}
+
+// Initialize schedule peminjaman ruangan interactions
+function initializeSchedulePeminjamanInteractions() {
+  const scheduleEvents = document.querySelectorAll('#schedulePeminjamanTimeline .schedule-event');
+  const modal = document.getElementById('schedulePeminjamanModal');
+  const modalTitle = document.getElementById('modalPeminjamanTitle');
+  const modalBody = document.getElementById('modalPeminjamanBody');
+  const modalClose = document.getElementById('modalPeminjamanClose');
+  const modalBackdrop = modal?.querySelector('.modal-backdrop');
+  
+  scheduleEvents.forEach(event => {
+    event.addEventListener('click', function() {
+      const eventData = JSON.parse(this.getAttribute('data-event-data'));
+      showSchedulePeminjamanModal(eventData);
+    });
+  });
+  
+  // Close modal handlers
+  if (modalClose) {
+    modalClose.addEventListener('click', () => {
+      closeSchedulePeminjamanModal();
+    });
+  }
+  
+  if (modalBackdrop) {
+    modalBackdrop.addEventListener('click', () => {
+      closeSchedulePeminjamanModal();
+    });
+  }
+  
+  // Close modal with Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && modal && modal.style.display === 'flex') {
+      closeSchedulePeminjamanModal();
+    }
+  });
+}
+
+// Show schedule peminjaman ruangan modal
+function showSchedulePeminjamanModal(eventData) {
+  const modal = document.getElementById('schedulePeminjamanModal');
+  const modalTitle = document.getElementById('modalPeminjamanTitle');
+  const modalBody = document.getElementById('modalPeminjamanBody');
+  
+  if (!modal || !modalTitle || !modalBody) return;
+  
+  // Set modal title
+  modalTitle.textContent = eventData.title;
+  
+  // Format tanggal
+  const tanggalFormatted = eventData.date ? 
+    new Date(eventData.date).toLocaleDateString('id-ID', { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    }) : 
+    'Tidak disebutkan';
+  
+  // Create modal content dengan format sama seperti jadwal kegiatan (tanpa keterangan)
+  const modalContent = `
+    <div class="modal-event-info">
+      <div class="event-detail-header">
+        <div class="event-time-detail">${eventData.time || 'Tidak disebutkan'}</div>
+        <div class="event-type-badge" style="background-color: ${eventData.color || '#3b82f6'}">
+          ${(eventData.type || 'room-booking').toUpperCase()}
+        </div>
+      </div>
+      
+      <div class="event-details">
+        <div class="detail-row">
+          <div class="detail-label">Tanggal:</div>
+          <div class="detail-value">${tanggalFormatted}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Ruangan:</div>
+          <div class="detail-value">${eventData.ruangan || 'Tidak disebutkan'}</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Peminjam:</div>
+          <div class="detail-value">${eventData.peminjam || 'Tidak disebutkan'}</div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  modalBody.innerHTML = modalContent;
+  modal.style.display = 'flex';
+  
+  // Add animation
+  setTimeout(() => {
+    modal.classList.add('show');
+  }, 10);
+}
+
+// Close schedule peminjaman ruangan modal
+function closeSchedulePeminjamanModal() {
+  const modal = document.getElementById('schedulePeminjamanModal');
+  if (!modal) return;
+  
+  modal.classList.remove('show');
+  
+  setTimeout(() => {
+    modal.style.display = 'none';
+  }, 300);
+}
+
 // Render placeholder schedule (backup - not used if empty schedule detected)
 function renderPlaceholderSchedule() {
   const scheduleTimeline = document.getElementById('scheduleTimeline');
@@ -991,6 +1477,9 @@ function initializeLandingPage() {
   // Load schedule
   loadSchedule();
   
+  // Load schedule peminjaman ruangan
+  loadSchedulePeminjaman();
+  
   // Load news portal
   loadNewsPortal();
   
@@ -1023,8 +1512,37 @@ function initializeLandingPage() {
   }, 100);
 }
 
+// Dropdown Menu Toggle for Mobile
+function initializeDropdownMenu() {
+  const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+  
+  dropdownToggles.forEach(toggle => {
+    toggle.addEventListener('click', function(e) {
+      // Only prevent default on mobile/tablet
+      if (window.innerWidth <= 768) {
+        e.preventDefault();
+        const dropdown = this.closest('.dropdown');
+        dropdown.classList.toggle('active');
+      }
+    });
+  });
+  
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth <= 768) {
+      const dropdowns = document.querySelectorAll('.dropdown');
+      dropdowns.forEach(dropdown => {
+        if (!dropdown.contains(e.target)) {
+          dropdown.classList.remove('active');
+        }
+      });
+    }
+  });
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   initializeCommon();
   initializeLandingPage();
+  initializeDropdownMenu();
 });

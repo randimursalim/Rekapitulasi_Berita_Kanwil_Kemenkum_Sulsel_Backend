@@ -17,7 +17,7 @@ class LayananPengaduanModel {
         $query = "
         SELECT id, no_register_pengaduan, nama, alamat, jenis_tanda_pengenal, jenis_tanda_pengenal_lainnya, no_tanda_pengenal, 
                no_telp, judul_laporan, isi_laporan, tanggal_kejadian, lokasi_kejadian, 
-               kategori_laporan, jenis_aduan, jenis_aduan_lainnya, tanggal_pengaduan
+               kategori_laporan, jenis_aduan, jenis_aduan_lainnya, tanggal_pengaduan, tindak_lanjut, keterangan
         FROM layanan_pengaduan
         WHERE 1=1
         ";
@@ -70,11 +70,59 @@ class LayananPengaduanModel {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Generate nomor register acak dengan prefix "P"
+    public function generateNoRegister() {
+        try {
+            $maxAttempts = 10; // Maksimal 10 kali coba untuk menghindari infinite loop
+            $attempt = 0;
+            
+            do {
+                // Generate nomor acak 6 digit (P + 6 angka)
+                // Format: P123456, P789012, dll
+                $randomNumber = str_pad(rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+                $noRegister = 'P' . $randomNumber;
+                
+                // Cek apakah nomor sudah ada
+                $stmt = $this->db->prepare("SELECT COUNT(*) as count FROM layanan_pengaduan WHERE no_register_pengaduan = :no_register");
+                $stmt->bindParam(':no_register', $noRegister);
+                $stmt->execute();
+                $result = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                $attempt++;
+                
+                // Jika nomor belum ada, return
+                if ($result['count'] == 0) {
+                    return $noRegister;
+                }
+                
+            } while ($attempt < $maxAttempts);
+            
+            // Jika setelah 10 kali masih duplikat, gunakan timestamp sebagai fallback
+            $timestamp = substr(time(), -6); // Ambil 6 digit terakhir dari timestamp
+            return 'P' . $timestamp;
+            
+        } catch (PDOException $e) {
+            error_log("[ERROR] Generate No Register: " . $e->getMessage());
+            // Fallback: use timestamp-based number
+            $timestamp = substr(time(), -6);
+            return 'P' . $timestamp;
+        }
+    }
+
+    // Ambil layanan pengaduan berdasarkan nomor register
+    public function getLayananPengaduanByNoRegister($noRegister) {
+        $query = "SELECT * FROM layanan_pengaduan WHERE no_register_pengaduan = :no_register";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':no_register', $noRegister);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     // Tambah layanan pengaduan baru
     public function tambahLayananPengaduan($data) {
         try {
-            $query = "INSERT INTO layanan_pengaduan (no_register_pengaduan, nama, alamat, jenis_tanda_pengenal, jenis_tanda_pengenal_lainnya, no_tanda_pengenal, no_telp, judul_laporan, isi_laporan, tanggal_kejadian, lokasi_kejadian, kategori_laporan, jenis_aduan, jenis_aduan_lainnya) 
-                      VALUES (:no_register_pengaduan, :nama, :alamat, :jenis_tanda_pengenal, :jenis_tanda_pengenal_lainnya, :no_tanda_pengenal, :no_telp, :judul_laporan, :isi_laporan, :tanggal_kejadian, :lokasi_kejadian, :kategori_laporan, :jenis_aduan, :jenis_aduan_lainnya)";
+            $query = "INSERT INTO layanan_pengaduan (no_register_pengaduan, nama, alamat, jenis_tanda_pengenal, jenis_tanda_pengenal_lainnya, no_tanda_pengenal, no_telp, judul_laporan, isi_laporan, tanggal_kejadian, lokasi_kejadian, kategori_laporan, jenis_aduan, jenis_aduan_lainnya, tindak_lanjut, keterangan) 
+                      VALUES (:no_register_pengaduan, :nama, :alamat, :jenis_tanda_pengenal, :jenis_tanda_pengenal_lainnya, :no_tanda_pengenal, :no_telp, :judul_laporan, :isi_laporan, :tanggal_kejadian, :lokasi_kejadian, :kategori_laporan, :jenis_aduan, :jenis_aduan_lainnya, :tindak_lanjut, :keterangan)";
             
             $stmt = $this->db->prepare($query);
             $jenisTandaPengenalLainnya = !empty($data['jenis_tanda_pengenal_lainnya']) ? $data['jenis_tanda_pengenal_lainnya'] : null;
@@ -107,12 +155,37 @@ class LayananPengaduanModel {
             } else {
                 $stmt->bindValue(':jenis_aduan_lainnya', null, PDO::PARAM_NULL);
             }
+            
+            // Handle tindak_lanjut (default: 'belum diproses')
+            $tindakLanjut = $data['tindak_lanjut'] ?? 'belum diproses';
+            $stmt->bindParam(':tindak_lanjut', $tindakLanjut);
+            
+            // Handle keterangan (nullable)
+            $keterangan = isset($data['keterangan']) && $data['keterangan'] !== '' ? $data['keterangan'] : null;
+            error_log("[LAYANAN PENGADUAN MODEL] Keterangan value: " . ($keterangan ?? 'NULL'));
+            error_log("[LAYANAN PENGADUAN MODEL] Keterangan length: " . ($keterangan ? strlen($keterangan) : 0));
+            if ($keterangan !== null) {
+                $stmt->bindParam(':keterangan', $keterangan);
+                error_log("[LAYANAN PENGADUAN MODEL] Binding keterangan as string: " . substr($keterangan, 0, 100) . "...");
+            } else {
+                $stmt->bindValue(':keterangan', null, PDO::PARAM_NULL);
+                error_log("[LAYANAN PENGADUAN MODEL] Binding keterangan as NULL");
+            }
 
+            error_log("[LAYANAN PENGADUAN MODEL] Executing INSERT query...");
             $result = $stmt->execute();
             
             if (!$result) {
                 $errorInfo = $stmt->errorInfo();
                 error_log("[ERROR] Tambah Layanan Pengaduan Model: " . print_r($errorInfo, true));
+            } else {
+                error_log("[LAYANAN PENGADUAN MODEL] INSERT successful! Last insert ID: " . $this->db->lastInsertId());
+                // Verify data was saved
+                $lastId = $this->db->lastInsertId();
+                $verifyStmt = $this->db->prepare("SELECT keterangan FROM layanan_pengaduan WHERE id = ?");
+                $verifyStmt->execute([$lastId]);
+                $verifyData = $verifyStmt->fetch(PDO::FETCH_ASSOC);
+                error_log("[LAYANAN PENGADUAN MODEL] Verified saved keterangan: " . ($verifyData['keterangan'] ?? 'NULL'));
             }
             
             return $result;
@@ -139,7 +212,9 @@ class LayananPengaduanModel {
                       lokasi_kejadian = :lokasi_kejadian,
                       kategori_laporan = :kategori_laporan,
                       jenis_aduan = :jenis_aduan,
-                      jenis_aduan_lainnya = :jenis_aduan_lainnya
+                      jenis_aduan_lainnya = :jenis_aduan_lainnya,
+                      tindak_lanjut = :tindak_lanjut,
+                      keterangan = :keterangan
                       WHERE id = :id";
             
             $stmt = $this->db->prepare($query);
@@ -173,6 +248,18 @@ class LayananPengaduanModel {
                 $stmt->bindParam(':jenis_aduan_lainnya', $jenisAduanLainnya);
             } else {
                 $stmt->bindValue(':jenis_aduan_lainnya', null, PDO::PARAM_NULL);
+            }
+            
+            // Handle tindak_lanjut
+            $tindakLanjut = $data['tindak_lanjut'] ?? 'belum diproses';
+            $stmt->bindParam(':tindak_lanjut', $tindakLanjut);
+            
+            // Handle keterangan (nullable)
+            $keterangan = !empty($data['keterangan']) ? $data['keterangan'] : null;
+            if ($keterangan !== null) {
+                $stmt->bindParam(':keterangan', $keterangan);
+            } else {
+                $stmt->bindValue(':keterangan', null, PDO::PARAM_NULL);
             }
 
             $result = $stmt->execute();

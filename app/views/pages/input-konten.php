@@ -148,6 +148,27 @@ document.addEventListener('DOMContentLoaded', function () {
       showConfirmButton: false,
       timer: 2000
     });
+  <?php elseif ($_GET['status'] == 'upload_error'): ?>
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal Upload File!',
+      text: '<?= isset($_GET['message']) ? htmlspecialchars(urldecode($_GET['message'])) : 'File tidak dapat diupload. Periksa ukuran dan format file.' ?>',
+      showConfirmButton: true
+    });
+  <?php elseif ($_GET['status'] == 'error_main'): ?>
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal Menyimpan Data!',
+      text: 'Terjadi kesalahan saat menyimpan data konten. Silakan coba lagi.',
+      showConfirmButton: true
+    });
+  <?php elseif ($_GET['status'] == 'error_detail'): ?>
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal Menyimpan Detail!',
+      text: 'Data konten berhasil disimpan, namun detail konten gagal. Silakan edit konten untuk melengkapi data.',
+      showConfirmButton: true
+    });
   <?php elseif ($_GET['status'] == 'error'): ?>
     Swal.fire({
       icon: 'error',

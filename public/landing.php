@@ -5,15 +5,35 @@ $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
 $serverName = $_SERVER['SERVER_NAME'] ?? '';
 $httpHost = $_SERVER['HTTP_HOST'] ?? '';
 
+// Deteksi localhost dengan lebih akurat
 $isLocalhost = (
     strpos($serverName, 'localhost') !== false ||
     strpos($serverName, '127.0.0.1') !== false ||
     strpos($httpHost, 'localhost') !== false ||
+    strpos($httpHost, '127.0.0.1') !== false ||
     strpos($requestUri, '/rekap-konten/public') !== false ||
-    strpos($scriptName, '/rekap-konten/public') !== false
+    strpos($scriptName, '/rekap-konten/public') !== false ||
+    (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && strpos($_SERVER['HTTP_X_FORWARDED_HOST'], 'localhost') !== false)
 );
 
+// Set BASE - di hosting biasanya kosong karena file ada di root public
 $BASE = $isLocalhost ? '/rekap-konten/public' : '';
+
+// Fallback: jika BASE kosong tapi script ada di subdirectory, deteksi otomatis
+if (empty($BASE) && strpos($scriptName, '/public/') !== false) {
+    $pathParts = explode('/public/', $scriptName);
+    if (count($pathParts) > 1) {
+        $BASE = $pathParts[0] . '/public';
+    }
+}
+
+// Pastikan BASE selalu dimulai dengan / jika tidak kosong
+if (!empty($BASE) && $BASE[0] !== '/') {
+    $BASE = '/' . $BASE;
+}
+
+// Pastikan BASE tidak diakhiri dengan /
+$BASE = rtrim($BASE, '/');
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -46,20 +66,30 @@ $BASE = $isLocalhost ? '/rekap-konten/public' : '';
         <li>
           <a href="#dashboard">Dashboard</a>
         </li>
-        <li>
-          <a href="#gallery-foto">Gallery Foto</a>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle">Gallery <i class="fas fa-chevron-down"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="#gallery-foto">Gallery Foto</a></li>
+            <li><a href="#gallery-video">Gallery Video</a></li>
+          </ul>
         </li>
         <li>
           <a href="#portal-berita">Portal Berita</a>
         </li>
-        <li>
-          <a href="#gallery-video">Gallery Video</a>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle">Layanan Kanwil Sulsel<i class="fas fa-chevron-down"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="#chatbot">Chatbot</a></li>
+            <li><a href="#layanan-pengaduan">Layanan Pengaduan</a></li>
+            <li><a href="https://simanis.kemenkumsulsel.id/" target="_blank">Simanis</a></li>
+          </ul>
         </li>
-        <li>
-          <a href="#chatbot">Chatbot</a>
-        </li>
-        <li>
-          <a href="#jadwal-kegiatan">Jadwal Kegiatan</a>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle">Jadwal <i class="fas fa-chevron-down"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="#jadwal-kegiatan">Jadwal Kegiatan</a></li>
+            <li><a href="#jadwal-peminjaman-ruangan">Jadwal Peminjaman Ruangan</a></li>
+          </ul>
         </li>
         <li>
           <a href="index.php?page=login" class="nav-login">Login</a>
@@ -79,7 +109,7 @@ $BASE = $isLocalhost ? '/rekap-konten/public' : '';
     </div>
 
     <div class="main-header-logo">
-      <img src="Images/aset_landing.png" alt="Ilustrasi SiCakap - Rekapitulasi Konten Humas" class="hero-illustration" />
+      <img src="<?= $BASE ?>/Images/aset_landing.png" alt="Ilustrasi SiCakap - Rekapitulasi Konten Humas" class="hero-illustration" />
     </div>
   </header>
 </section>
@@ -105,7 +135,7 @@ $BASE = $isLocalhost ? '/rekap-konten/public' : '';
       </article>
       </div>
       <div class="intro-image">
-        <img src="Images/mockup_sicakap2nobg.png" alt="Mockup SiCakap Dashboard" class="mockup-image">
+        <img src="<?= $BASE ?>/Images/mockup_sicakap2nobg.png" alt="Mockup SiCakap Dashboard" class="mockup-image">
       </div>
     </div>
   </div>
@@ -131,7 +161,7 @@ $BASE = $isLocalhost ? '/rekap-konten/public' : '';
         <div class="dashboard-stats">
           <div class="stat-box">
             <div class="stat-icon">
-              <img src="Images/newspaper_bg.gif" alt="Newspaper Icon" class="icon-gif">
+              <img src="<?= $BASE ?>/Images/newspaper_bg.gif" alt="Newspaper Icon" class="icon-gif">
             </div>
             <div class="stat-content">
               <span class="stat-number" id="total-berita">-</span>
@@ -140,7 +170,7 @@ $BASE = $isLocalhost ? '/rekap-konten/public' : '';
           </div>
           <div class="stat-box">
             <div class="stat-icon">
-              <img src="Images/post_bg.gif" alt="Social Media Post Icon" class="icon-gif">
+              <img src="<?= $BASE ?>/Images/post_bg.gif" alt="Social Media Post Icon" class="icon-gif">
             </div>
             <div class="stat-content">
               <span class="stat-number" id="total-medsos">-</span>
@@ -149,7 +179,7 @@ $BASE = $isLocalhost ? '/rekap-konten/public' : '';
           </div>
           <div class="stat-box">
             <div class="stat-icon">
-              <img src="Images/arsip_nobg.gif" alt="Archive Icon" class="icon-gif">
+              <img src="<?= $BASE ?>/Images/arsip_nobg.gif" alt="Archive Icon" class="icon-gif">
             </div>
             <div class="stat-content">
               <span class="stat-number" id="total-arsip">-</span>
@@ -352,6 +382,94 @@ $BASE = $isLocalhost ? '/rekap-konten/public' : '';
           </div>
 </section>
 
+<!-- Layanan Pengaduan Section -->
+<section id="layanan-pengaduan" class="section primary-background bg-svg-1">
+  <div class="section-content portfolio">
+    <div class="full-height">
+      <header class="section-header">
+        <h2>Layanan Pengaduan</h2>
+        <p>Layanan pengaduan untuk masyarakat mengenai layanan di kantor wilayah kemenkum sulsel</p>
+      </header>
+
+      <div class="layanan-pengaduan-container">
+        <div class="layanan-pengaduan-features">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-gavel"></i>
+            </div>
+            <h3>Layanan Pengaduan Online</h3>
+            <p>Sampaikan pengaduan Anda secara online dengan mudah dan cepat</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3>Terjamin Keamanannya</h3>
+            <p>Data pengaduan Anda terjaga kerahasiaannya dan diproses dengan profesional</p>
+          </div>
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <h3>Respon Cepat</h3>
+            <p>Tim kami akan merespon pengaduan Anda dengan segera</p>
+          </div>
+        </div>
+        
+        <div class="layanan-pengaduan-actions">
+          <a href="index.php?page=tambah-layanan-pengaduan-masyarakat" class="btn-view-all" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-bullhorn"></i> Ajukan Pengaduan
+          </a>
+          <a href="index.php?page=tracking-layanan-pengaduan" class="btn-view-all" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-search"></i> Tracking Penyelesaian Pengaduan
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Jadwal Peminjaman Ruangan Section -->
+<section id="jadwal-peminjaman-ruangan" class="section white-background">
+  <div class="section-content portfolio">
+    <div class="full-height">
+      <header class="section-header">
+        <h2>Jadwal Peminjaman Ruangan</h2>
+        <p>Jadwal peminjaman ruangan dan agenda terbaru dari Kemenkum Sulsel</p>
+      </header>
+
+      <div class="schedule-container">
+        <div class="schedule-timeline" id="schedulePeminjamanTimeline">
+          <!-- Schedule items will be loaded dynamically -->
+          <div class="schedule-loading">
+            <p>Memuat jadwal peminjaman ruangan...</p>
+          </div>
+    </div>
+
+        <div class="schedule-actions">
+          <a href="index.php?page=tambah-peminjaman-ruangan-masyarakat" class="btn-view-all" target="_blank" rel="noopener noreferrer">
+            <i class="fas fa-door-open"></i> Pinjam Ruangan
+          </a>
+            </div>
+            </div>
+      
+      <!-- Schedule Detail Modal -->
+      <div id="schedulePeminjamanModal" class="schedule-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title" id="modalPeminjamanTitle">Detail Jadwal</h3>
+            <button class="modal-close" id="modalPeminjamanClose">&times;</button>
+            </div>
+          <div class="modal-body" id="modalPeminjamanBody">
+            <!-- Content will be populated dynamically -->
+            </div>
+            </div>
+            </div>
+            </div>
+          </div>
+</section>
+
 <!-- <p class="created-by"><a href="#">© 2025 SiCakap - Humas Kanwil Kemenkum SulSel</a></p> -->
 
 <footer class="footer-section">
@@ -381,8 +499,8 @@ $BASE = $isLocalhost ? '/rekap-konten/public' : '';
 <a class="back-to-top" role="button" aria-label="Back to top" title="Back to top" href="#home"></a>
 
 <!-- JavaScript files -->
-<script src="js/common.js"></script>
-<script src="js/landing.js"></script>
+<script src="<?= $BASE ?>/js/common.js"></script>
+<script src="<?= $BASE ?>/js/landing.js"></script>
 
 </body>
 </html>

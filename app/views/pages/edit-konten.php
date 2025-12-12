@@ -104,10 +104,23 @@ if (!isset($BASE)) {
             <div class="form-group">
                 <label for="dokumentasi">Dokumentasi (Opsional)</label>
                 <input type="file" id="dokumentasi" name="dokumentasi" accept="image/*">
-                <?php if (!empty($konten['dokumentasi'])): ?>
-                    <p style="margin-top: 5px; font-size: 12px; color: #666;">
-                        Dokumentasi saat ini: <a href="<?= htmlspecialchars($konten['dokumentasi']) ?>" target="_blank">Lihat</a>
-                    </p>
+                <?php if (!empty($konten['dokumentasi'])): 
+                    // Generate full URL untuk gambar
+                    $dokumentasiUrl = $konten['dokumentasi'];
+                    if (!preg_match('/^https?:\/\//', $dokumentasiUrl) && !str_starts_with($dokumentasiUrl, '/')) {
+                        $dokumentasiUrl = $BASE . '/' . ltrim($konten['dokumentasi'], '/');
+                    }
+                ?>
+                    <div style="margin-top: 10px;">
+                        <p style="margin-bottom: 5px; font-size: 12px; color: #666;">
+                            Dokumentasi saat ini:
+                        </p>
+                        <img src="<?= htmlspecialchars($dokumentasiUrl) ?>" alt="Preview Dokumentasi" style="max-width: 300px; max-height: 200px; border: 1px solid #ddd; border-radius: 4px; padding: 5px; background: #f9f9f9;" onerror="this.style.display='none';">
+                        <br>
+                        <a href="<?= htmlspecialchars($dokumentasiUrl) ?>" target="_blank" style="font-size: 12px; color: #0E4BF1; text-decoration: none; margin-top: 5px; display: inline-block;">
+                            <i class="fas fa-external-link-alt"></i> Buka di tab baru
+                        </a>
+                    </div>
                 <?php endif; ?>
             </div>
 

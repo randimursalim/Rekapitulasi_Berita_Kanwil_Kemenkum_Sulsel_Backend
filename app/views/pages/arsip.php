@@ -80,4 +80,20 @@ if (!isset($BASE)) {
   <img id="modalImage" src="" alt="Preview" style="max-width:90%; max-height:80%;">
 </div>
 
+<script>
+  // Set BASE URL untuk JavaScript
+  window.BASE_URL = '<?= $BASE ?>';
+  
+  // Helper function untuk generate image URL
+  function getImageUrl(path) {
+    if (!path) return null;
+    // Jika sudah full URL atau absolute path, return as is
+    if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) {
+      return path;
+    }
+    // Jika path relatif (storage/uploads/...), tambahkan BASE URL
+    const base = window.BASE_URL || '';
+    return base + '/' + path.replace(/^\//, '');
+  }
+</script>
 <script src="<?= $BASE ?>/js/arsip.js"></script>

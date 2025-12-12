@@ -32,12 +32,13 @@ if (!isset($BASE)) {
 <div class="activity-wrapper form-wrapper">
     <div class="activity form-activity">
         <div class="form-container">
-            <form id="formLayananPengaduan" class="input-berita-form" action="index.php?page=store-layanan-pengaduan" method="POST" autocomplete="off">
+            <form id="formLayananPengaduan" class="input-berita-form" action="index.php?page=store-layanan-pengaduan" method="POST" autocomplete="off" enctype="multipart/form-data">
                 <h3 style="margin-bottom: 20px; color: var(--text-color);">Data Pelapor</h3>
                 
                 <div class="form-group">
                     <label for="noRegisterPengaduan">No. Register Pengaduan <span style="color: red;">*</span></label>
-                    <input type="text" id="noRegisterPengaduan" name="noRegisterPengaduan" placeholder="Masukkan nomor register pengaduan" required>
+                    <input type="text" id="noRegisterPengaduan" name="noRegisterPengaduan" placeholder="Akan terisi otomatis" readonly style="background-color: #f0f0f0; cursor: not-allowed;">
+                    <small style="color: #666; font-size: 0.9em;">Nomor register akan terisi otomatis</small>
                 </div>
 
                 <div class="form-group">
@@ -127,6 +128,32 @@ if (!isset($BASE)) {
                     <input type="text" id="jenisAduanLainnya" name="jenisAduanLainnya" placeholder="Masukkan jenis aduan lainnya">
                 </div>
 
+                <h3 style="margin: 30px 0 20px 0; color: var(--text-color);">Tindak Lanjut</h3>
+
+                <div class="form-group">
+                    <label for="tindakLanjut">Tindak Lanjut <span style="color: red;">*</span></label>
+                    <select id="tindakLanjut" name="tindakLanjut" required>
+                        <option value="belum diproses" selected>Belum Diproses</option>
+                        <option value="proses">Proses</option>
+                        <option value="selesai">Selesai</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="keterangan">Keterangan</label>
+                    <textarea id="keterangan" name="keterangan" rows="4" placeholder="Masukkan keterangan dalam bentuk teks (opsional)"></textarea>
+                    <small style="color: #666; font-size: 0.9em; display: block; margin-top: 5px;">Bisa diisi teks dan/atau upload file</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="keteranganFile">Upload File Keterangan (Opsional)</label>
+                    <input type="file" id="keteranganFile" name="keteranganFile" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                    <small style="color: #666; font-size: 0.9em; display: block; margin-top: 5px;">Format: PDF, JPG, PNG, DOC, DOCX (Maks. 10MB)</small>
+                    <div id="keteranganFilePreview" style="margin-top: 10px; display: none;">
+                        <p style="color: #28a745; font-size: 0.9em;"><i class="fas fa-check-circle"></i> File dipilih: <span id="keteranganFileName"></span></p>
+                    </div>
+                </div>
+
                 <!-- Tombol Aksi -->
                 <div class="form-actions" style="text-align:center; margin-top:20px;">
                     <button type="submit" class="btn-simpan">
@@ -160,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
     Swal.fire({
       icon: 'error',
       title: 'Gagal Menyimpan Data!',
-      text: 'Silakan coba lagi atau periksa data yang diinput.',
+      text: '<?= isset($_GET['message']) ? htmlspecialchars(urldecode($_GET['message'])) : 'Silakan coba lagi atau periksa data yang diinput.' ?>',
       showConfirmButton: true
     });
   <?php endif; ?>

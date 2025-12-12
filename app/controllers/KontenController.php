@@ -31,7 +31,7 @@ class KontenController {
     $dokumentasi = null;
     if (!empty($_FILES['dokumentasi']['name'])) {
         require_once __DIR__ . '/../helpers/SecureFileUpload.php';
-        $uploadHandler = new SecureFileUpload();
+        $uploadHandler = new SecureFileUpload('konten');
         
         $uploadResult = $uploadHandler->uploadFile('dokumentasi', 'konten');
         
@@ -256,7 +256,7 @@ class KontenController {
         $dokumentasi = null;
         if (!empty($_FILES['dokumentasi']['name'])) {
             require_once __DIR__ . '/../helpers/SecureFileUpload.php';
-            $uploadHandler = new SecureFileUpload();
+            $uploadHandler = new SecureFileUpload('konten');
             
             $uploadResult = $uploadHandler->uploadFile('dokumentasi', 'konten');
             

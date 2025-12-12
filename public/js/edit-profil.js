@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
+                        // Error handled by SweetAlert below
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',

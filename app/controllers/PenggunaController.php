@@ -44,7 +44,7 @@ class PenggunaController {
         if (empty($password)) $errors[] = 'Password harus diisi';
         if (strlen($password) < 6) $errors[] = 'Password minimal 6 karakter';
         if ($password !== $confirmPassword) $errors[] = 'Password dan konfirmasi password tidak sama';
-        if (!in_array($role, ['Admin', 'Operator'])) $errors[] = 'Role tidak valid';
+        if (!in_array($role, ['Admin', 'Operator', 'p3h'])) $errors[] = 'Role tidak valid';
 
         // Cek username sudah ada
         if ($this->model->isUsernameExists($username)) {
@@ -134,7 +134,7 @@ class PenggunaController {
         $errors = [];
         if (empty($nama)) $errors[] = 'Nama harus diisi';
         if (empty($username)) $errors[] = 'Username harus diisi';
-        if (!in_array($role, ['Admin', 'Operator'])) $errors[] = 'Role tidak valid';
+        if (!in_array($role, ['Admin', 'Operator', 'p3h'])) $errors[] = 'Role tidak valid';
         
         // Validasi password jika diisi
         if (!empty($password)) {
@@ -297,7 +297,7 @@ class PenggunaController {
         $foto = $_SESSION['user']['foto'] ?? 'user.jpg'; // Default foto dari session
         if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
             require_once __DIR__ . '/../helpers/SecureFileUpload.php';
-            $uploadHandler = new SecureFileUpload();
+            $uploadHandler = new SecureFileUpload('users');
             
             $uploadResult = $uploadHandler->uploadFile('foto', 'user');
             

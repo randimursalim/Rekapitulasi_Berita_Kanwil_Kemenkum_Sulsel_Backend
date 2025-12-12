@@ -24,7 +24,23 @@ if (!isset($BASE)) {
 ?>
 
 <script src="<?= $BASE ?>/js/script.js"></script>
+<?php if (isset($_GET['page']) && $_GET['page'] === 'rekap-konten'): ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="<?= $BASE ?>/js/rekap.js"></script>
+<?php endif; ?>
+<?php if (isset($_GET['page']) && $_GET['page'] === 'rekap-harmonisasi'): ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="<?= $BASE ?>/js/rekap-harmonisasi.js"></script>
+<?php endif; ?>
+<?php if (isset($_GET['page']) && $_GET['page'] === 'jadwal-peminjaman-ruangan'): ?>
+<script src="<?= $BASE ?>/js/jadwal-peminjaman-ruangan.js"></script>
+<?php endif; ?>
+<?php if (isset($_GET['page']) && $_GET['page'] === 'tambah-peminjaman-ruangan'): ?>
+<script src="<?= $BASE ?>/js/tambah-peminjaman-ruangan.js"></script>
+<?php endif; ?>
+<?php if (isset($_GET['page']) && $_GET['page'] === 'edit-peminjaman-ruangan'): ?>
+<script src="<?= $BASE ?>/js/edit-peminjaman-ruangan.js"></script>
+<?php endif; ?>
 <script src="<?= $BASE ?>/js/modal-dashboard.js"></script>
 <script src="<?= $BASE ?>/js/filter-activity.js"></script>
 <script src="<?= $BASE ?>/js/form-kegiatan.js"></script>

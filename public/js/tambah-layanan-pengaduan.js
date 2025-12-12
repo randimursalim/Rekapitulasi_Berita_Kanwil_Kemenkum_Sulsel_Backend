@@ -1,5 +1,21 @@
 // Tambah/Edit Layanan Pengaduan Form Management
 document.addEventListener('DOMContentLoaded', function() {
+    // Auto-generate nomor register untuk form tambah
+    const noRegisterInput = document.getElementById('noRegisterPengaduan');
+    if (noRegisterInput && !noRegisterInput.value) {
+        // Hanya generate jika form tambah (tidak ada value)
+        fetch('ajax/generate_no_register.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.no_register) {
+                    noRegisterInput.value = data.no_register;
+                }
+            })
+            .catch(error => {
+                // Error generating no register - handled silently
+            });
+    }
+    
     const jenisTandaPengenalSelect = document.getElementById('jenisTandaPengenal');
     const jenisTandaPengenalLainnyaGroup = document.getElementById('jenisTandaPengenalLainnyaGroup');
     const jenisTandaPengenalLainnyaInput = document.getElementById('jenisTandaPengenalLainnya');
@@ -54,6 +70,23 @@ document.addEventListener('DOMContentLoaded', function() {
         jenisAduanSelect.addEventListener('change', toggleJenisAduanLainnya);
         // Check initial state saat halaman dimuat (untuk edit mode)
         toggleJenisAduanLainnya();
+    }
+    
+    // Preview file keterangan
+    const keteranganFileInput = document.getElementById('keteranganFile');
+    const keteranganFilePreview = document.getElementById('keteranganFilePreview');
+    const keteranganFileName = document.getElementById('keteranganFileName');
+    
+    if (keteranganFileInput && keteranganFilePreview && keteranganFileName) {
+        keteranganFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                keteranganFileName.textContent = file.name;
+                keteranganFilePreview.style.display = 'block';
+            } else {
+                keteranganFilePreview.style.display = 'none';
+            }
+        });
     }
 });
 

@@ -51,14 +51,14 @@
     Deny from all
 </Files>
 
-# Only allow specific image types
-<FilesMatch "\.(jpg|jpeg|png|gif)$">
+# Allow specific file types: images, PDF, and Word documents
+<FilesMatch "\.(jpg|jpeg|png|gif|pdf|doc|docx)$">
     Order Allow,Deny
     Allow from all
 </FilesMatch>
 
 # Deny everything else
-<FilesMatch "^(?!.*\.(jpg|jpeg|png|gif)$).*$">
+<FilesMatch "^(?!.*\.(jpg|jpeg|png|gif|pdf|doc|docx)$).*$">
     Order Allow,Deny
     Deny from all
 </FilesMatch>

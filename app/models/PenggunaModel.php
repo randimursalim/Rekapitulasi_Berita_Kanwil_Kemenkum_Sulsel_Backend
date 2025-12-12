@@ -113,6 +113,6 @@ class PenggunaModel {
 
     // Ambil semua role yang tersedia
     public function getAvailableRoles() {
-        return ['Admin', 'Operator'];
+        return ['Admin', 'Operator', 'p3h'];
     }
 }

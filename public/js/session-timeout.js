@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => {
             // Activity update failed - handled silently
-            console.debug('Activity update failed:', error);
         });
     }
     
@@ -155,9 +154,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (baseUrl) {
                 logoutUrl = baseUrl.replace(/\/$/, '') + '/index.php?page=logout&timeout=1';
             }
-            
-            // Debug (dapat dihapus di production)
-            console.debug('Session timeout - Redirecting to:', logoutUrl);
             
             // Tampilkan popup dan langsung setup redirect
             Swal.fire({

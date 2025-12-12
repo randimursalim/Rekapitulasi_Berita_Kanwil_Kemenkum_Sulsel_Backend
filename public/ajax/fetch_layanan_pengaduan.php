@@ -19,7 +19,7 @@ try {
     $query = "
     SELECT id, no_register_pengaduan, nama, alamat, jenis_tanda_pengenal, jenis_tanda_pengenal_lainnya, no_tanda_pengenal, 
            no_telp, judul_laporan, isi_laporan, tanggal_kejadian, lokasi_kejadian, 
-           kategori_laporan, jenis_aduan, jenis_aduan_lainnya, tanggal_pengaduan
+           kategori_laporan, jenis_aduan, jenis_aduan_lainnya, tanggal_pengaduan, tindak_lanjut, keterangan
     FROM layanan_pengaduan
     WHERE 1=1
     ";
