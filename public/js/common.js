@@ -7,12 +7,19 @@
 function initializeSmoothScrolling() {
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
+      // Skip if this is a dropdown toggle (has dropdown-toggle class or is inside dropdown)
+      if (this.classList.contains('dropdown-toggle') || this.closest('.dropdown-toggle')) {
+        return; // Let dropdown handler handle it
+      }
+      
       e.preventDefault();
       
-      // Close mobile menu if open
-      const closeMenuCheckbox = document.getElementById('close-menu');
-      if (closeMenuCheckbox) {
-        closeMenuCheckbox.checked = false;
+      // Close mobile menu if open (only on mobile)
+      if (window.innerWidth <= 800) {
+        const closeMenuCheckbox = document.getElementById('close-menu');
+        if (closeMenuCheckbox) {
+          closeMenuCheckbox.checked = false;
+        }
       }
       
       const target = document.querySelector(this.getAttribute('href'));

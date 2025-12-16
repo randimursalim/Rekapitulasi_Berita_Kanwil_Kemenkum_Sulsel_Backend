@@ -1519,20 +1519,39 @@ function initializeDropdownMenu() {
   dropdownToggles.forEach(toggle => {
     toggle.addEventListener('click', function(e) {
       // Only prevent default on mobile/tablet
-      if (window.innerWidth <= 768) {
+      if (window.innerWidth <= 800) {
         e.preventDefault();
+        e.stopPropagation(); // Prevent event from bubbling up
         const dropdown = this.closest('.dropdown');
         dropdown.classList.toggle('active');
       }
     });
   });
   
+  // Handle clicks on dropdown submenu items
+  const dropdownMenuLinks = document.querySelectorAll('.dropdown-menu a');
+  dropdownMenuLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      // On mobile, close menu after clicking submenu item
+      if (window.innerWidth <= 800) {
+        const closeMenuCheckbox = document.getElementById('close-menu');
+        if (closeMenuCheckbox) {
+          // Small delay to allow smooth scroll to start
+          setTimeout(() => {
+            closeMenuCheckbox.checked = false;
+          }, 100);
+        }
+      }
+    });
+  });
+  
   // Close dropdown when clicking outside
   document.addEventListener('click', function(e) {
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 800) {
       const dropdowns = document.querySelectorAll('.dropdown');
       dropdowns.forEach(dropdown => {
-        if (!dropdown.contains(e.target)) {
+        // Don't close if clicking on dropdown toggle or inside dropdown menu
+        if (!dropdown.contains(e.target) && !e.target.closest('.dropdown-toggle')) {
           dropdown.classList.remove('active');
         }
       });

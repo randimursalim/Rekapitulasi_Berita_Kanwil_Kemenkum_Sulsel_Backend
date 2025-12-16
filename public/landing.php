@@ -42,7 +42,9 @@ $BASE = rtrim($BASE, '/');
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing Page - SiCakap</title>
     <link rel="icon" type="image/png" href="<?= $BASE ?>/Images/aset_landing.png">
-    <link rel="stylesheet" href="<?= $BASE ?>/css/landing.css">
+    <!-- Cache busting: update version number when CSS/JS changes -->
+    <?php $version = '1.0.2'; // Update this number when you make CSS/JS changes ?>
+    <link rel="stylesheet" href="<?= $BASE ?>/css/landing.css?v=<?= $version ?>">
     <link rel="stylesheet" href="<?= $BASE ?>/vendor/fontawesome/css/all.min.css">
 
 
@@ -105,7 +107,7 @@ $BASE = rtrim($BASE, '/');
     <div class="main-header-content">
       <h2>SiCakap
       </h2>
-      <p>Sistem Cerdas Arsip dan Rekapitulasi Konten Publikasi.</p>
+      <p>Sistem Cerdas Arsip dan Pelayanan Publik.</p>
     </div>
 
     <div class="main-header-logo">
@@ -120,18 +122,19 @@ $BASE = rtrim($BASE, '/');
       <div class="intro-text">
       <article>
           <h2>Tentang SiCakap</h2>
-          <p>SiCakap merupakan platform digital yang dikembangkan untuk mendukung pengelolaan dan rekapitulasi konten publikasi di lingkungan kerja Humas Kantor Wilayah Kementerian Hukum Sulawesi Selatan. 
-            Sistem ini berfungsi untuk mengarsipkan berbagai jenis konten seperti berita, unggahan media sosial, 
-            dan dokumentasi kegiatan secara sistematis dan efisien.</p>
-          <p>Melalui SiCakap, proses input data, pengelolaan arsip, hingga pembuatan laporan rekap dapat dilakukan secara terpusat 
-            dalam satu sistem. Fitur utama seperti dashboard informasi, form input konten, rekap konten otomatis, 
-            dan jadwal kegiatan membantu pengguna memantau serta mengatur aktivitas publikasi Humas. 
-            Fitur jadwal kegiatan juga memudahkan pegawai melihat dan mengelola agenda kerja secara terstruktur 
-            lengkap dengan tanggal dan keterangan kegiatan.</p>
-          <p>Selain mempermudah dokumentasi dan pelaporan, SiCakap menjadi langkah digitalisasi arsip publikasi agar data lebih aman, 
-            mudah diakses, dan terorganisir. Dengan antarmuka yang sederhana namun informatif, 
-            sistem ini mendukung peningkatan kinerja Humas dalam menjaga konsistensi publikasi dan transparansi informasi 
-            kepada pimpinan serta masyarakat.</p>
+          <p>SiCakap merupakan platform digital yang dikembangkan untuk mendukung pengelolaan arsip 
+            dan pelayanan publik di lingkungan Kantor Wilayah Kementerian Hukum Sulawesi Selatan. 
+            Sistem ini mengintegrasikan berbagai kebutuhan kerja seperti pengarsipan konten publikasi, 
+            layanan pengaduan, data harmonisasi, serta peminjaman ruangan dalam satu aplikasi terpusat.</p>
+          <p>Melalui SiCakap, proses input data, pengelolaan arsip, pemantauan layanan, 
+            hingga rekap laporan dapat dilakukan secara lebih cepat dan efisien. 
+            Fitur inti seperti dashboard informasi, form input konten, daftar aduan, 
+            rekap harmonisasi, dan jadwal kegiatan membantu pegawai mengatur aktivitas kerja 
+            secara terstruktur dan terdokumentasi.</p>
+          <p>Dengan antarmuka sederhana dan akses yang terpusat, 
+            SiCakap hadir sebagai langkah digitalisasi untuk menghadirkan arsip yang aman, 
+            pelayanan publik yang lebih responsif, 
+            serta transparansi informasi bagi pimpinan maupun masyarakat.</p>
       </article>
       </div>
       <div class="intro-image">
@@ -499,8 +502,10 @@ $BASE = rtrim($BASE, '/');
 <a class="back-to-top" role="button" aria-label="Back to top" title="Back to top" href="#home"></a>
 
 <!-- JavaScript files -->
-<script src="<?= $BASE ?>/js/common.js"></script>
-<script src="<?= $BASE ?>/js/landing.js"></script>
+<!-- Cache busting: update version number when CSS/JS changes -->
+<?php if (!isset($version)) $version = '1.0.2'; // Update this number when you make CSS/JS changes ?>
+<script src="<?= $BASE ?>/js/common.js?v=<?= $version ?>"></script>
+<script src="<?= $BASE ?>/js/landing.js?v=<?= $version ?>"></script>
 
 </body>
 </html>

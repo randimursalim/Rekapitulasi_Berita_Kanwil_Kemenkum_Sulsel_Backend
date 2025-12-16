@@ -56,7 +56,7 @@ if (!isset($BASE)) {
             </div>
 
             <!-- Form Berita -->
-            <div id="form-berita" style="display:none;">
+            <div id="form-berita" style="display:<?= ($konten['jenis'] ?? '') === 'berita' ? 'block' : 'none' ?>;">
                 <div class="form-group">
                     <label for="tanggalBerita">Tanggal Berita</label>
                     <input type="date" id="tanggalBerita" name="tanggalBerita" value="<?= htmlspecialchars($konten['tanggal_berita'] ?? '') ?>">
@@ -85,7 +85,7 @@ if (!isset($BASE)) {
             </div>
 
             <!-- Form Media Sosial -->
-            <div id="form-medsos" style="display:none;">
+            <div id="form-medsos" style="display:<?= in_array($konten['jenis'] ?? '', ['instagram','youtube','tiktok','twitter','facebook']) ? 'block' : 'none' ?>;">
                 <div class="form-group">
                     <label for="tanggalPost">Tanggal Posting</label>
                     <input type="date" id="tanggalPost" name="tanggalPost" value="<?= htmlspecialchars($konten['tanggal_post'] ?? '') ?>">
@@ -104,18 +104,38 @@ if (!isset($BASE)) {
             <div class="form-group">
                 <label for="dokumentasi">Dokumentasi (Opsional)</label>
                 <input type="file" id="dokumentasi" name="dokumentasi" accept="image/*">
-                <?php if (!empty($konten['dokumentasi'])): 
+                <?php 
+                // Debug: cek apakah dokumentasi ada
+                $hasDokumentasi = !empty($konten['dokumentasi']);
+                if ($hasDokumentasi): 
                     // Generate full URL untuk gambar
-                    $dokumentasiUrl = $konten['dokumentasi'];
-                    if (!preg_match('/^https?:\/\//', $dokumentasiUrl) && !str_starts_with($dokumentasiUrl, '/')) {
-                        $dokumentasiUrl = $BASE . '/' . ltrim($konten['dokumentasi'], '/');
+                    $dokumentasiPath = $konten['dokumentasi'];
+                    $dokumentasiUrl = $dokumentasiPath;
+                    
+                    // Jika bukan full URL, proses path
+                    if (!preg_match('/^https?:\/\//', $dokumentasiUrl)) {
+                        // Jika absolute path (dimulai dengan /) - kompatibel PHP 7.4
+                        if (substr($dokumentasiUrl, 0, 1) === '/') {
+                            // Di hosting, absolute path biasanya tidak perlu BASE
+                            // Tapi kita tetap coba dengan BASE jika diperlukan
+                            if (!empty($BASE)) {
+                                $dokumentasiUrl = $BASE . $dokumentasiUrl;
+                            }
+                        } else {
+                            // Relative path, tambahkan BASE
+                            $dokumentasiUrl = $BASE . '/' . ltrim($dokumentasiPath, '/');
+                        }
                     }
                 ?>
                     <div style="margin-top: 10px;">
                         <p style="margin-bottom: 5px; font-size: 12px; color: #666;">
                             Dokumentasi saat ini:
                         </p>
-                        <img src="<?= htmlspecialchars($dokumentasiUrl) ?>" alt="Preview Dokumentasi" style="max-width: 300px; max-height: 200px; border: 1px solid #ddd; border-radius: 4px; padding: 5px; background: #f9f9f9;" onerror="this.style.display='none';">
+                        <img src="<?= htmlspecialchars($dokumentasiUrl) ?>" 
+                             alt="Preview Dokumentasi" 
+                             data-original-path="<?= htmlspecialchars($dokumentasiPath) ?>"
+                             style="max-width: 300px; max-height: 200px; border: 1px solid #ddd; border-radius: 4px; padding: 5px; background: #f9f9f9; display: block;"
+                             onerror="if(typeof getImageUrl !== 'undefined' && this.dataset.originalPath) { var newSrc = getImageUrl(this.dataset.originalPath); if(newSrc) { this.src = newSrc; } else { this.style.display='none'; } } else { this.style.display='none'; }">
                         <br>
                         <a href="<?= htmlspecialchars($dokumentasiUrl) ?>" target="_blank" style="font-size: 12px; color: #0E4BF1; text-decoration: none; margin-top: 5px; display: inline-block;">
                             <i class="fas fa-external-link-alt"></i> Buka di tab baru
@@ -136,16 +156,125 @@ if (!isset($BASE)) {
             </div>
 
             <!-- Buttons -->
-            <div style="text-align:center; margin-top:20px;" class="form-buttons">
-                <button type="submit" class="btn-simpan"><i class="fas fa-save"></i> Update</button>
-                <button type="button" class="btn-batal" onclick="window.location.href='index.php?page=arsip'"><i class="fas fa-times"></i> Batal</button>
+            <div class="form-actions" style="text-align: center; margin-top: 30px; margin-bottom: 20px; padding: 20px 0; clear: both; display: block;">
+                <button type="submit" class="btn-simpan" style="display: inline-block; margin: 0 10px;">
+                    <i class="fas fa-save"></i> Update
+                </button>
+                <button type="button" class="btn-batal" onclick="window.location.href='index.php?page=arsip'" style="display: inline-block; margin: 0 10px;">
+                    <i class="fas fa-times"></i> Batal
+                </button>
             </div>
         </form>
         </div>
     </div>
 </div>
 
+<!-- Inline script untuk toggle form saat user mengubah pilihan -->
+<script>
+(function() {
+    // Cegah eksekusi ganda
+    if (window.editKontenFormInitialized) return;
+    
+    function initEditKontenForm() {
+        // Set flag untuk mencegah eksekusi ganda
+        if (window.editKontenFormInitialized) return;
+        window.editKontenFormInitialized = true;
+        
+        const jenisSelect = document.getElementById('jenis');
+        const formBerita = document.getElementById('form-berita');
+        const formMedsos = document.getElementById('form-medsos');
+        const editForm = document.getElementById('editKontenForm');
+        const formActions = document.querySelector('.form-actions');
+        const dokumentasiImg = document.querySelector('#dokumentasi + div img');
 
-<script src="<?= $BASE ?>/js/edit-konten.js"></script>
-</body>
-</html>
+        if (!jenisSelect) {
+            // Retry jika elemen belum tersedia
+            setTimeout(initEditKontenForm, 100);
+            return;
+        }
+
+        // Pastikan tombol terlihat
+        if (formActions) {
+            formActions.style.display = 'block';
+            formActions.style.visibility = 'visible';
+            formActions.style.opacity = '1';
+        }
+
+        // Perbaiki path gambar dokumentasi jika gagal dimuat
+        if (dokumentasiImg && typeof getImageUrl !== 'undefined') {
+            const originalPath = dokumentasiImg.dataset.originalPath;
+            if (originalPath) {
+                dokumentasiImg.onerror = function() {
+                    const newSrc = getImageUrl(originalPath);
+                    if (newSrc && newSrc !== this.src) {
+                        this.src = newSrc;
+                    } else {
+                        console.error('Gagal memuat gambar dokumentasi:', originalPath);
+                    }
+                };
+            }
+        }
+
+        // Fungsi untuk menampilkan form sesuai jenis
+        function toggleForm() {
+            const value = jenisSelect.value;
+            if (value === 'berita') {
+                if (formBerita) formBerita.style.display = 'block';
+                if (formMedsos) formMedsos.style.display = 'none';
+            } else if (['instagram','youtube','tiktok','twitter','facebook'].includes(value)) {
+                if (formBerita) formBerita.style.display = 'none';
+                if (formMedsos) formMedsos.style.display = 'block';
+            } else {
+                if (formBerita) formBerita.style.display = 'none';
+                if (formMedsos) formMedsos.style.display = 'none';
+            }
+        }
+
+        // Jalankan saat user mengganti pilihan (form sudah ditampilkan oleh PHP)
+        jenisSelect.addEventListener('change', toggleForm);
+
+        // Konfirmasi sebelum submit form
+        if (editForm) {
+            editForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Update Konten?',
+                        text: "Apakah kamu yakin untuk mengupdate konten ini?",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ya, update!',
+                        cancelButtonText: 'Batal'
+                    }).then(result => {
+                        if(result.isConfirmed){
+                            // Submit form jika konfirmasi
+                            this.submit();
+                        }
+                    });
+                } else {
+                    // Fallback jika SweetAlert tidak tersedia
+                    if (confirm('Apakah kamu yakin untuk mengupdate konten ini?')) {
+                        this.submit();
+                    }
+                }
+            });
+        }
+    }
+
+    // Jalankan saat DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initEditKontenForm);
+    } else {
+        // DOM sudah ready, jalankan langsung
+        initEditKontenForm();
+    }
+    
+    // Backup: jalankan setelah window load
+    window.addEventListener('load', function() {
+        setTimeout(initEditKontenForm, 100);
+    });
+})();
+</script>

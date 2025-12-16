@@ -617,13 +617,16 @@ nav.close .logo_name{
 }
 nav .menu-items{
     margin-top: 40px;
-    height: calc(100vh - 90px) !important;
-    max-height: calc(100vh - 90px) !important;
-    min-height: calc(100vh - 90px) !important;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    overflow: hidden;
+    height: calc(100vh - 100px) !important;
+    max-height: calc(100vh - 100px) !important;
+    min-height: calc(100vh - 100px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    overflow-y: auto !important;
+    overflow-x: visible !important;
+    position: relative !important;
+    padding-bottom: 25px !important;
 }
 nav .menu-items .nav-links{
     overflow-y: auto !important;
@@ -631,7 +634,7 @@ nav .menu-items .nav-links{
     flex: 1 1 auto;
     min-height: 0;
     padding-right: 8px;
-    max-height: calc(100vh - 200px) !important;
+    max-height: calc(100vh - 280px) !important;
     height: auto !important;
     scrollbar-width: thin !important;
     scrollbar-color: var(--primary-color) #f5f5f5 !important;
@@ -725,6 +728,44 @@ nav.close li a .link-name{
     opacity: 0;
     pointer-events: none;
 }
+/* Saat sidebar ditutup, sembunyikan icon dan text dark mode, hanya tampilkan toggle switch */
+nav.close .menu-items .logout-mode li.mode a .link-name,
+nav.close .menu-items .logout-mode li.mode a i,
+nav.close .logout-mode li.mode a .link-name,
+nav.close .logout-mode li.mode a i,
+nav.close .logout-mode li.mode a{
+    opacity: 0 !important;
+    pointer-events: none !important;
+    display: none !important;
+    visibility: hidden !important;
+}
+/* Pastikan mode-toggle tetap terlihat saat sidebar ditutup dan di-center */
+nav.close .menu-items .logout-mode li.mode .mode-toggle,
+nav.close .logout-mode li.mode .mode-toggle,
+nav.close .mode-toggle{
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    right: auto !important;
+    left: auto !important;
+    margin: 0 auto !important;
+}
+/* Pastikan mode li tetap terlihat untuk menampung toggle switch dan di-center */
+nav.close .menu-items .logout-mode li.mode,
+nav.close .logout-mode li.mode{
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 50px !important;
+}
+/* Tambahkan margin-top pada mode untuk spacing dengan logout */
+nav.close .menu-items .logout-mode li.mode,
+nav.close .logout-mode li.mode{
+    margin-top: 10px !important;
+}
 .nav-links li a:hover i,
 .nav-links li a:hover .link-name{
     color: var(--primary-color);
@@ -734,15 +775,24 @@ body.dark .nav-links li a:hover .link-name{
     color: var(--text-color);
 }
 .menu-items .logout-mode{
-    padding-top: 10px;
+    padding-top: 10px !important;
+    padding-bottom: 25px !important;
     border-top: 1px solid var(--border-color);
-    flex-shrink: 0;
-    margin-top: auto;
+    flex-shrink: 0 !important;
+    margin-top: auto !important;
+    position: relative !important;
+    z-index: 100 !important;
+    overflow: visible !important;
+    background-color: var(--panel-color) !important;
+    margin-bottom: 0 !important;
 }
 .menu-items .mode{
     display: flex;
     align-items: center;
     white-space: nowrap;
+    position: relative;
+    z-index: 101;
+    overflow: visible;
 }
 .menu-items .mode-toggle{
     position: absolute;
@@ -753,6 +803,15 @@ body.dark .nav-links li a:hover .link-name{
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    z-index: 102;
+    overflow: visible;
+}
+/* Pastikan mode-toggle tetap terlihat saat sidebar ditutup */
+nav.close .mode-toggle{
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    right: 14px !important;
 }
 .mode-toggle .switch{
     position: relative;

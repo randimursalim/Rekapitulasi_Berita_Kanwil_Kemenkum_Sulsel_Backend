@@ -63,7 +63,7 @@ function is_active($pageName) {
   <link rel="icon" type="image/jpeg" href="<?= $BASE ?>/Images/LOGO KEMENKUM.jpeg">
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="<?= $BASE ?>/css/style.css" />
+  <link rel="stylesheet" href="<?= $BASE ?>/css/style.css?v=1.0.7" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   
   <!-- Set BASE_URL untuk JavaScript -->
@@ -121,6 +121,38 @@ function is_active($pageName) {
     }
     body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb:hover {
       background: #777 !important;
+    }
+    /* Fallback untuk dark mode toggle saat sidebar ditutup */
+    nav.close .menu-items .logout-mode li.mode a .link-name,
+    nav.close .menu-items .logout-mode li.mode a i,
+    nav.close .logout-mode li.mode a .link-name,
+    nav.close .logout-mode li.mode a i,
+    nav.close .logout-mode li.mode a {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      display: none !important;
+      visibility: hidden !important;
+    }
+    nav.close .menu-items .logout-mode li.mode .mode-toggle,
+    nav.close .logout-mode li.mode .mode-toggle,
+    nav.close .mode-toggle {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      position: static !important;
+      right: auto !important;
+      left: auto !important;
+      margin: 0 auto !important;
+    }
+    nav.close .menu-items .logout-mode li.mode,
+    nav.close .logout-mode li.mode {
+      display: flex !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      justify-content: center !important;
+      align-items: center !important;
+      height: 50px !important;
+      margin-top: 10px !important;
     }
   </style>
 
