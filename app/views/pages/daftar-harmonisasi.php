@@ -1,6 +1,7 @@
 <?php
 // app/views/pages/daftar-harmonisasi.php
-// Auto-detect BASE_URL jika belum tersedia
+// $BASE sudah didefinisikan di header.php, tidak perlu didefinisikan lagi
+// Jika header.php belum di-include, gunakan fallback
 if (!isset($BASE)) {
     $requestUri = $_SERVER['REQUEST_URI'] ?? '';
     $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
@@ -11,13 +12,29 @@ if (!isset($BASE)) {
         strpos($serverName, 'localhost') !== false ||
         strpos($serverName, '127.0.0.1') !== false ||
         strpos($httpHost, 'localhost') !== false ||
+        strpos($httpHost, '127.0.0.1') !== false ||
         strpos($requestUri, '/rekap-konten/public') !== false ||
-        strpos($scriptName, '/rekap-konten/public') !== false
+        strpos($scriptName, '/rekap-konten/public') !== false ||
+        (isset($_SERVER['HTTP_X_FORWARDED_HOST']) && strpos($_SERVER['HTTP_X_FORWARDED_HOST'], 'localhost') !== false)
     );
     
-    $BASE = $isLocalhost ? 
-        (defined('BASE_URL') ? BASE_URL : '/rekap-konten/public') : 
-        '';
+    $BASE = $isLocalhost ? '/rekap-konten/public' : '';
+    
+    // Fallback: jika BASE kosong tapi script ada di subdirectory, deteksi otomatis
+    if (empty($BASE) && strpos($scriptName, '/public/') !== false) {
+        $pathParts = explode('/public/', $scriptName);
+        if (count($pathParts) > 1) {
+            $BASE = $pathParts[0] . '/public';
+        }
+    }
+    
+    // Pastikan BASE selalu dimulai dengan / jika tidak kosong
+    if (!empty($BASE) && $BASE[0] !== '/') {
+        $BASE = '/' . $BASE;
+    }
+    
+    // Pastikan BASE tidak diakhiri dengan /
+    $BASE = rtrim($BASE, '/');
 }
 ?>
 
@@ -76,8 +93,6 @@ if (!isset($BASE)) {
         <!-- Pagination akan di-generate via JavaScript -->
     </div>
 </div>
-
-<script src="<?= $BASE ?>/js/daftar-harmonisasi.js"></script>
 
 <?php if (isset($_GET['status'])): ?>
 <script>

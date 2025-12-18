@@ -41,6 +41,9 @@ if (!isset($BASE)) {
 <?php if (isset($_GET['page']) && $_GET['page'] === 'edit-peminjaman-ruangan'): ?>
 <script src="<?= $BASE ?>/js/edit-peminjaman-ruangan.js"></script>
 <?php endif; ?>
+<?php if (isset($_GET['page']) && $_GET['page'] === 'harmonisasi'): ?>
+<script src="<?= $BASE ?>/js/daftar-harmonisasi.js?v=1.0.2"></script>
+<?php endif; ?>
 <?php if (isset($_GET['page']) && $_GET['page'] === 'edit-konten'): ?>
 <script src="<?= $BASE ?>/js/edit-konten.js?v=1.0.4" onerror="console.warn('edit-konten.js not found, using inline script')"></script>
 <script>
