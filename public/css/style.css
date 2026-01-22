@@ -1937,6 +1937,298 @@ body.dark .filters span {
   color: var(--text-color) !important; /* gunakan warna teks terang */
 }
 
+/* CSS untuk Halaman Tamu - Public */
+/* simtamu.js */
+#sig canvas {
+  touch-action: none;
+}
+
+/* tambah-tamu.js */
+#signature-pad {
+  touch-action: none;
+}
+
+/* CSS untuk Halaman Tamu - Admin */
+.tamu-page .activity-data {
+  display: grid;
+  grid-template-columns:
+    60px      /* no */
+    160px     /* tanggal */
+    180px     /* nama */
+    160px     /* kontak */
+    160px     /* alamat */
+    180px     /* tujuan */
+    120px     /* ttd */
+    120px     /* foto */
+    80px;     /* aksi */
+
+  gap: 0;
+}
+
+.tamu-page .activity-data .data-list {
+  min-height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* gambar ttd di table tamu */
+.img-ttd,
+.img-foto {
+  width: 100px;          /* boleh diperkecil */
+  max-height: 50px;      /* INI KUNCI */
+  object-fit: contain;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  padding: 2px;
+}
+
+.data-list.ttd,
+.data-list.foto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signature-wrapper {
+  border: 1px solid #999;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 420px;
+  height: 200px;
+  background: #fff;
+}
+
+.signature-wrapper canvas {
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+.btn-clear {
+  width: auto;
+  max-width: 100px;
+  margin-top: 8px;
+  padding: 6px 14px;
+  background: #3793fc;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* preview gambar tabel tamu */
+.img-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  align-items: center;
+}
+
+/* Box putih */
+.img-modal-box {
+  background: #fff;
+  padding: 16px 16px 12px;
+  border-radius: 10px;
+  max-width: 92%;
+  max-height: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* Gambar */
+.img-modal-content {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+/* Caption */
+.img-modal-caption {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  color: #444;
+  text-align: center;
+  word-break: break-word;
+}
+
+/* Tombol close */
+.img-modal-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 26px;
+  cursor: pointer;
+  color: #555;
+}
+
+.img-modal-close:hover {
+  color: #000;
+}
+
+/* HEADER & FILTER BAR – LIGHT MODE (DEFAULT) */
+
+/* Filter bar daftar tamu */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* KIRI - KANAN */
+  margin: 20px 0;
+}
+
+/* Judul kiri */
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.page-title span {
+  color: #111827;
+}
+
+.page-title i {
+  font-size: 26px;
+  color: #1e40af; /* biru ikon */
+}
+
+/* Filter kanan */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Select & button (light) */
+.filter-bar select,
+.filter-bar button {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 14px;
+  border-radius: 10px;
+
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #d1d5db;
+}
+
+/* Hover light */
+.filter-bar select:hover,
+.filter-bar button:hover {
+  background: #f3f4f6;
+}
+
+/* Tombol Cari - light */
+.btn-cari {
+  background: #6b7280;
+  color: #ffffff;
+  border: none;
+}
+
+.btn-cari:hover {
+  background: #4b5563;
+}
+
+/* Tombol Print - light */
+.btn-print {
+  background: #111827;
+  color: #ffffff;
+  border: none;
+}
+
+.btn-print:hover {
+  background: #000000;
+}
+
+/* DARK MODE (AKTIF JIKA ADA .dark PARENT) */
+
+.dark .page-title span {
+  color: #f9fafb;
+}
+
+.dark .page-title i {
+  color: #2563eb;
+}
+
+.dark .filter-bar select,
+.dark .filter-bar button {
+  background: #2a2d2f;       /* dark soft */
+  color: #e5e7eb;
+  border: 1px solid #3a3d40;
+  outline: none;
+}
+
+/* Select arrow dark */
+.dark .filter-bar select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #9ca3af 50%),
+    linear-gradient(135deg, #9ca3af 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 14px,
+    calc(100% - 12px) 14px;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 34px;
+}
+
+/* Hover dark */
+.dark .filter-bar select:hover,
+.dark .filter-bar button:hover {
+  background: #34373a;
+}
+
+.dark .filter-bar select:focus {
+  border-color: #2563eb;
+}
+
+/* Tombol Cari - dark */
+.dark .btn-cari {
+  background: #374151;
+  border: 1px solid #4b5563;
+  color: #f9fafb;
+}
+
+.dark .btn-cari:hover {
+  background: #4b5563;
+}
+
+/* Tombol Print - dark */
+.dark .btn-print {
+  background: #030712;
+  border: 1px solid #111827;
+  color: #ffffff;
+}
+
+.dark .btn-print:hover {
+  background: #111827;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .filter-bar {
+    flex-wrap: wrap;
+  }
+}
+
 
 /* 🔹 CSS Khusus untuk Halaman Arsip */
 .arsip-page .activity-wrapper {
@@ -2012,8 +2304,8 @@ body.dark .filters span {
 
 .harmonisasi-page .activity-data {
   display: grid !important;  /* override CSS lain */
-  grid-template-columns: 50px 1fr 180px 260px 180px 200px 120px 150px !important;
-  min-width: 1340px !important;
+  grid-template-columns: 50px 1fr 180px 260px 180px 200px 120px 150px 150px !important;
+  min-width: 1490px !important;
   gap: 0 !important;
   overflow-x: auto;        /* scroll horizontal jika perlu */
   overflow-y: visible;     /* tidak ada scroll vertikal */
@@ -2054,6 +2346,7 @@ body.dark .filters span {
 /* Alignment untuk header lainnya - center */
 .harmonisasi-page .activity-data .data.no .data-title,
 .harmonisasi-page .activity-data .data.pemerintah .data-title,
+.harmonisasi-page .activity-data .data.tanggal-surat .data-title,
 .harmonisasi-page .activity-data .data.tanggal .data-title,
 .harmonisasi-page .activity-data .data.pemegang .data-title,
 .harmonisasi-page .activity-data .data.status .data-title,

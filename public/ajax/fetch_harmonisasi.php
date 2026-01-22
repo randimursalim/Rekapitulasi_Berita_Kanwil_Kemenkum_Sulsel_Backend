@@ -18,8 +18,8 @@ try {
 
     // Base query
     $query = "
-    SELECT id, judul_rancangan, pemrakarsa, pemerintah_daerah, tanggal_rapat, 
-           pemegang_draf, status, alasan_pengembalian_draf
+    SELECT id, judul_rancangan, pemrakarsa, pemerintah_daerah, tanggal_surat_diterima, 
+           tanggal_rapat, pemegang_draf, status, alasan_pengembalian_draf
     FROM harmonisasi
     WHERE 1=1
     ";

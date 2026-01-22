@@ -49,6 +49,11 @@ if (!isset($BASE)) {
                 </div>
 
                 <div class="form-group">
+                    <label for="tanggal_surat_diterima">Tanggal Surat Diterima</label>
+                    <input type="date" id="tanggal_surat_diterima" name="tanggal_surat_diterima">
+                </div>
+
+                <div class="form-group">
                     <label for="tanggal_rapat">Tanggal Rapat <span style="color: red;">*</span></label>
                     <input type="date" id="tanggal_rapat" name="tanggal_rapat" required>
                 </div>

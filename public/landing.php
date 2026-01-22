@@ -41,9 +41,9 @@ $BASE = rtrim($BASE, '/');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landing Page - SiCakap</title>
-    <link rel="icon" type="image/png" href="<?= $BASE ?>/Images/aset_landing.png">
+    <link rel="icon" type="image/png" href="<?= $BASE ?>/Images/aset_landing.webp">
     <!-- Cache busting: update version number when CSS/JS changes -->
-    <?php $version = '1.0.2'; // Update this number when you make CSS/JS changes ?>
+    <?php $version = '1.0.5'; // Update this number when you make CSS/JS changes ?>
     <link rel="stylesheet" href="<?= $BASE ?>/css/landing.css?v=<?= $version ?>">
     <link rel="stylesheet" href="<?= $BASE ?>/vendor/fontawesome/css/all.min.css">
 
@@ -83,7 +83,9 @@ $BASE = rtrim($BASE, '/');
           <ul class="dropdown-menu">
             <li><a href="#chatbot">Chatbot</a></li>
             <li><a href="#layanan-pengaduan">Layanan Pengaduan</a></li>
+            <li><a href="#data-harmonisasi">Data Harmonisasi</a></li>
             <li><a href="https://simanis.kemenkumsulsel.id/" target="_blank">Simanis</a></li>
+            <li><a href="<?= $BASE ?>/index.php?page=simtamu">Simtamu</a></li>
           </ul>
         </li>
         <li class="dropdown">
@@ -328,21 +330,21 @@ $BASE = rtrim($BASE, '/');
               </div>
               <div class="message user">
                 <p>Saya ingin mengetahui informasi terbaru tentang layanan di kantor wilayah kemenkum sulsel.</p>
-              </div>
+        </div>
               <div class="message bot">
                 <p>Baik, saya akan membantu Anda. Bisa ceritakan lebih detail informasi yang ingin Anda tanyakan?</p>
-              </div>
-            </div>
+        </div>
+        </div>
             <div class="chat-input">
               <input type="text" placeholder="Ketik pesan Anda..." >
               <a href="https://wa.me/6285787028737" target="_blank" rel="noopener noreferrer" class="chat-button-kirim">Kirim</a>
-            </div>
-          </div>
         </div>
+        </div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-    </section>
+</section>
 
 <!-- Jadwal Kegiatan Section -->
 <section id="jadwal-kegiatan" class="section white-background">
@@ -380,9 +382,9 @@ $BASE = rtrim($BASE, '/');
             <!-- Content will be populated dynamically -->
             </div>
             </div>
-            </div>
-            </div>
-          </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- Layanan Pengaduan Section -->
@@ -432,8 +434,34 @@ $BASE = rtrim($BASE, '/');
   </div>
 </section>
 
+<!-- Data Harmonisasi Section -->
+<section id="data-harmonisasi" class="section white-background">
+  <div class="section-content portfolio">
+    <div class="full-height">
+      <header class="section-header">
+        <h2>Data Harmonisasi</h2>
+        <p>Informasi data harmonisasi rancangan peraturan terbaru</p>
+      </header>
+
+      <div class="harmonisasi-preview-container">
+        <div class="harmonisasi-table-wrapper" id="harmonisasiPreview">
+          <div class="harmonisasi-loading">
+            <p>Memuat data harmonisasi...</p>
+          </div>
+        </div>
+
+        <div class="harmonisasi-actions">
+          <a href="index.php?page=data-harmonisasi-public" class="btn-view-all">
+            <i class="fas fa-list"></i> Lihat Semua Data Harmonisasi
+          </a>
+        </div>
+    </div>
+  </div>
+</div>
+    </section>
+
 <!-- Jadwal Peminjaman Ruangan Section -->
-<section id="jadwal-peminjaman-ruangan" class="section white-background">
+<section id="jadwal-peminjaman-ruangan" class="section primary-background bg-svg-1">
   <div class="section-content portfolio">
     <div class="full-height">
       <header class="section-header">
@@ -503,7 +531,11 @@ $BASE = rtrim($BASE, '/');
 
 <!-- JavaScript files -->
 <!-- Cache busting: update version number when CSS/JS changes -->
-<?php if (!isset($version)) $version = '1.0.2'; // Update this number when you make CSS/JS changes ?>
+<?php if (!isset($version)) $version = '1.0.5'; // Update this number when you make CSS/JS changes ?>
+<script>
+  // Set BASE_URL untuk JavaScript
+  window.BASE_URL = '<?= $BASE ?>';
+</script>
 <script src="<?= $BASE ?>/js/common.js?v=<?= $version ?>"></script>
 <script src="<?= $BASE ?>/js/landing.js?v=<?= $version ?>"></script>
 

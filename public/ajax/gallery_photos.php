@@ -14,7 +14,11 @@ try {
     $kontenModel = new KontenModel();
     
     // Get photos from database (only those with dokumentasi)
+    // Filter sudah dilakukan di getGalleryPhotos() - hanya return file yang benar-benar ada
     $photos = $kontenModel->getGalleryPhotos();
+    
+    // Log untuk debugging
+    error_log("[GALLERY API] Returning " . count($photos) . " photos");
     
     echo json_encode([
         'success' => true,

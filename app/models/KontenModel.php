@@ -734,32 +734,59 @@ class KontenModel {
             $stmt->execute();
             
             $totalFetched = 0;
+            // Base path untuk file uploads
+            $basePath = __DIR__ . '/../../public/storage/uploads/konten/';
+            
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $totalFetched++;
                 $dokumentasi = $row['dokumentasi'];
                 if (empty($dokumentasi)) continue;
                 
-                // Deduplicate by filename (case-insensitive)
-                $filename = strtolower(basename(str_replace('\\', '/', $dokumentasi)));
+                // Normalize path (handle both Windows and Unix paths)
+                $dokumentasi = str_replace('\\', '/', $dokumentasi);
+                
+                // Extract filename (case-insensitive)
+                $filename = basename($dokumentasi);
                 if (empty($filename)) continue;
                 
-                // Skip if this filename already exists
-                if (!in_array($filename, $uniqueFiles)) {
-                    $uniqueFiles[] = $filename;
-                    $photos[] = [
-                        'id' => $row['id_konten'],
-                        'title' => $row['judul'],
-                        'image' => $dokumentasi,
-                        'type' => 'berita',
-                        'tanggal_input' => $row['tanggal_input'] ?? null,
-                        'tanggal_berita' => $row['tanggal'] ?? null,
-                        'date' => $row['tanggal'] ?? $row['tanggal_input'] ?? null,
-                        'category' => 'Berita'
-                    ];
-                    
-                    // Stop if we have enough unique photos
-                    if (count($photos) >= $limit) break;
+                // Deduplicate by filename (case-insensitive)
+                $filenameLower = strtolower($filename);
+                if (in_array($filenameLower, $uniqueFiles)) continue;
+                
+                // Check if file physically exists
+                // Handle different path formats in database:
+                // 1. Just filename: "konten_xxx.jpg"
+                // 2. Relative path: "storage/uploads/konten/konten_xxx.jpg"
+                // 3. Full path: "/path/to/storage/uploads/konten/konten_xxx.jpg"
+                $filePath = $basePath . $filename;
+                
+                // If path contains "konten/" directory, try to extract just filename
+                if (strpos($dokumentasi, 'konten/') !== false) {
+                    $parts = explode('konten/', $dokumentasi);
+                    if (count($parts) > 1) {
+                        $filePath = $basePath . basename($parts[1]);
+                    }
                 }
+                
+                if (!file_exists($filePath)) {
+                    // Skip this photo if file doesn't exist
+                    continue;
+                }
+                
+                $uniqueFiles[] = $filenameLower;
+                $photos[] = [
+                    'id' => $row['id_konten'],
+                    'title' => $row['judul'],
+                    'image' => $dokumentasi,
+                    'type' => 'berita',
+                    'tanggal_input' => $row['tanggal_input'] ?? null,
+                    'tanggal_berita' => $row['tanggal'] ?? null,
+                    'date' => $row['tanggal'] ?? $row['tanggal_input'] ?? null,
+                    'category' => 'Berita'
+                ];
+                
+                // Stop if we have enough unique photos
+                if (count($photos) >= $limit) break;
             }
             
             // Log for debugging
@@ -814,13 +841,46 @@ class KontenModel {
     $stmt->execute();
 
             $news = [];
+            // Base path untuk file uploads
+            $basePath = __DIR__ . '/../../public/storage/uploads/konten/';
+            
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                // Check if dokumentasi file exists (if dokumentasi is provided)
+                $dokumentasi = $row['dokumentasi'] ?? null;
+                if (!empty($dokumentasi) && $dokumentasi !== 'user.jpg') {
+                    // Normalize path
+                    $dokumentasi = str_replace('\\', '/', $dokumentasi);
+                    $filename = basename($dokumentasi);
+                    
+                    if (!empty($filename)) {
+                        // Check if file physically exists
+                        $filePath = $basePath . $filename;
+                        
+                        // If path contains "konten/" directory, try to extract just filename
+                        if (strpos($dokumentasi, 'konten/') !== false) {
+                            $parts = explode('konten/', $dokumentasi);
+                            if (count($parts) > 1) {
+                                $filePath = $basePath . basename($parts[1]);
+                            }
+                        }
+                        
+                        // If file doesn't exist, set dokumentasi to null
+                        if (!file_exists($filePath)) {
+                            $dokumentasi = null;
+                        }
+                    } else {
+                        $dokumentasi = null;
+                    }
+                } else {
+                    $dokumentasi = null;
+                }
+                
                 $news[] = [
                     'id' => $row['id_konten'],
                     'judul' => $row['judul'],
                     'isi' => $row['ringkasan'], // Gunakan ringkasan sebagai isi
                     'jenis' => $row['jenis'],
-                    'dokumentasi' => $row['dokumentasi'],
+                    'dokumentasi' => $dokumentasi,
                     'tanggal' => $row['tanggal_berita'] ?: $row['tanggal_input'],
                     'link' => $row['link_berita'],
                     'sumber' => $row['sumber_berita'],

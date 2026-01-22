@@ -210,6 +210,9 @@ function is_active($pageName) {
         <li><a href="<?= $BASE ?>/index.php?page=dashboard" class="<?= is_active('dashboard') ?>"><i class="fas fa-home"></i><span class="link-name">Dashboard</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=input-konten" class="<?= is_active('input-konten') ?>"><i class="fas fa-plus-circle"></i><span class="link-name">Input Konten</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=rekap-konten" class="<?= is_active('rekap-konten') ?>"><i class="fas fa-database"></i><span class="link-name">Rekap Konten</span></a></li>
+        <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'Admin'): ?>
+            <li><a href="<?= $BASE ?>/index.php?page=tamu" class="<?= is_active('tamu') ?>"><i class="fas fa-book"></i><span class="link-name">Buku Tamu</span></a></li>
+        <?php endif; ?>
         <li><a href="<?= $BASE ?>/index.php?page=arsip" class="<?= is_active('arsip') ?>"><i class="fas fa-archive"></i><span class="link-name">Arsip</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=jadwal-kegiatan" class="<?= is_active('jadwal-kegiatan') ?>"><i class="fas fa-calendar-alt"></i><span class="link-name">Jadwal Kegiatan</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=jadwal-peminjaman-ruangan" class="<?= is_active('jadwal-peminjaman-ruangan') ?>"><i class="fas fa-door-open"></i><span class="link-name">Peminjaman Ruangan</span></a></li>

@@ -98,13 +98,27 @@ function renderGalleryPhotos(photos) {
   const photosHTML = uniquePhotos.map((photo, index) => {
     // Handle image path - fix path for storage/uploads
     let imageSrc = photo.image;
-    if (!imageSrc.startsWith('http') && !imageSrc.startsWith('/')) {
-      // If path starts with storage/uploads, use it directly
-      if (imageSrc.startsWith('storage/uploads/')) {
-        imageSrc = imageSrc; // Use as is
-      } else {
-        imageSrc = 'Images/' + imageSrc;
-      }
+    
+    // Skip if no image path
+    if (!imageSrc || imageSrc.trim() === '' || imageSrc === 'user.jpg') {
+      return ''; // Skip this photo
+    }
+    
+    // Get BASE_URL
+    const baseUrl = (typeof window.BASE_URL !== 'undefined' && window.BASE_URL) ? window.BASE_URL : '';
+    
+    if (imageSrc.startsWith('http://') || imageSrc.startsWith('https://')) {
+      // Already a full URL, use as is
+      imageSrc = imageSrc;
+    } else if (imageSrc.startsWith('/')) {
+      // Absolute path, add BASE_URL if needed
+      imageSrc = baseUrl + imageSrc;
+    } else if (imageSrc.startsWith('storage/uploads/')) {
+      // Relative path starting with storage/uploads, add BASE_URL and leading slash
+      imageSrc = baseUrl + '/' + imageSrc;
+    } else {
+      // Other relative paths, try Images/ prefix
+      imageSrc = baseUrl + '/Images/' + imageSrc;
     }
     
     // Resolve date from various possible API fields without defaulting to today
@@ -119,10 +133,10 @@ function renderGalleryPhotos(photos) {
     return `
       <div class="gallery-item" data-index="${index}">
         <div class="gallery-image">
-          <img src="${imageSrc}" alt="${photo.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
+          <img src="${imageSrc}" alt="${photo.title || 'Gallery Image'}" loading="lazy" onerror="this.onerror=null; this.style.display='none'; this.parentElement.parentElement.style.display='none';">
           <div class="gallery-overlay">
             <div class="gallery-info">
-              <h3>${photo.title}</h3>
+              <h3>${photo.title || 'Untitled'}</h3>
               <p>${photo.type === 'berita' ? 'Berita' : 'Media Sosial'}</p>
               ${dateHTML}
             </div>
@@ -130,7 +144,7 @@ function renderGalleryPhotos(photos) {
         </div>
       </div>
     `;
-  }).join('');
+  }).filter(html => html !== '').join(''); // Filter out empty strings
   
   galleryGrid.innerHTML = photosHTML;
   initializeGalleryInteractions();
@@ -198,10 +212,10 @@ function renderPlaceholderVideos() {
       thumbnail: 'https://img.youtube.com/vi/55wGNoLPdjA/maxresdefault.jpg'
     },
     {
-      id: '_RK7k7cQAkI',
-      title: 'Pelantikan Notaris Pengganti',
-      description: 'Dua Notaris Pengganti untuk wilayah Kabupaten Gowa dan Maros resmi dilantik di Kanwil Kemenkum Sulsel',
-      thumbnail: 'https://img.youtube.com/vi/_RK7k7cQAkI/maxresdefault.jpg'
+      id: 'mwOUluhxpJM',
+      title: 'Capaian Kinerja Kantor Wilayah Kementerian Hukum Sulawesi Selatan',
+      description: 'Kami bangga dengan pencapaian yang telah diraih sepanjang tahun 2025 ini, yang mencerminkan komitmen kami dalam memberikan pelayanan hukum terbaik untuk masyarakat.',
+      thumbnail: 'https://img.youtube.com/vi/mwOUluhxpJM/maxresdefault.jpg'
     },
     {
       id: 'EPVjj441Wvg',
@@ -1215,12 +1229,27 @@ function renderNewsPortal(news) {
   
   const newsHTML = news.map((item, index) => {
     // Handle image path
-    let imageSrc = item.dokumentasi || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUwIiBoZWlnaHQ9IjIyMCIgdmlld0JveD0iMCAwIDM1MCAyMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzNTAiIGhlaWdodD0iMjIwIiBmaWxsPSIjNjM2NmYxIi8+Cjx0ZXh0IHg9IjE3NSIgeT0iMTEwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5KwIE5ld3MgSW1hZ2U8L3RleHQ+Cjwvc3ZnPg==';
-    if (!imageSrc.startsWith('http') && !imageSrc.startsWith('/') && !imageSrc.startsWith('data:')) {
-      if (imageSrc.startsWith('storage/uploads/')) {
+    let imageSrc = item.dokumentasi;
+    
+    // Skip if no image or invalid
+    if (!imageSrc || imageSrc.trim() === '' || imageSrc === 'user.jpg') {
+      imageSrc = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzUwIiBoZWlnaHQ9IjIyMCIgdmlld0JveD0iMCAwIDM1MCAyMjAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzNTAiIGhlaWdodD0iMjIwIiBmaWxsPSIjNjM2NmYxIi8+Cjx0ZXh0IHg9IjE3NSIgeT0iMTEwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5KwIE5ld3MgSW1hZ2U8L3RleHQ+Cjwvc3ZnPg==';
+    } else {
+      // Get BASE_URL
+      const baseUrl = (typeof window.BASE_URL !== 'undefined' && window.BASE_URL) ? window.BASE_URL : '';
+      
+      if (imageSrc.startsWith('http://') || imageSrc.startsWith('https://')) {
+        // Already a full URL, use as is
         imageSrc = imageSrc;
-      } else {
-        imageSrc = 'Images/' + imageSrc;
+      } else if (imageSrc.startsWith('/')) {
+        // Absolute path, add BASE_URL if needed
+        imageSrc = baseUrl + imageSrc;
+      } else if (imageSrc.startsWith('storage/uploads/')) {
+        // Relative path starting with storage/uploads, add BASE_URL and leading slash
+        imageSrc = baseUrl + '/' + imageSrc;
+      } else if (!imageSrc.startsWith('data:')) {
+        // Other relative paths, try Images/ prefix
+        imageSrc = baseUrl + '/Images/' + imageSrc;
       }
     }
     
@@ -1483,6 +1512,9 @@ function initializeLandingPage() {
   // Load news portal
   loadNewsPortal();
   
+  // Load harmonisasi preview
+  loadHarmonisasiPreview();
+  
   // Add scroll event listener to news grid
   const newsGrid = document.getElementById('newsGrid');
   if (newsGrid) {
@@ -1557,6 +1589,117 @@ function initializeDropdownMenu() {
       });
     }
   });
+}
+
+// Flag untuk mencegah multiple calls
+let harmonisasiPreviewLoaded = false;
+
+// Load Harmonisasi Preview (10 data terbaru)
+async function loadHarmonisasiPreview() {
+  const container = document.getElementById('harmonisasiPreview');
+  if (!container) return;
+  
+  // Prevent multiple calls
+  if (harmonisasiPreviewLoaded) return;
+  harmonisasiPreviewLoaded = true;
+
+  try {
+    container.innerHTML = '<div class="harmonisasi-loading"><p>Memuat data harmonisasi...</p></div>';
+
+    const response = await fetch('ajax/fetch_harmonisasi_public.php?limit=10');
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const result = await response.json();
+
+    if (!result.success) {
+      container.innerHTML = '<div class="harmonisasi-loading"><p>Gagal memuat data harmonisasi.</p></div>';
+      return;
+    }
+
+    const data = result.data || [];
+
+    if (data.length === 0) {
+      container.innerHTML = '<div class="harmonisasi-loading"><p>Belum ada data harmonisasi.</p></div>';
+      harmonisasiPreviewLoaded = false; // Reset flag if no data
+      return;
+    }
+
+    renderHarmonisasiPreview(data);
+
+  } catch (error) {
+    console.error('Error loading harmonisasi preview:', error);
+    container.innerHTML = '<div class="harmonisasi-loading"><p>Terjadi kesalahan saat memuat data.</p></div>';
+    harmonisasiPreviewLoaded = false; // Reset flag on error to allow retry
+  }
+}
+
+// Render harmonisasi preview table
+function renderHarmonisasiPreview(data) {
+  const container = document.getElementById('harmonisasiPreview');
+  if (!container) return;
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('id-ID');
+  }
+
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  const html = `
+    <div class="harmonisasi-preview-table">
+      <table class="harmonisasi-table">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Judul Rancangan</th>
+            <th>Pemrakarsa</th>
+            <th>Pemerintah Daerah</th>
+            <th>Tanggal Surat Diterima</th>
+            <th>Tanggal Rapat</th>
+            <th>Pemegang Draf</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${data.map((h, index) => {
+            const judul = h.judul_rancangan || '-';
+            const pemrakarsa = h.pemrakarsa || '-';
+            const status = h.status || 'Diterima';
+            const statusClass = status === 'Diterima' ? 'status-selesai' : 'status-proses';
+            const statusText = status === 'Diterima' ? 'Diterima' : 'Dikembalikan';
+            
+            return `
+              <tr>
+                <td data-label="">${index + 1}</td>
+                <td class="text-full" data-label="Judul Rancangan" title="${escapeHtml(judul)}">
+                  <div class="cell-content">${escapeHtml(judul)}</div>
+                </td>
+                <td class="text-full" data-label="Pemrakarsa" title="${escapeHtml(pemrakarsa)}">
+                  <div class="cell-content">${escapeHtml(pemrakarsa)}</div>
+                </td>
+                <td data-label="Pemerintah Daerah">${escapeHtml(h.pemerintah_daerah || '-')}</td>
+                <td data-label="Tanggal Surat Diterima">${formatDate(h.tanggal_surat_diterima)}</td>
+                <td data-label="Tanggal Rapat">${formatDate(h.tanggal_rapat)}</td>
+                <td data-label="Pemegang Draf">${escapeHtml(h.pemegang_draf || '-')}</td>
+                <td data-label="Status"><span class="status-badge ${statusClass}">${statusText}</span></td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+
+  container.innerHTML = html;
 }
 
 // Initialize when DOM is loaded

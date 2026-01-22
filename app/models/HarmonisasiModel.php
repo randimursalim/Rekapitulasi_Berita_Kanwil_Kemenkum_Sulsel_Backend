@@ -15,8 +15,8 @@ class HarmonisasiModel {
         
         // Base query
         $query = "
-        SELECT id, judul_rancangan, pemrakarsa, pemerintah_daerah, tanggal_rapat, 
-               pemegang_draf, status, alasan_pengembalian_draf
+        SELECT id, judul_rancangan, pemrakarsa, pemerintah_daerah, tanggal_surat_diterima, 
+               tanggal_rapat, pemegang_draf, status, alasan_pengembalian_draf
         FROM harmonisasi
         WHERE 1=1
         ";
@@ -78,13 +78,22 @@ class HarmonisasiModel {
     // Tambah data harmonisasi baru
     public function tambahHarmonisasi($data) {
         try {
-            $query = "INSERT INTO harmonisasi (judul_rancangan, pemrakarsa, pemerintah_daerah, tanggal_rapat, pemegang_draf, status, alasan_pengembalian_draf) 
-                      VALUES (:judul_rancangan, :pemrakarsa, :pemerintah_daerah, :tanggal_rapat, :pemegang_draf, :status, :alasan_pengembalian_draf)";
+            $query = "INSERT INTO harmonisasi (judul_rancangan, pemrakarsa, pemerintah_daerah, tanggal_surat_diterima, tanggal_rapat, pemegang_draf, status, alasan_pengembalian_draf) 
+                      VALUES (:judul_rancangan, :pemrakarsa, :pemerintah_daerah, :tanggal_surat_diterima, :tanggal_rapat, :pemegang_draf, :status, :alasan_pengembalian_draf)";
             
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':judul_rancangan', $data['judul_rancangan']);
             $stmt->bindParam(':pemrakarsa', $data['pemrakarsa']);
             $stmt->bindParam(':pemerintah_daerah', $data['pemerintah_daerah']);
+            
+            // Handle tanggal_surat_diterima (nullable)
+            $tanggalSurat = !empty($data['tanggal_surat_diterima']) ? $data['tanggal_surat_diterima'] : null;
+            if ($tanggalSurat !== null) {
+                $stmt->bindParam(':tanggal_surat_diterima', $tanggalSurat);
+            } else {
+                $stmt->bindValue(':tanggal_surat_diterima', null, PDO::PARAM_NULL);
+            }
+            
             $stmt->bindParam(':tanggal_rapat', $data['tanggal_rapat']);
             $stmt->bindParam(':pemegang_draf', $data['pemegang_draf']);
             $stmt->bindParam(':status', $data['status']);
@@ -111,6 +120,7 @@ class HarmonisasiModel {
                       judul_rancangan = :judul_rancangan,
                       pemrakarsa = :pemrakarsa,
                       pemerintah_daerah = :pemerintah_daerah,
+                      tanggal_surat_diterima = :tanggal_surat_diterima,
                       tanggal_rapat = :tanggal_rapat,
                       pemegang_draf = :pemegang_draf,
                       status = :status,
@@ -122,6 +132,15 @@ class HarmonisasiModel {
             $stmt->bindParam(':judul_rancangan', $data['judul_rancangan']);
             $stmt->bindParam(':pemrakarsa', $data['pemrakarsa']);
             $stmt->bindParam(':pemerintah_daerah', $data['pemerintah_daerah']);
+            
+            // Handle tanggal_surat_diterima (nullable)
+            $tanggalSurat = !empty($data['tanggal_surat_diterima']) ? $data['tanggal_surat_diterima'] : null;
+            if ($tanggalSurat !== null) {
+                $stmt->bindParam(':tanggal_surat_diterima', $tanggalSurat);
+            } else {
+                $stmt->bindValue(':tanggal_surat_diterima', null, PDO::PARAM_NULL);
+            }
+            
             $stmt->bindParam(':tanggal_rapat', $data['tanggal_rapat']);
             $stmt->bindParam(':pemegang_draf', $data['pemegang_draf']);
             $stmt->bindParam(':status', $data['status']);

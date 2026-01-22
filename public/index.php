@@ -620,7 +620,65 @@ switch ($page) {
         $controller->hapusPengguna();
         break;
 
+    // === PUBLIC PAGES (TANPA LOGIN) ===
+    case 'data-harmonisasi-public':
+        // Halaman publik untuk melihat data harmonisasi tanpa login
+        require_once __DIR__ . '/../app/views/pages/data-harmonisasi-public.php';
+        exit;
+        break;
+        
+        // === BUKU TAMU (Admin Only) ===
+    case 'tamu':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin(); // Hanya admin yang bisa akses
 
+        require_once __DIR__ . '/../app/controllers/TamuController.php';
+        $controller = new TamuController();
+        $controller->daftarTamu();
+        break;
+
+    case 'simtamu':
+        require_once __DIR__ . '/../app/controllers/TamuController.php';
+        $controller = new TamuController();
+        $controller->formPublic();
+        break;
+
+    case 'tambah-tamu':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+
+        require_once __DIR__ . '/../app/controllers/TamuController.php';
+        $controller = new TamuController();
+        $controller->tambahTamu();
+        break;
+
+    case 'store-tamu':
+        // require_once __DIR__ . '/../app/controllers/AuthController.php';
+        // AuthController::requireAdmin(); // Hanya admin yang bisa akses
+
+        require_once __DIR__ . '/../app/controllers/TamuController.php';
+        $controller = new TamuController();
+        $controller->storeTamu();
+        break;
+
+    case 'hapus-tamu':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+
+        require_once __DIR__ . '/../app/controllers/TamuController.php';
+        $controller = new TamuController();
+        $controller->hapusTamu();
+        break;
+
+    case 'print-tamu':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/TamuController.php';
+        $controller = new TamuController();
+        $controller->printTamu();
+        break;
+        
     // === DEFAULT ===
     default:
         echo "404 - Halaman tidak ditemukan";

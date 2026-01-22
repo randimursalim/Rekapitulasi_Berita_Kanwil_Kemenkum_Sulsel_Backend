@@ -167,6 +167,11 @@ document.addEventListener('DOMContentLoaded', function() {
         ${data.map(h => `<span class="data-list">${escapeHtml(h.pemerintah_daerah || '-')}</span>`).join('')}
       </div>
 
+      <div class="data tanggal-surat">
+        <span class="data-title">Tanggal Surat Diterima</span>
+        ${data.map(h => `<span class="data-list">${formatDate(h.tanggal_surat_diterima)}</span>`).join('')}
+      </div>
+
       <div class="data tanggal">
         <span class="data-title">Tanggal Rapat</span>
         ${data.map(h => `<span class="data-list">${formatDate(h.tanggal_rapat)}</span>`).join('')}
@@ -191,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <span class="data-title">Aksi</span>
         ${data.map((h, index) => `
           <span class="data-list">
-            <button class="btn-action-aksi view" onclick="showDetailHarmonisasi(${h.id}, '${escapeHtml(h.judul_rancangan || '')}', '${escapeHtml(h.pemrakarsa || '')}', '${escapeHtml(h.pemerintah_daerah || '')}', '${formatDate(h.tanggal_rapat)}', '${escapeHtml(h.pemegang_draf || '')}', '${h.status || 'Diterima'}', '${escapeHtml(h.alasan_pengembalian_draf || '')}')">
+            <button class="btn-action-aksi view" onclick="showDetailHarmonisasi(${h.id}, '${escapeHtml(h.judul_rancangan || '')}', '${escapeHtml(h.pemrakarsa || '')}', '${escapeHtml(h.pemerintah_daerah || '')}', '${formatDate(h.tanggal_surat_diterima)}', '${formatDate(h.tanggal_rapat)}', '${escapeHtml(h.pemegang_draf || '')}', '${h.status || 'Diterima'}', '${escapeHtml(h.alasan_pengembalian_draf || '')}')">
               <i class="fas fa-eye"></i>
             </button>
             <button class="btn-action-aksi edit" onclick="window.location.href='index.php?page=edit-harmonisasi&id=${h.id}'">
@@ -282,17 +287,19 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Fungsi tampilkan modal detail
-  function showDetailHarmonisasi(id, judulRancangan, pemrakarsa, pemerintahDaerah, tanggalRapat, pemegangDraf, status, alasanPengembalianDraf) {
+  function showDetailHarmonisasi(id, judulRancangan, pemrakarsa, pemerintahDaerah, tanggalSuratDiterima, tanggalRapat, pemegangDraf, status, alasanPengembalianDraf) {
     const modalContent = document.getElementById('modalContent');
     if (!modalContent) return;
 
     let htmlContent = '';
     
-    htmlContent += `<strong>Judul Rancangan:</strong> ${judulRancangan || '-'}<br><br>`;
-    htmlContent += `<strong>Pemrakarsa:</strong> ${pemrakarsa || '-'}<br>`;
-    htmlContent += `<strong>Pemerintah Daerah:</strong> ${pemerintahDaerah || '-'}<br>`;
+    htmlContent += `<strong>Judul Rancangan:</strong><br>`;
+    htmlContent += `<div style="margin: 10px 0; padding: 10px; background: var(--panel-color); border: 1px solid var(--border-color); border-radius: 5px; white-space: pre-wrap; color: var(--text-color); word-wrap: break-word; word-break: break-word;">${escapeHtml(judulRancangan || '-')}</div><br>`;
+    htmlContent += `<strong>Pemrakarsa:</strong> ${escapeHtml(pemrakarsa || '-')}<br>`;
+    htmlContent += `<strong>Pemerintah Daerah:</strong> ${escapeHtml(pemerintahDaerah || '-')}<br>`;
+    htmlContent += `<strong>Tanggal Surat Diterima:</strong> ${tanggalSuratDiterima || '-'}<br>`;
     htmlContent += `<strong>Tanggal Rapat:</strong> ${tanggalRapat}<br>`;
-    htmlContent += `<strong>Pemegang Draf:</strong> ${pemegangDraf || '-'}<br><br>`;
+    htmlContent += `<strong>Pemegang Draf:</strong> ${escapeHtml(pemegangDraf || '-')}<br><br>`;
     
     htmlContent += `<strong>Status:</strong> `;
     const statusText = status === 'Diterima' ? 'Diterima' : 'Dikembalikan';
@@ -301,7 +308,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (status === 'Dikembalikan' && alasanPengembalianDraf) {
       htmlContent += `<br><strong>Alasan Pengembalian Draf:</strong><br>`;
-      htmlContent += `<div style="margin: 10px 0; padding: 10px; background: #f9f9f9; border-radius: 5px; white-space: pre-wrap;">${escapeHtml(alasanPengembalianDraf).replace(/\n/g, '<br>')}</div>`;
+      htmlContent += `<div style="margin: 10px 0; padding: 10px; background: var(--panel-color); border: 1px solid var(--border-color); border-radius: 5px; white-space: pre-wrap; color: var(--text-color); word-wrap: break-word; word-break: break-word;">${escapeHtml(alasanPengembalianDraf).replace(/\n/g, '<br>')}</div>`;
     }
     
     modalContent.innerHTML = htmlContent;
