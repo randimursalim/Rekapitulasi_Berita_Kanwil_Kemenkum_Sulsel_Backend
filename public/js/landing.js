@@ -595,6 +595,7 @@ function renderSchedulePeminjamanFromDatabase(scheduleData) {
                      style="background-color: ${activity.color}; border-left: 4px solid ${activity.color}">
                   <div class="event-title">${activity.title}</div>
                   <div class="event-time">${activity.time}</div>
+                  <div class="event-ruangan" style="font-size: 0.7rem; opacity: 0.9; margin-top: 2px; line-height: 1.2;">${activity.ruangan}</div>
                 </div>
               `).join('');
               
@@ -798,6 +799,7 @@ function renderPlaceholderSchedulePeminjaman() {
                    style="background-color: ${activity.color}; border-left: 4px solid ${activity.color}">
                 <div class="event-title">${activity.title}</div>
                 <div class="event-time">${activity.time}</div>
+                <div class="event-ruangan" style="font-size: 0.7rem; opacity: 0.9; margin-top: 2px; line-height: 1.2;">${activity.ruangan}</div>
               </div>
             `).join('');
             

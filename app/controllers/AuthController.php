@@ -14,9 +14,14 @@ class AuthController
     // === Halaman login ===
     public function login()
     {
-        // Jika user sudah login, redirect ke dashboard
+        // Jika user sudah login, arahkan ke redirect parameter jika ada, sebaliknya ke dashboard
         if (isset($_SESSION['user'])) {
-            header('Location: index.php?page=dashboard');
+            if (!empty($_GET['redirect'])) {
+                $redirectPage = preg_replace('/[^a-zA-Z0-9\-_]/', '', $_GET['redirect']);
+                header('Location: index.php?page=' . $redirectPage);
+            } else {
+                header('Location: index.php?page=dashboard');
+            }
             exit;
         }
 
@@ -63,8 +68,12 @@ class AuthController
                     // Update last login
                     $this->model->updateLastLogin($user['id_pengguna']);
 
-                    // Redirect berdasarkan role
-                    if ($user['role'] === 'p3h') {
+                    // Redirect berdasarkan role atau intended destination
+                    if (!empty($_POST['redirect'])) {
+                        // sanitize to allow only alphanumeric, dashes
+                        $redirectPage = preg_replace('/[^a-zA-Z0-9\-_]/', '', $_POST['redirect']);
+                        header('Location: index.php?page=' . $redirectPage);
+                    } elseif ($user['role'] === 'p3h') {
                         header('Location: index.php?page=harmonisasi');
                     } else {
                         header('Location: index.php?page=dashboard');
@@ -308,7 +317,7 @@ class AuthController
             $allowedPages = ['harmonisasi', 'rekap-harmonisasi', 'tambah-harmonisasi', 'edit-harmonisasi', 
                            'store-harmonisasi', 'update-harmonisasi', 'hapus-harmonisasi',
                            'get-rekap-data-harmonisasi', 'get-rekap-tabel-harmonisasi', 
-                           'get-available-periods-harmonisasi', 'edit-profil', 'update-profil', 'dashboard'];
+                           'get-available-periods-harmonisasi', 'edit-profil', 'update-profil', 'dashboard', 'jadwal-kegiatan', 'jadwal-peminjaman-ruangan'];
             $currentPage = $_GET['page'] ?? 'dashboard';
             
             if (!in_array($currentPage, $allowedPages)) {

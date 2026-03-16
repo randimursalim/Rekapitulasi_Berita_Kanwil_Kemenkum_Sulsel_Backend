@@ -34,7 +34,7 @@ if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'p3h') {
                      'store-harmonisasi', 'update-harmonisasi', 'hapus-harmonisasi',
                      'get-rekap-data-harmonisasi', 'get-rekap-tabel-harmonisasi', 
                      'get-available-periods-harmonisasi', 'edit-profil', 'update-profil', 
-                     'logout', 'update-activity'];
+                     'logout', 'update-activity', 'jadwal-kegiatan', 'jadwal-peminjaman-ruangan'];
     
     if (!in_array($page, $allowedPages)) {
         header('Location: index.php?page=harmonisasi');
@@ -341,14 +341,20 @@ switch ($page) {
         break;
 
     case 'tambah-peminjaman-ruangan-masyarakat':
-        // Form untuk masyarakat (tanpa login)
+        // Form untuk masyarakat (wajib login)
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
         require_once __DIR__ . '/../app/controllers/PeminjamanRuanganController.php';
         $controller = new PeminjamanRuanganController();
         $controller->tambahPeminjamanRuanganMasyarakat();
         break;
 
     case 'store-peminjaman-ruangan-masyarakat':
-        // Proses untuk masyarakat (tanpa login)
+        // Proses untuk masyarakat (wajib login)
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
         require_once __DIR__ . '/../app/controllers/PeminjamanRuanganController.php';
         $controller = new PeminjamanRuanganController();
         $controller->storePeminjamanRuanganMasyarakat();

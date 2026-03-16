@@ -48,13 +48,17 @@ if (!isset($BASE)) {
 		<div class="container-login100">
 			<div class="wrap-login100">
 				<div class="login100-pic js-tilt" data-tilt>
-					<img src="<?= $BASE ?>/Images/LOGO KEMENKUM.jpeg" alt="LOGO KEMENKUM SULSEL">
+					<img src="<?= $BASE ?>/Images/lamacca.png" alt="LOGO KEMENKUM SULSEL">
 				</div>
 
 				<form class="login100-form validate-form" method="POST" action="<?= $BASE ?>/index.php?page=proses-login">
 					<span class="login100-form-title">
-						Selamat Datang di SiCakap!
+						Selamat Datang di LaMacca
 					</span>
+
+					<?php if (isset($_GET['redirect'])): ?>
+						<input type="hidden" name="redirect" value="<?= htmlspecialchars($_GET['redirect']) ?>">
+					<?php endif; ?>
 
 					<?php if (isset($error)): ?>
 						<div class="alert alert-danger" style="margin-bottom: 20px; padding: 10px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; border-radius: 4px;">

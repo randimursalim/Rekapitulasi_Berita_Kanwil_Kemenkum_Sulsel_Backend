@@ -533,6 +533,225 @@ body.dark .layanan-pengaduan-page .activity-data::-webkit-scrollbar-thumb:hover 
   }
 }
 
+/* CSS khusus untuk halaman Tamu */
+.tamu-page .activity-wrapper {
+  overflow-x: auto;
+  overflow-y: visible;
+  max-height: none;
+}
+
+.tamu-page .activity {
+  max-height: none;
+  overflow-y: visible;
+}
+
+.tamu-page .activity-data {
+  display: grid !important;
+  /* Disesuaikan: No, Tgl, Nama, Kontak, Alamat, Tujuan, TTD, Foto, Aksi */
+  grid-template-columns: 50px 170px 220px 200px 250px 250px 100px 100px 120px !important;
+  min-width: 1460px !important;
+  gap: 0 !important;
+  overflow-x: auto;
+  overflow-y: visible;
+}
+
+/* Styling untuk data-title */
+.tamu-page .data-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-color);
+  padding: 0 15px;
+  text-align: center;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  background: var(--panel-color) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 999 !important;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  height: auto;
+  word-wrap: break-word;
+  line-height: 1.3;
+  hyphens: auto;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tamu-page .activity-wrapper,
+.tamu-page .activity {
+  position: relative;
+  z-index: 1;
+}
+
+/* Styling untuk data-list - biarkan multiline */
+/* Text alignment & wrap */
+.tamu-page .activity-data .data .data-list .text-content {
+  display: block; /* Kembalikan ke block */
+}
+
+/* Styling untuk data-list - style arsip (truncation normal) */
+.tamu-page .data-list {
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 0 15px;
+  margin: 0;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  text-align: center;
+  white-space: nowrap; 
+  border: none !important;
+  border-bottom: none !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  justify-content: center;
+}
+
+/* Image preview in table */
+.tamu-page .data-list img.img-preview {
+  max-height: 40px;
+  max-width: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Text alignment & wrap - hapus text wrap */
+.tamu-page .activity-data .data .data-list .text-content {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tamu-page .data {
+  min-width: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.tamu-page .data.nama .data-list,
+.tamu-page .data.alamat .data-list,
+.tamu-page .data.tujuan .data-list,
+.tamu-page .data.kontak .data-list,
+.tamu-page .data.tanggal .data-list,
+.tamu-page .data.no .data-list,
+.tamu-page .data.ttd .data-list,
+.tamu-page .data.foto .data-list {
+  justify-content: center !important; /* Kembali center seperti arsip */
+  text-align: center !important;
+}
+
+.tamu-page .data.nama .data-title,
+.tamu-page .data.alamat .data-title,
+.tamu-page .data.tujuan .data-title,
+.tamu-page .data.kontak .data-title {
+  justify-content: center;
+  text-align: center;
+}
+
+.tamu-page .data.no { min-width: 50px; max-width: 50px; }
+.tamu-page .data.tanggal { min-width: 170px; max-width: 170px; }
+.tamu-page .data.nama { min-width: 220px; max-width: 220px; }
+.tamu-page .data.kontak { min-width: 200px; max-width: 200px; }
+.tamu-page .data.alamat { min-width: 250px; max-width: 250px; }
+.tamu-page .data.tujuan { min-width: 250px; max-width: 250px; }
+.tamu-page .data.ttd { min-width: 100px; max-width: 100px; }
+.tamu-page .data.foto { min-width: 100px; max-width: 100px; }
+.tamu-page .data.actions { min-width: 120px; max-width: 120px; }
+
+/* Actions */
+.tamu-page .data.actions .data-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.tamu-page .btn-action-aksi {
+  margin: 0 3px;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+.tamu-page .btn-action-aksi.delete,
+.tamu-page .btn-action-aksi.delete i {
+  color: #e74c3c !important;
+}
+.tamu-page .btn-action-aksi:hover {
+  background: rgba(0,0,0,0.1) !important;
+}
+body.dark .tamu-page .btn-action-aksi.delete {
+  color: #e74c3c !important;
+}
+body.dark .tamu-page .btn-action-aksi:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+
+/* Scrollbar */
+.tamu-page .activity-data::-webkit-scrollbar {
+  height: 8px;
+}
+.tamu-page .activity-data::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+.tamu-page .activity-data::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+.tamu-page .activity-data::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color-dark);
+}
+
+body.dark .tamu-page .activity-data::-webkit-scrollbar-track {
+  background: #3A3B3C;
+}
+body.dark .tamu-page .activity-data::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+}
+body.dark .tamu-page .activity-data::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color-dark);
+}
+
+/* Responsive Medium */
+@media (max-width: 1400px) {
+  .tamu-page .activity-data {
+    min-width: 1100px !important;
+    grid-template-columns: 50px 120px 150px 140px 200px 200px 90px 90px 100px !important;
+  }
+  .tamu-page .data.no { min-width: 50px; max-width: 50px; }
+  .tamu-page .data.tanggal { min-width: 120px; max-width: 120px; }
+  .tamu-page .data.nama { min-width: 150px; max-width: 150px; }
+  .tamu-page .data.kontak { min-width: 140px; max-width: 140px; }
+  .tamu-page .data.alamat { min-width: 200px; max-width: 200px; }
+  .tamu-page .data.tujuan { min-width: 200px; max-width: 200px; }
+  .tamu-page .data.ttd { min-width: 90px; max-width: 90px; }
+  .tamu-page .data.foto { min-width: 90px; max-width: 90px; }
+  .tamu-page .data.actions { min-width: 100px; max-width: 100px; }
+}
+
+@media (max-width: 1200px) {
+  .tamu-page .activity-data {
+    min-width: 1000px !important;
+  }
+  .tamu-page .data-title, .tamu-page .data-list {
+    font-size: 0.85rem;
+  }
+}
+
 /* Styling untuk scrollbar horizontal */
 .activity-data::-webkit-scrollbar {
   height: 8px;

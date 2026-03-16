@@ -60,7 +60,7 @@ function is_active($pageName) {
   <title><?= ucfirst($currentPage) ?> - KEMENKUM SULSEL</title>
   
   <!-- Favicon -->
-  <link rel="icon" type="image/jpeg" href="<?= $BASE ?>/Images/LOGO KEMENKUM.jpeg">
+  <link rel="icon" type="image/jpeg" href="<?= $BASE ?>/Images/lamaccalogonobg.png">
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="<?= $BASE ?>/css/style.css?v=1.0.7" />
@@ -214,12 +214,12 @@ function is_active($pageName) {
             <li><a href="<?= $BASE ?>/index.php?page=tamu" class="<?= is_active('tamu') ?>"><i class="fas fa-book"></i><span class="link-name">Buku Tamu</span></a></li>
         <?php endif; ?>
         <li><a href="<?= $BASE ?>/index.php?page=arsip" class="<?= is_active('arsip') ?>"><i class="fas fa-archive"></i><span class="link-name">Arsip</span></a></li>
-        <li><a href="<?= $BASE ?>/index.php?page=jadwal-kegiatan" class="<?= is_active('jadwal-kegiatan') ?>"><i class="fas fa-calendar-alt"></i><span class="link-name">Jadwal Kegiatan</span></a></li>
-        <li><a href="<?= $BASE ?>/index.php?page=jadwal-peminjaman-ruangan" class="<?= is_active('jadwal-peminjaman-ruangan') ?>"><i class="fas fa-door-open"></i><span class="link-name">Peminjaman Ruangan</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=daftar-aduan" class="<?= is_active('daftar-aduan') ?>"><i class="fas fa-exclamation-triangle"></i><span class="link-name">Daftar Aduan</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=layanan-pengaduan" class="<?= is_active('layanan-pengaduan') ?>"><i class="fas fa-gavel"></i><span class="link-name">Layanan Pengaduan</span></a></li>
         <?php endif; ?>
         
+        <li><a href="<?= $BASE ?>/index.php?page=jadwal-kegiatan" class="<?= is_active('jadwal-kegiatan') ?>"><i class="fas fa-calendar-alt"></i><span class="link-name">Jadwal Kegiatan</span></a></li>
+        <li><a href="<?= $BASE ?>/index.php?page=jadwal-peminjaman-ruangan" class="<?= is_active('jadwal-peminjaman-ruangan') ?>"><i class="fas fa-door-open"></i><span class="link-name">Peminjaman Ruangan</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=harmonisasi" class="<?= is_active('harmonisasi') ?>"><i class="fas fa-balance-scale"></i><span class="link-name">Data Harmonisasi</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=rekap-harmonisasi" class="<?= is_active('rekap-harmonisasi') ?>"><i class="fas fa-chart-line"></i><span class="link-name">Rekap Harmonisasi</span></a></li>
         

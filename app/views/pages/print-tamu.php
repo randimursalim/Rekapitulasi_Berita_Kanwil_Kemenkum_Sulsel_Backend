@@ -25,7 +25,7 @@ if (!isset($BASE)) {
 <head>
     <meta charset="UTF-8">
     <title>Laporan Buku Tamu - KEMENKUM SULSEL</title>
-    <link rel="icon" type="image/png" href="<?= $BASE ?>/Images/LOGO KEMENKUM.jpeg">
+    <link rel="icon" type="image/png" href="<?= $BASE ?>/Images/lamacca.png">
     <style>
         body {
             font-family: "Times New Roman", serif;

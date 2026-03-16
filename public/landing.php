@@ -1,4 +1,18 @@
 <?php
+// Set custom session path with error handling so landing.php shares the same session as index.php
+$sessionPath = __DIR__ . '/../storage/sessions';
+if (!is_dir($sessionPath)) {
+    @mkdir($sessionPath, 0755, true);
+}
+if (is_writable($sessionPath)) {
+    ini_set('session.save_path', $sessionPath);
+}
+
+// Start session to detect logged-in users and render views accordingly
+if (session_status() === PHP_SESSION_NONE) {
+    @session_start();
+}
+
 // Auto-detect BASE_URL untuk localhost vs hosting
 $requestUri = $_SERVER['REQUEST_URI'] ?? '';
 $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
@@ -40,10 +54,10 @@ $BASE = rtrim($BASE, '/');
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landing Page - SiCakap</title>
+    <title>Landing Page - LaMacca</title>
     <link rel="icon" type="image/png" href="<?= $BASE ?>/Images/aset_landing.webp">
     <!-- Cache busting: update version number when CSS/JS changes -->
-    <?php $version = '1.0.5'; // Update this number when you make CSS/JS changes ?>
+    <?php $version = '1.0.6'; // Update this number when you make CSS/JS changes ?>
     <link rel="stylesheet" href="<?= $BASE ?>/css/landing.css?v=<?= $version ?>">
     <link rel="stylesheet" href="<?= $BASE ?>/vendor/fontawesome/css/all.min.css">
 
@@ -58,7 +72,7 @@ $BASE = rtrim($BASE, '/');
 <aside class="menu">
   <div>
     <h1 class="logo">
-      <a href="#home">SiCakap</a>
+      <a href="#home">LaMacca</a>
     </h1>
     <nav>
       <ul>
@@ -107,13 +121,13 @@ $BASE = rtrim($BASE, '/');
   <div id="home"></div>
   <header id="main-header" class="main-header section-content">
     <div class="main-header-content">
-      <h2>SiCakap
+      <h2>LaMacca
       </h2>
-      <p>Sistem Cerdas Arsip dan Pelayanan Publik.</p>
+      <p>Layanan Manajemen Cepat Akses.</p>
     </div>
 
     <div class="main-header-logo">
-      <img src="<?= $BASE ?>/Images/aset_landing.png" alt="Ilustrasi SiCakap - Rekapitulasi Konten Humas" class="hero-illustration" />
+      <img src="<?= $BASE ?>/Images/aset_landing.png" alt="Ilustrasi LaMacca - Rekapitulasi Konten Humas" class="hero-illustration" />
     </div>
   </header>
 </section>
@@ -123,24 +137,25 @@ $BASE = rtrim($BASE, '/');
     <div class="intro-container">
       <div class="intro-text">
       <article>
-          <h2>Tentang SiCakap</h2>
-          <p>SiCakap merupakan platform digital yang dikembangkan untuk mendukung pengelolaan arsip 
-            dan pelayanan publik di lingkungan Kantor Wilayah Kementerian Hukum Sulawesi Selatan. 
-            Sistem ini mengintegrasikan berbagai kebutuhan kerja seperti pengarsipan konten publikasi, 
-            layanan pengaduan, data harmonisasi, serta peminjaman ruangan dalam satu aplikasi terpusat.</p>
-          <p>Melalui SiCakap, proses input data, pengelolaan arsip, pemantauan layanan, 
-            hingga rekap laporan dapat dilakukan secara lebih cepat dan efisien. 
-            Fitur inti seperti dashboard informasi, form input konten, daftar aduan, 
-            rekap harmonisasi, dan jadwal kegiatan membantu pegawai mengatur aktivitas kerja 
-            secara terstruktur dan terdokumentasi.</p>
-          <p>Dengan antarmuka sederhana dan akses yang terpusat, 
-            SiCakap hadir sebagai langkah digitalisasi untuk menghadirkan arsip yang aman, 
-            pelayanan publik yang lebih responsif, 
-            serta transparansi informasi bagi pimpinan maupun masyarakat.</p>
+          <h2>Tentang LaMacca</h2>
+          <p>LaMacca merupakan platform digital yang dikembangkan untuk mendukung pengelolaan data,
+             arsip, dan pelayanan publik di lingkungan Kantor Wilayah Kementerian Hukum Sulawesi Selatan. 
+             Sistem ini mengintegrasikan berbagai kebutuhan kerja dalam satu aplikasi terpusat, 
+             seperti rekap konten publikasi, layanan pengaduan masyarakat, data harmonisasi, 
+             peminjaman ruangan, serta jadwal kegiatan pimpinan.</p>
+          <p>Selain itu, LaMacca juga menyediakan akses ke layanan pendukung lainnya seperti 
+            SIMANIS (Sistem Informasi Manajemen Izin Penelitian Mahasiswa), 
+            SIMTAMU (Sistem Informasi Buku Tamu), 
+            serta chatbot informasi untuk memudahkan pegawai maupun masyarakat dalam memperoleh 
+            layanan dan informasi secara cepat.</p> 
+          <p>Dengan antarmuka yang sederhana dan sistem yang terintegrasi, 
+            LaMacca diharapkan dapat meningkatkan efisiensi kerja, 
+            pengelolaan arsip yang lebih tertata, serta pelayanan publik yang lebih responsif 
+            dan transparan.</p>
       </article>
       </div>
       <div class="intro-image">
-        <img src="<?= $BASE ?>/Images/mockup_sicakap2nobg.png" alt="Mockup SiCakap Dashboard" class="mockup-image">
+        <img src="<?= $BASE ?>/Images/mockup_sicakap2nobg.png" alt="Mockup LaMacca Dashboard" class="mockup-image">
       </div>
     </div>
   </div>
@@ -478,10 +493,16 @@ $BASE = rtrim($BASE, '/');
     </div>
 
         <div class="schedule-actions">
-          <a href="index.php?page=tambah-peminjaman-ruangan-masyarakat" class="btn-view-all" target="_blank" rel="noopener noreferrer">
-            <i class="fas fa-door-open"></i> Pinjam Ruangan
-          </a>
-            </div>
+          <?php if (isset($_SESSION['user'])): ?>
+            <a href="index.php?page=tambah-peminjaman-ruangan-masyarakat" class="btn-view-all" target="_blank" rel="noopener noreferrer">
+              <i class="fas fa-door-open"></i> Pinjam Ruangan
+            </a>
+          <?php else: ?>
+            <a href="index.php?page=login&redirect=tambah-peminjaman-ruangan-masyarakat" class="btn-view-all" onclick="alert('Anda harus login terlebih dahulu untuk meminjam ruangan.');">
+              <i class="fas fa-door-open"></i> Pinjam Ruangan
+            </a>
+          <?php endif; ?>
+        </div>
             </div>
       
       <!-- Schedule Detail Modal -->
@@ -501,12 +522,12 @@ $BASE = rtrim($BASE, '/');
           </div>
 </section>
 
-<!-- <p class="created-by"><a href="#">© 2025 SiCakap - Humas Kanwil Kemenkum SulSel</a></p> -->
+<!-- <p class="created-by"><a href="#">© 2025 LaMacca - Humas Kanwil Kemenkum SulSel</a></p> -->
 
 <footer class="footer-section">
   <div class="footer-container">
     <div class="footer-logo">
-      <p>© 2025 <strong>SiCakap</strong><br>Humas Kanwil Kemenkum SulSel</p>
+      <p>© 2025 <strong>LaMacca</strong><br>Humas Kanwil Kemenkum SulSel</p>
     </div>
 
     <div class="footer-social">

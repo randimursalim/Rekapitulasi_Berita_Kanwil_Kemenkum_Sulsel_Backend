@@ -108,27 +108,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
         <div class="data nama">
           <span class="data-title">Nama Tamu</span>
-          ${data.map(t => `<span class="data-list">${t.nama}</span>`).join('')}
+          ${data.map(t => `<span class="data-list"><span class="text-content" title="${t.nama}">${t.nama}</span></span>`).join('')}
         </div>
   
         <div class="data kontak">
           <span class="data-title">Kontak</span>
           ${data.map(t => `
             <span class="data-list">
-              ${t.telp}<br>
-              <small>${t.email ?? '-'}</small>
+              <span class="text-content" title="${t.telp} | ${t.email ?? '-'}">
+                ${t.telp}<br>
+                <small>${t.email ?? '-'}</small>
+              </span>
             </span>
           `).join('')}          
         </div>
   
         <div class="data alamat">
           <span class="data-title">Alamat</span>
-          ${data.map(t => `<span class="data-list">${t.alamat}</span>`).join('')}
+          ${data.map(t => `<span class="data-list"><span class="text-content" title="${t.alamat}">${t.alamat}</span></span>`).join('')}
         </div>
 
         <div class="data tujuan">
           <span class="data-title">Maksud/Tujuan</span>
-          ${data.map(t => `<span class="data-list">${t.tujuan}</span>`).join('')}
+          ${data.map(t => `<span class="data-list"><span class="text-content" title="${t.tujuan}">${t.tujuan}</span></span>`).join('')}
         </div>
         
         <div class="data ttd">
