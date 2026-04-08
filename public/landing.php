@@ -57,7 +57,7 @@ $BASE = rtrim($BASE, '/');
     <title>Landing Page - LaMacca</title>
     <link rel="icon" type="image/png" href="<?= $BASE ?>/Images/aset_landing.webp">
     <!-- Cache busting: update version number when CSS/JS changes -->
-    <?php $version = '1.0.6'; // Update this number when you make CSS/JS changes ?>
+    <?php $version = '1.0.8'; // Update this number when you make CSS/JS changes ?>
     <link rel="stylesheet" href="<?= $BASE ?>/css/landing.css?v=<?= $version ?>">
     <link rel="stylesheet" href="<?= $BASE ?>/vendor/fontawesome/css/all.min.css">
 

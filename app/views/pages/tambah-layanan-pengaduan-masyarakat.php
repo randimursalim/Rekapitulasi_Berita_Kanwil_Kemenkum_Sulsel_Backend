@@ -141,6 +141,60 @@ if (!isset($BASE)) {
             color: red;
         }
         
+        /* Custom SweetAlert2 Styles */
+        .swal2-popup {
+            border-radius: 15px !important;
+            padding: 2em 1.5em !important;
+        }
+        .swal2-title {
+            color: #333 !important;
+        }
+        .swal2-confirm.custom-confirm-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            border: none !important;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4) !important;
+            border-radius: 8px !important;
+            padding: 12px 25px !important;
+            font-weight: 600 !important;
+        }
+        .swal2-cancel.custom-cancel-btn {
+            background: transparent !important;
+            border: 2px solid #667eea !important;
+            color: #667eea !important;
+            border-radius: 8px !important;
+            padding: 10px 25px !important;
+            font-weight: 600 !important;
+            box-shadow: none !important;
+        }
+        .swal2-cancel.custom-cancel-btn:hover {
+            background: rgba(102, 126, 234, 0.1) !important;
+        }
+        .res-badge {
+            background: #f3f4f6;
+            color: #667eea;
+            padding: 12px 24px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.6em;
+            font-weight: 700;
+            margin: 15px 0;
+            border: 2px dashed #a5b4fc;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .res-badge:hover {
+            background: #e0e7ff;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        .res-badge i {
+            font-size: 0.7em;
+            color: #667eea;
+            transition: color 0.3s;
+        }
+        
         /* Responsive untuk smartphone */
         @media (max-width: 768px) {
             body {
@@ -323,24 +377,55 @@ if (!isset($BASE)) {
         <?php 
         $noRegister = isset($_GET['no_register']) ? htmlspecialchars($_GET['no_register'], ENT_QUOTES, 'UTF-8') : '';
         $htmlContent = '';
-        $footerContent = '';
         
         if ($noRegister) {
-            $htmlContent = '<strong>Nomor Register Anda:</strong><br><h2 style="color: #667eea; margin: 10px 0;">' . $noRegister . '</h2><p style="margin-top: 15px;">Simpan nomor register ini untuk tracking pengaduan Anda.</p>';
-            $footerContent = '<a href="index.php?page=tracking-layanan-pengaduan" style="color: #667eea; text-decoration: underline;">Tracking Pengaduan</a>';
+            $htmlContent = '
+                <div style="margin-top: 5px; color: #4b5563; font-size: 1.05em;">Nomor Register Anda:</div>
+                <div class="res-badge" onclick="copyToClipboard(\'' . $noRegister . '\')" title="Klik untuk menyalin">
+                    ' . $noRegister . ' <i id="copy-icon" class="far fa-copy"></i>
+                </div>
+                <p style="margin-top: 10px; font-size: 0.95em; color: #6b7280; line-height: 1.5;">Simpan nomor register ini untuk <b>tracking pengaduan</b> Anda.</p>
+            ';
         } else {
             $htmlContent = 'Terima kasih. Pengaduan Anda telah diterima dan akan segera diproses oleh tim kami.';
         }
         ?>
+        
+        window.copyToClipboard = function(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const icon = document.getElementById('copy-icon');
+                if (icon) {
+                    icon.className = 'fas fa-check';
+                    icon.style.color = '#10b981';
+                    setTimeout(() => {
+                        icon.className = 'far fa-copy';
+                        icon.style.color = '#667eea';
+                    }, 2000);
+                }
+            });
+        };
+
         Swal.fire({
           icon: 'success',
           title: 'Pengaduan Berhasil Dikirim!',
           html: <?= json_encode($htmlContent, JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
           showConfirmButton: true,
-          confirmButtonText: 'Kembali ke Halaman Utama',
-          footer: <?= json_encode($footerContent, JSON_HEX_APOS | JSON_HEX_QUOT) ?>
-        }).then(() => {
-          window.location.href = 'landing.php#layanan-pengaduan';
+          showCancelButton: <?= $noRegister ? 'true' : 'false' ?>,
+          confirmButtonText: 'Ke Halaman Utama',
+          cancelButtonText: '<i class="fas fa-search" style="margin-right: 5px;"></i> Lacak Pengaduan',
+          reverseButtons: true,
+          customClass: {
+            confirmButton: 'custom-confirm-btn',
+            cancelButton: 'custom-cancel-btn'
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = 'landing.php#layanan-pengaduan';
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            window.location.href = 'index.php?page=tracking-layanan-pengaduan';
+          } else {
+            window.location.href = 'landing.php#layanan-pengaduan';
+          }
         });
       <?php elseif ($_GET['status'] == 'error'): ?>
         Swal.fire({

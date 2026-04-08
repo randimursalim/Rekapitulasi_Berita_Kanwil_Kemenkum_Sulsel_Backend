@@ -309,7 +309,7 @@ function showVideoModal(videoId, title) {
 
 // Initialize schedule interactions
 function initializeScheduleInteractions() {
-  const scheduleEvents = document.querySelectorAll('.schedule-event');
+  const scheduleEvents = document.querySelectorAll('#scheduleTimeline .schedule-event');
   
   scheduleEvents.forEach((event, index) => {
     // Add staggered animation delay
