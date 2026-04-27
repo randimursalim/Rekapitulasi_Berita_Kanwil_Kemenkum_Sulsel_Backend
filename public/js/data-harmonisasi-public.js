@@ -165,9 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
               <th>Judul Rancangan</th>
               <th>Pemrakarsa</th>
               <th>Pemerintah Daerah</th>
-              <th>Tanggal Surat Diterima</th>
               <th>Tanggal Rapat</th>
-              <th>Pemegang Draf</th>
               <th>Status</th>
               <th>Aksi</th>
             </tr>
@@ -190,9 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="cell-content">${escapeHtml(pemrakarsa)}</div>
                   </td>
                   <td data-label="Pemerintah Daerah">${escapeHtml(h.pemerintah_daerah || '-')}</td>
-                  <td data-label="Tanggal Surat Diterima">${formatDate(h.tanggal_surat_diterima)}</td>
                   <td data-label="Tanggal Rapat">${formatDate(h.tanggal_rapat)}</td>
-                  <td data-label="Pemegang Draf">${escapeHtml(h.pemegang_draf || '-')}</td>
                   <td data-label="Status"><span class="status-badge ${statusClass}">${statusText}</span></td>
                   <td data-label="Aksi">
                     <button class="btn-view-detail" onclick="showDetailHarmonisasi(${h.id}, '${escapeHtml(judul).replace(/'/g, "\\'")}', '${escapeHtml(pemrakarsa).replace(/'/g, "\\'")}', '${escapeHtml(h.pemerintah_daerah || '').replace(/'/g, "\\'")}', '${formatDate(h.tanggal_surat_diterima)}', '${formatDate(h.tanggal_rapat)}', '${escapeHtml(h.pemegang_draf || '').replace(/'/g, "\\'")}', '${h.status || 'Diterima'}', '${escapeHtml(h.alasan_pengembalian_draf || '').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r')}')">
@@ -288,9 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlContent += `<div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; white-space: pre-wrap; color: #333; word-wrap: break-word; word-break: break-word;">${escapeHtml(judulRancangan || '-')}</div><br>`;
     htmlContent += `<strong>Pemrakarsa:</strong> ${escapeHtml(pemrakarsa) || '-'}<br>`;
     htmlContent += `<strong>Pemerintah Daerah:</strong> ${escapeHtml(pemerintahDaerah) || '-'}<br>`;
-    htmlContent += `<strong>Tanggal Surat Diterima:</strong> ${tanggalSuratDiterima || '-'}<br>`;
-    htmlContent += `<strong>Tanggal Rapat:</strong> ${tanggalRapat}<br>`;
-    htmlContent += `<strong>Pemegang Draf:</strong> ${escapeHtml(pemegangDraf) || '-'}<br><br>`;
+    htmlContent += `<strong>Tanggal Rapat:</strong> ${tanggalRapat}<br><br>`;
     
     htmlContent += `<strong>Status:</strong> `;
     const statusText = status === 'Diterima' ? 'Diterima' : 'Dikembalikan';

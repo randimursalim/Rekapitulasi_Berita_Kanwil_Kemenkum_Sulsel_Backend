@@ -1665,9 +1665,7 @@ function renderHarmonisasiPreview(data) {
             <th>Judul Rancangan</th>
             <th>Pemrakarsa</th>
             <th>Pemerintah Daerah</th>
-            <th>Tanggal Surat Diterima</th>
             <th>Tanggal Rapat</th>
-            <th>Pemegang Draf</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -1689,9 +1687,7 @@ function renderHarmonisasiPreview(data) {
                   <div class="cell-content">${escapeHtml(pemrakarsa)}</div>
                 </td>
                 <td data-label="Pemerintah Daerah">${escapeHtml(h.pemerintah_daerah || '-')}</td>
-                <td data-label="Tanggal Surat Diterima">${formatDate(h.tanggal_surat_diterima)}</td>
                 <td data-label="Tanggal Rapat">${formatDate(h.tanggal_rapat)}</td>
-                <td data-label="Pemegang Draf">${escapeHtml(h.pemegang_draf || '-')}</td>
                 <td data-label="Status"><span class="status-badge ${statusClass}">${statusText}</span></td>
               </tr>
             `;
