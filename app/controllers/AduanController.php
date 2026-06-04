@@ -32,14 +32,15 @@ class AduanController {
                 'jenis_aduan' => $_POST['jenisAduan'] ?? '',
                 'media_digunakan' => $_POST['mediaDigunakan'] ?? '',
                 'tindak_lanjut' => $_POST['tindakLanjut'] ?? '',
-                'keterangan' => $_POST['keterangan'] ?? ''
+                'keterangan' => $_POST['keterangan'] ?? '',
+                'id_pengguna' => $_SESSION['user']['id'] ?? null
             ];
 
             // Validasi data
             if (empty($data['no_register']) || empty($data['tanggal']) || 
                 empty($data['aduan']) || empty($data['jenis_aduan']) || 
                 empty($data['media_digunakan'])) {
-                header('Location: index.php?page=tambah-aduan&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-aduan&status=error');
                 exit;
             }
 
@@ -49,9 +50,9 @@ class AduanController {
                 $homeModel = new HomeModel();
                 $homeModel->addLogAktivitas("Menambahkan aduan: " . $data['no_register']);
                 
-                header('Location: index.php?page=tambah-aduan&status=success');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-aduan&status=success');
             } else {
-                header('Location: index.php?page=tambah-aduan&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-aduan&status=error');
             }
             exit;
         }
@@ -62,14 +63,14 @@ class AduanController {
         $id = $_GET['id'] ?? null;
         
         if (!$id) {
-            header('Location: index.php?page=daftar-aduan');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=daftar-aduan');
             exit;
         }
 
         $aduan = $this->model->getAduanById($id);
         
         if (!$aduan) {
-            header('Location: index.php?page=daftar-aduan');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=daftar-aduan');
             exit;
         }
 
@@ -84,7 +85,7 @@ class AduanController {
             $id = $_POST['id'] ?? null;
             
             if (!$id) {
-                header('Location: index.php?page=daftar-aduan');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=daftar-aduan');
                 exit;
             }
 
@@ -102,7 +103,7 @@ class AduanController {
             if (empty($data['no_register']) || empty($data['tanggal']) || 
                 empty($data['aduan']) || empty($data['jenis_aduan']) || 
                 empty($data['media_digunakan'])) {
-                header('Location: index.php?page=edit-aduan&id=' . $id . '&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-aduan&id=' . $id . '&status=error');
                 exit;
             }
 
@@ -112,9 +113,9 @@ class AduanController {
                 $homeModel = new HomeModel();
                 $homeModel->addLogAktivitas("Mengedit aduan: " . $data['no_register']);
                 
-                header('Location: index.php?page=edit-aduan&id=' . $id . '&status=success');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-aduan&id=' . $id . '&status=success');
             } else {
-                header('Location: index.php?page=edit-aduan&id=' . $id . '&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-aduan&id=' . $id . '&status=error');
             }
             exit;
         }

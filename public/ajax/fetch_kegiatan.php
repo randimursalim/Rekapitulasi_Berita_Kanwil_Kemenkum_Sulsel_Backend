@@ -5,6 +5,28 @@ header('Content-Type: application/json; charset=utf-8');
 try {
     require_once '../../config/database.php';
 
+    // Auto update status kegiatan yang belum mulai
+    $updateBelumDimulai = "UPDATE kegiatan 
+                           SET status = 'Belum Dimulai' 
+                           WHERE status IN ('Selesai', 'Sedang Berlangsung') 
+                           AND CONCAT(tanggal, ' ', jam_mulai) > NOW()";
+    $conn->exec($updateBelumDimulai);
+
+    // Auto update status kegiatan yang sudah lewat menjadi 'Selesai'
+    $updateSelesai = "UPDATE kegiatan 
+                      SET status = 'Selesai' 
+                      WHERE status IN ('Belum Dimulai', 'Sedang Berlangsung') 
+                      AND CONCAT(tanggal, ' ', jam_selesai) < NOW()";
+    $conn->exec($updateSelesai);
+    
+    // Auto update status kegiatan yang sedang berjalan
+    $updateBerlangsung = "UPDATE kegiatan 
+                          SET status = 'Sedang Berlangsung' 
+                          WHERE status IN ('Belum Dimulai', 'Selesai') 
+                          AND CONCAT(tanggal, ' ', jam_mulai) <= NOW() 
+                          AND CONCAT(tanggal, ' ', jam_selesai) >= NOW()";
+    $conn->exec($updateBerlangsung);
+
     // Ambil parameter dari AJAX
     $page        = isset($_GET['page']) ? (int) $_GET['page'] : 1;
     $search      = isset($_GET['search']) ? trim($_GET['search']) : '';
@@ -25,7 +47,7 @@ try {
 
     // Base query
     $query = "
-    SELECT id_kegiatan, nama_kegiatan, tanggal, jam_mulai, jam_selesai, keterangan, status, created_at
+    SELECT id_kegiatan, nama_kegiatan, tanggal, jam_mulai, jam_selesai, keterangan, status, created_at, hadir_kakanwil, hadir_kadiv_p3h, hadir_kadiv_yankum
     FROM kegiatan
     WHERE 1=1
     ";

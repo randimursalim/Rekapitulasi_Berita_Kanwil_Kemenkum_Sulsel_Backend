@@ -70,8 +70,8 @@ class AduanModel {
 
     // Tambah aduan baru
     public function tambahAduan($data) {
-        $query = "INSERT INTO aduan (no_register, tanggal, aduan, jenis_aduan, media_digunakan, tindak_lanjut, keterangan) 
-                  VALUES (:no_register, :tanggal, :aduan, :jenis_aduan, :media_digunakan, :tindak_lanjut, :keterangan)";
+        $query = "INSERT INTO aduan (no_register, tanggal, aduan, jenis_aduan, media_digunakan, tindak_lanjut, keterangan, id_pengguna) 
+                  VALUES (:no_register, :tanggal, :aduan, :jenis_aduan, :media_digunakan, :tindak_lanjut, :keterangan, :id_pengguna)";
         
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':no_register', $data['no_register']);
@@ -81,6 +81,7 @@ class AduanModel {
         $stmt->bindParam(':media_digunakan', $data['media_digunakan']);
         $stmt->bindParam(':tindak_lanjut', $data['tindak_lanjut']);
         $stmt->bindParam(':keterangan', $data['keterangan']);
+        $stmt->bindValue(':id_pengguna', $data['id_pengguna'] ?? null, PDO::PARAM_INT);
 
         return $stmt->execute();
     }

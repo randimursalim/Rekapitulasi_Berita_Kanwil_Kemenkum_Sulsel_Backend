@@ -137,14 +137,14 @@ class HarmonisasiController {
         $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
         
         if ($id <= 0) {
-            header('Location: index.php?page=harmonisasi&status=error&message=' . urlencode('ID tidak valid.'));
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=harmonisasi&status=error&message=' . urlencode('ID tidak valid.'));
             exit;
         }
 
         $harmonisasi = $this->model->getHarmonisasiById($id);
         
         if (!$harmonisasi) {
-            header('Location: index.php?page=harmonisasi&status=error&message=' . urlencode('Data tidak ditemukan.'));
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=harmonisasi&status=error&message=' . urlencode('Data tidak ditemukan.'));
             exit;
         }
 
@@ -159,7 +159,7 @@ class HarmonisasiController {
     // Proses tambah data harmonisasi
     public function storeHarmonisasi() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: index.php?page=harmonisasi&status=error&message=' . urlencode('Method tidak diizinkan.'));
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=harmonisasi&status=error&message=' . urlencode('Method tidak diizinkan.'));
             exit;
         }
 
@@ -171,20 +171,21 @@ class HarmonisasiController {
             'tanggal_rapat' => $_POST['tanggal_rapat'] ?? '',
             'pemegang_draf' => trim($_POST['pemegang_draf'] ?? ''),
             'status' => $_POST['status'] ?? 'Diterima',
-            'alasan_pengembalian_draf' => trim($_POST['alasan_pengembalian_draf'] ?? '')
+            'alasan_pengembalian_draf' => trim($_POST['alasan_pengembalian_draf'] ?? ''),
+            'id_pengguna' => $_SESSION['user']['id'] ?? null
         ];
 
         // Validasi
         if (empty($data['judul_rancangan']) || empty($data['pemrakarsa']) || empty($data['pemerintah_daerah']) || 
             empty($data['tanggal_rapat']) || empty($data['pemegang_draf'])) {
-            header('Location: index.php?page=tambah-harmonisasi&status=error&message=' . urlencode('Semua field wajib diisi kecuali Alasan Pengembalian Draf.'));
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-harmonisasi&status=error&message=' . urlencode('Semua field wajib diisi kecuali Alasan Pengembalian Draf.'));
             exit;
         }
 
         if ($this->model->tambahHarmonisasi($data)) {
-            header('Location: index.php?page=harmonisasi&status=success&message=' . urlencode('Data harmonisasi berhasil ditambahkan.'));
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=harmonisasi&status=success&message=' . urlencode('Data harmonisasi berhasil ditambahkan.'));
         } else {
-            header('Location: index.php?page=tambah-harmonisasi&status=error&message=' . urlencode('Gagal menambahkan data harmonisasi.'));
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-harmonisasi&status=error&message=' . urlencode('Gagal menambahkan data harmonisasi.'));
         }
         exit;
     }
@@ -192,14 +193,14 @@ class HarmonisasiController {
     // Proses update data harmonisasi
     public function updateHarmonisasi() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: index.php?page=harmonisasi&status=error&message=' . urlencode('Method tidak diizinkan.'));
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=harmonisasi&status=error&message=' . urlencode('Method tidak diizinkan.'));
             exit;
         }
 
         $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
         
         if ($id <= 0) {
-            header('Location: index.php?page=harmonisasi&status=error&message=' . urlencode('ID tidak valid.'));
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=harmonisasi&status=error&message=' . urlencode('ID tidak valid.'));
             exit;
         }
 
@@ -217,14 +218,14 @@ class HarmonisasiController {
         // Validasi
         if (empty($data['judul_rancangan']) || empty($data['pemrakarsa']) || empty($data['pemerintah_daerah']) || 
             empty($data['tanggal_rapat']) || empty($data['pemegang_draf'])) {
-            header('Location: index.php?page=edit-harmonisasi&id=' . $id . '&status=error&message=' . urlencode('Semua field wajib diisi kecuali Alasan Pengembalian Draf.'));
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-harmonisasi&id=' . $id . '&status=error&message=' . urlencode('Semua field wajib diisi kecuali Alasan Pengembalian Draf.'));
             exit;
         }
 
         if ($this->model->updateHarmonisasi($id, $data)) {
-            header('Location: index.php?page=harmonisasi&status=success&message=' . urlencode('Data harmonisasi berhasil diupdate.'));
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=harmonisasi&status=success&message=' . urlencode('Data harmonisasi berhasil diupdate.'));
         } else {
-            header('Location: index.php?page=edit-harmonisasi&id=' . $id . '&status=error&message=' . urlencode('Gagal mengupdate data harmonisasi.'));
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-harmonisasi&id=' . $id . '&status=error&message=' . urlencode('Gagal mengupdate data harmonisasi.'));
         }
         exit;
     }

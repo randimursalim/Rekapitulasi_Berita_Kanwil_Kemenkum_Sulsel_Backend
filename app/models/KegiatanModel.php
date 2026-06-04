@@ -28,8 +28,8 @@ class KegiatanModel {
 
     // Tambah kegiatan baru
     public function tambahKegiatan($data) {
-        $query = "INSERT INTO kegiatan (nama_kegiatan, tanggal, jam_mulai, jam_selesai, keterangan, status) 
-                  VALUES (:nama_kegiatan, :tanggal, :jam_mulai, :jam_selesai, :keterangan, :status)";
+        $query = "INSERT INTO kegiatan (nama_kegiatan, tanggal, jam_mulai, jam_selesai, keterangan, status, hadir_kakanwil, hadir_kadiv_p3h, hadir_kadiv_yankum, id_pengguna) 
+                  VALUES (:nama_kegiatan, :tanggal, :jam_mulai, :jam_selesai, :keterangan, :status, :hadir_kakanwil, :hadir_kadiv_p3h, :hadir_kadiv_yankum, :id_pengguna)";
         
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':nama_kegiatan', $data['nama_kegiatan']);
@@ -38,6 +38,10 @@ class KegiatanModel {
         $stmt->bindParam(':jam_selesai', $data['jam_selesai']);
         $stmt->bindParam(':keterangan', $data['keterangan']);
         $stmt->bindParam(':status', $data['status']);
+        $stmt->bindParam(':hadir_kakanwil', $data['hadir_kakanwil'], PDO::PARAM_INT);
+        $stmt->bindParam(':hadir_kadiv_p3h', $data['hadir_kadiv_p3h'], PDO::PARAM_INT);
+        $stmt->bindParam(':hadir_kadiv_yankum', $data['hadir_kadiv_yankum'], PDO::PARAM_INT);
+        $stmt->bindValue(':id_pengguna', $data['id_pengguna'] ?? null, PDO::PARAM_INT);
 
         return $stmt->execute();
     }
@@ -50,7 +54,10 @@ class KegiatanModel {
                   jam_mulai = :jam_mulai,
                   jam_selesai = :jam_selesai,
                   keterangan = :keterangan,
-                  status = :status
+                  status = :status,
+                  hadir_kakanwil = :hadir_kakanwil,
+                  hadir_kadiv_p3h = :hadir_kadiv_p3h,
+                  hadir_kadiv_yankum = :hadir_kadiv_yankum
                   WHERE id_kegiatan = :id";
         
         $stmt = $this->db->prepare($query);
@@ -61,6 +68,9 @@ class KegiatanModel {
         $stmt->bindParam(':jam_selesai', $data['jam_selesai']);
         $stmt->bindParam(':keterangan', $data['keterangan']);
         $stmt->bindParam(':status', $data['status']);
+        $stmt->bindParam(':hadir_kakanwil', $data['hadir_kakanwil'], PDO::PARAM_INT);
+        $stmt->bindParam(':hadir_kadiv_p3h', $data['hadir_kadiv_p3h'], PDO::PARAM_INT);
+        $stmt->bindParam(':hadir_kadiv_yankum', $data['hadir_kadiv_yankum'], PDO::PARAM_INT);
 
         return $stmt->execute();
     }

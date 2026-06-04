@@ -93,14 +93,14 @@ class PenggunaController {
         $id = $_GET['id'] ?? null;
         
         if (!$id) {
-            header('Location: index.php?page=pengguna');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=pengguna');
             exit;
         }
 
         $pengguna = $this->model->getPenggunaById($id);
         if (!$pengguna) {
             $_SESSION['errors'] = ['Pengguna tidak ditemukan'];
-            header('Location: index.php?page=pengguna');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=pengguna');
             exit;
         }
 
@@ -348,5 +348,16 @@ class PenggunaController {
             echo json_encode(['success' => false, 'message' => 'Gagal memperbarui profil']);
         }
         exit;
+    }
+    // ==== HALAMAN STATISTIK PENGGUNA ====
+    public function statistikPengguna() {
+        require_once __DIR__ . '/../models/StatistikPenggunaModel.php';
+        $statModel = new StatistikPenggunaModel();
+        
+        $dataStatistik = $statModel->getStatistikSemuaPengguna();
+        
+        include __DIR__ . '/../views/layouts/header.php';
+        include __DIR__ . '/../views/pages/statistik-pengguna.php';
+        include __DIR__ . '/../views/layouts/footer.php';
     }
 }

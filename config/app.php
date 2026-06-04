@@ -1,5 +1,5 @@
-// config/app.php
 <?php
+// config/app.php
 // Auto-detect BASE_URL untuk localhost vs hosting
 // Di localhost: /rekap-konten/public
 // Di hosting: '' (kosong, handled by .htaccess)

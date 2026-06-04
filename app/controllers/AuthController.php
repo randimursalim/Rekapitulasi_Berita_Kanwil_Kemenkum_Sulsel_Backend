@@ -18,9 +18,9 @@ class AuthController
         if (isset($_SESSION['user'])) {
             if (!empty($_GET['redirect'])) {
                 $redirectPage = preg_replace('/[^a-zA-Z0-9\-_]/', '', $_GET['redirect']);
-                header('Location: index.php?page=' . $redirectPage);
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=' . $redirectPage);
             } else {
-                header('Location: index.php?page=dashboard');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=dashboard');
             }
             exit;
         }
@@ -72,11 +72,11 @@ class AuthController
                     if (!empty($_POST['redirect'])) {
                         // sanitize to allow only alphanumeric, dashes
                         $redirectPage = preg_replace('/[^a-zA-Z0-9\-_]/', '', $_POST['redirect']);
-                        header('Location: index.php?page=' . $redirectPage);
+                        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=' . $redirectPage);
                     } elseif ($user['role'] === 'p3h') {
-                        header('Location: index.php?page=harmonisasi');
+                        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=harmonisasi');
                     } else {
-                        header('Location: index.php?page=dashboard');
+                        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=dashboard');
                     }
                     exit;
             } else {
@@ -84,7 +84,7 @@ class AuthController
                 include __DIR__ . '/../views/pages/login.php';
             }
         } else {
-            header('Location: index.php?page=login');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=login');
             exit;
         }
     }
@@ -109,7 +109,7 @@ class AuthController
         
         // Redirect ke login, dengan parameter timeout jika ada
         $timeout = isset($_GET['timeout']) ? '&timeout=1' : '';
-        header('Location: index.php?page=login' . $timeout);
+        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=login' . $timeout);
         exit;
     }
 
@@ -117,7 +117,7 @@ class AuthController
     public static function requireLogin()
     {
         if (!isset($_SESSION['user'])) {
-            header('Location: index.php?page=login');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=login');
             exit;
         }
         
@@ -195,7 +195,7 @@ class AuthController
         session_destroy();
         
         // Redirect ke login
-        header('Location: index.php?page=login&error=security');
+        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=login&error=security');
         exit;
     }
     
@@ -228,7 +228,7 @@ class AuthController
             error_log("Session timeout - Logging out user: " . ($_SESSION['user']['username'] ?? 'unknown') . 
                       " - Last activity: $timeDifference seconds ago (timeout: $timeout seconds)");
             session_destroy();
-            header('Location: index.php?page=login&timeout=1');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=login&timeout=1');
             exit;
         }
         
@@ -291,7 +291,7 @@ class AuthController
     {
         self::requireLogin();
         if ($_SESSION['user']['role'] !== 'Admin') {
-            header('Location: index.php?page=dashboard');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=dashboard');
             exit;
         }
     }
@@ -302,7 +302,7 @@ class AuthController
         self::requireLogin();
         $role = $_SESSION['user']['role'] ?? '';
         if (!in_array($role, ['Admin', 'Operator', 'p3h'])) {
-            header('Location: index.php?page=dashboard');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=dashboard');
             exit;
         }
     }
@@ -321,7 +321,7 @@ class AuthController
             $currentPage = $_GET['page'] ?? 'dashboard';
             
             if (!in_array($currentPage, $allowedPages)) {
-                header('Location: index.php?page=harmonisasi');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=harmonisasi');
                 exit;
             }
         }

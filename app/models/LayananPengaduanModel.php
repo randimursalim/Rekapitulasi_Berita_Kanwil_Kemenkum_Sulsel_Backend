@@ -121,8 +121,8 @@ class LayananPengaduanModel {
     // Tambah layanan pengaduan baru
     public function tambahLayananPengaduan($data) {
         try {
-            $query = "INSERT INTO layanan_pengaduan (no_register_pengaduan, nama, alamat, jenis_tanda_pengenal, jenis_tanda_pengenal_lainnya, no_tanda_pengenal, no_telp, judul_laporan, isi_laporan, tanggal_kejadian, lokasi_kejadian, kategori_laporan, jenis_aduan, jenis_aduan_lainnya, tindak_lanjut, keterangan) 
-                      VALUES (:no_register_pengaduan, :nama, :alamat, :jenis_tanda_pengenal, :jenis_tanda_pengenal_lainnya, :no_tanda_pengenal, :no_telp, :judul_laporan, :isi_laporan, :tanggal_kejadian, :lokasi_kejadian, :kategori_laporan, :jenis_aduan, :jenis_aduan_lainnya, :tindak_lanjut, :keterangan)";
+            $query = "INSERT INTO layanan_pengaduan (no_register_pengaduan, nama, alamat, jenis_tanda_pengenal, jenis_tanda_pengenal_lainnya, no_tanda_pengenal, no_telp, judul_laporan, isi_laporan, tanggal_kejadian, lokasi_kejadian, kategori_laporan, jenis_aduan, jenis_aduan_lainnya, tindak_lanjut, keterangan, id_pengguna) 
+                      VALUES (:no_register_pengaduan, :nama, :alamat, :jenis_tanda_pengenal, :jenis_tanda_pengenal_lainnya, :no_tanda_pengenal, :no_telp, :judul_laporan, :isi_laporan, :tanggal_kejadian, :lokasi_kejadian, :kategori_laporan, :jenis_aduan, :jenis_aduan_lainnya, :tindak_lanjut, :keterangan, :id_pengguna)";
             
             $stmt = $this->db->prepare($query);
             $jenisTandaPengenalLainnya = !empty($data['jenis_tanda_pengenal_lainnya']) ? $data['jenis_tanda_pengenal_lainnya'] : null;
@@ -171,6 +171,7 @@ class LayananPengaduanModel {
                 $stmt->bindValue(':keterangan', null, PDO::PARAM_NULL);
                 error_log("[LAYANAN PENGADUAN MODEL] Binding keterangan as NULL");
             }
+            $stmt->bindValue(':id_pengguna', $data['id_pengguna'] ?? null, PDO::PARAM_INT);
 
             error_log("[LAYANAN PENGADUAN MODEL] Executing INSERT query...");
             $result = $stmt->execute();

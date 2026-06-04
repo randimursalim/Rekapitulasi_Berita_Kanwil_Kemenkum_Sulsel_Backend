@@ -30,6 +30,7 @@
 body{
     min-height: 100vh;
     background-color: var(--primary-color);
+    overflow-x: hidden;
 }
 body.dark{
     --primary-color: #3A3B3C;
@@ -1540,6 +1541,49 @@ body.dark .status-error {
 .btn-tambah:hover {
   background:   #0077ff;
   color: #fff;
+}
+
+/* Custom Export Buttons */
+.btn-word {
+  background-color: #0E4BF1 !important;
+  color: #fff !important;
+}
+.btn-word:hover {
+  background-color: #0A3BC7 !important;
+}
+.btn-excel {
+  background-color: #217346 !important;
+  color: #fff !important;
+}
+.btn-excel:hover {
+  background-color: #185433 !important;
+}
+.btn-pdf {
+  background-color: #d32f2f !important;
+  color: #fff !important;
+}
+.btn-pdf:hover {
+  background-color: #b71c1c !important;
+}
+
+/* Dark Mode Export Buttons */
+body.dark .btn-word {
+  background-color: #2a5c9a !important;
+}
+body.dark .btn-word:hover {
+  background-color: #1f4575 !important;
+}
+body.dark .btn-excel {
+  background-color: #1d5f3d !important;
+}
+body.dark .btn-excel:hover {
+  background-color: #14422a !important;
+}
+body.dark .btn-pdf {
+  background-color: #ab2525 !important;
+}
+body.dark .btn-pdf:hover {
+  background-color: #821c1c !important;
 }
 
 .input-berita-form input::placeholder,

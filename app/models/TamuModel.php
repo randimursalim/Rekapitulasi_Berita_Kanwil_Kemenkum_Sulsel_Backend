@@ -25,9 +25,9 @@ class TamuModel
     {
         try {
             $sql = "INSERT INTO tb_tamu 
-                    (nama, telp, email, alamat, tujuan, foto, ttd, tgl, jam) 
+                    (nama, telp, email, alamat, tujuan, foto, ttd, tgl, jam, id_pengguna) 
                     VALUES 
-                    (:nama, :telp, :email, :alamat, :tujuan, :foto, :ttd, CURDATE(), CURTIME())";
+                    (:nama, :telp, :email, :alamat, :tujuan, :foto, :ttd, CURDATE(), CURTIME(), :id_pengguna)";
 
             $stmt = $this->db->prepare($sql);
 
@@ -39,6 +39,7 @@ class TamuModel
                 ':tujuan' => $data['tujuan'],
                 ':foto'   => $data['foto'],
                 ':ttd'    => $data['ttd'],
+                ':id_pengguna' => $data['id_pengguna'] ?? null,
             ]);
         } catch (PDOException $e) {
             // Untuk debugging (hapus di production)

@@ -18,7 +18,7 @@ class KontenController {
     // === SIMPAN DATA KONTEN ===
     public function storeKonten() {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        header('Location: index.php?page=input-konten&status=invalid');
+        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=input-konten&status=invalid');
         exit;
     }
 
@@ -39,16 +39,17 @@ class KontenController {
             $dokumentasi = $uploadResult['path'];
         } else {
             // Handle upload error
-            header('Location: index.php?page=input-konten&status=upload_error&message=' . urlencode($uploadResult['message']));
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=input-konten&status=upload_error&message=' . urlencode($uploadResult['message']));
             exit;
         }
     }
 
     // Simpan ke tabel konten
-    $idKonten = $this->model->insertKonten($jenis, $judul, $divisi, $dokumentasi);
+    $idPengguna = $_SESSION['user']['id'] ?? null;
+    $idKonten = $this->model->insertKonten($jenis, $judul, $divisi, $dokumentasi, $idPengguna);
 
     if (!$idKonten) {
-        header('Location: index.php?page=input-konten&status=error_main');
+        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=input-konten&status=error_main');
         exit;
     }
 
@@ -80,12 +81,12 @@ class KontenController {
         $homeModel = new HomeModel();
         $homeModel->addLogAktivitas("Menambahkan konten: " . $judul);
         
-        header('Location: index.php?page=input-konten&status=success');
+        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=input-konten&status=success');
         exit;
     } else {
         // ❌ jika gagal, hapus data utama agar tidak nyangkut di DB
         $this->model->deleteKonten($idKonten);
-        header('Location: index.php?page=input-konten&status=error_detail');
+        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=input-konten&status=error_detail');
         exit;
     }
 }
@@ -219,13 +220,13 @@ class KontenController {
     public function editKonten() {
         $id = $_GET['id'] ?? null;
         if (!$id) {
-            header('Location: index.php?page=arsip&status=invalid_id');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=arsip&status=invalid_id');
             exit;
         }
         
         $konten = $this->model->getKontenLengkapById($id);
         if (!$konten) {
-            header('Location: index.php?page=arsip&status=not_found');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=arsip&status=not_found');
             exit;
         }
 
@@ -237,13 +238,13 @@ class KontenController {
     // === UPDATE KONTEN ===
     public function updateKonten() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header('Location: index.php?page=arsip&status=invalid_method');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=arsip&status=invalid_method');
             exit;
         }
 
         $idKonten = $_POST['id_konten'] ?? null;
         if (!$idKonten) {
-            header('Location: index.php?page=arsip&status=invalid_id');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=arsip&status=invalid_id');
             exit;
         }
 
@@ -271,7 +272,7 @@ class KontenController {
                 }
             } else {
                 // Handle upload error
-                header('Location: index.php?page=edit-konten&id=' . $idKonten . '&status=upload_error&message=' . urlencode($uploadResult['message']));
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-konten&id=' . $idKonten . '&status=upload_error&message=' . urlencode($uploadResult['message']));
                 exit;
             }
         } else {
@@ -284,7 +285,7 @@ class KontenController {
         $kontenUpdated = $this->model->updateKonten($idKonten, $jenis, $judul, $divisi, $dokumentasi);
 
         if (!$kontenUpdated) {
-            header('Location: index.php?page=edit-konten&id=' . $idKonten . '&status=error_main');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-konten&id=' . $idKonten . '&status=error_main');
             exit;
         }
 
@@ -316,11 +317,11 @@ class KontenController {
             $homeModel = new HomeModel();
             $homeModel->addLogAktivitas("Mengedit konten: " . $judul);
             
-            header('Location: index.php?page=arsip&status=update_success');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=arsip&status=update_success');
             exit;
         } else {
             // ❌ jika gagal update detail
-            header('Location: index.php?page=edit-konten&id=' . $idKonten . '&status=error_detail');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-konten&id=' . $idKonten . '&status=error_detail');
             exit;
         }
     }

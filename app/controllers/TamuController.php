@@ -119,7 +119,8 @@ class TamuController
             'alamat' => $alamat,
             'tujuan' => $tujuan,
             'foto'   => $fotoFilename,
-            'ttd'    => $ttdFilename
+            'ttd'    => $ttdFilename,
+            'id_pengguna' => $_SESSION['user']['id'] ?? null
         ];
 
         if ($this->model->tambahTamu($data)) {

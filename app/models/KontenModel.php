@@ -10,16 +10,17 @@ class KontenModel {
     }
 
     // === INSERT KONTEN UTAMA ===
-    public function insertKonten($jenis, $judul, $divisi, $dokumentasi = null) {
+    public function insertKonten($jenis, $judul, $divisi, $dokumentasi = null, $idPengguna = null) {
         try {
             $stmt = $this->db->prepare("
-                INSERT INTO konten (jenis, judul, divisi, dokumentasi)
-                VALUES (:jenis, :judul, :divisi, :dokumentasi)
+                INSERT INTO konten (jenis, judul, divisi, dokumentasi, id_pengguna)
+                VALUES (:jenis, :judul, :divisi, :dokumentasi, :id_pengguna)
             ");
             $stmt->bindParam(':jenis', $jenis);
             $stmt->bindParam(':judul', $judul);
             $stmt->bindParam(':divisi', $divisi);
             $stmt->bindParam(':dokumentasi', $dokumentasi);
+            $stmt->bindParam(':id_pengguna', $idPengguna);
             $stmt->execute();
 
             return $this->db->lastInsertId(); // return id konten baru

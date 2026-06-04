@@ -33,27 +33,31 @@ class KegiatanController {
                 'jam_mulai' => $_POST['jamMulai'] ?? '',
                 'jam_selesai' => $_POST['jamSelesai'] ?? '',
                 'keterangan' => $_POST['keterangan'] ?? '',
-                'status' => $_POST['status'] ?? 'Belum Dimulai'
+                'status' => $_POST['status'] ?? 'Belum Dimulai',
+                'hadir_kakanwil' => isset($_POST['hadir_kakanwil']) ? 1 : 0,
+                'hadir_kadiv_p3h' => isset($_POST['hadir_kadiv_p3h']) ? 1 : 0,
+                'hadir_kadiv_yankum' => isset($_POST['hadir_kadiv_yankum']) ? 1 : 0,
+                'id_pengguna' => $_SESSION['user']['id'] ?? null
             ];
 
             // Validasi data
             if (empty($data['nama_kegiatan']) || empty($data['tanggal']) || 
                 empty($data['jam_mulai']) || empty($data['jam_selesai']) || 
                 empty($data['status'])) {
-                header('Location: index.php?page=tambah-kegiatan&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-kegiatan&status=error');
                 exit;
             }
 
             // Validasi jam
             if ($data['jam_mulai'] >= $data['jam_selesai']) {
-                header('Location: index.php?page=tambah-kegiatan&status=error&message=jam');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-kegiatan&status=error&message=jam');
                 exit;
             }
 
             if ($this->model->tambahKegiatan($data)) {
-                header('Location: index.php?page=tambah-kegiatan&status=success');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-kegiatan&status=success');
             } else {
-                header('Location: index.php?page=tambah-kegiatan&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-kegiatan&status=error');
             }
             exit;
         }
@@ -64,14 +68,14 @@ class KegiatanController {
         $id = $_GET['id'] ?? null;
         
         if (!$id) {
-            header('Location: index.php?page=jadwal-kegiatan');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=jadwal-kegiatan');
             exit;
         }
 
         $kegiatan = $this->model->getKegiatanById($id);
         
         if (!$kegiatan) {
-            header('Location: index.php?page=jadwal-kegiatan');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=jadwal-kegiatan');
             exit;
         }
 
@@ -86,7 +90,7 @@ class KegiatanController {
             $id = $_POST['id'] ?? null;
             
             if (!$id) {
-                header('Location: index.php?page=jadwal-kegiatan');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=jadwal-kegiatan');
                 exit;
             }
 
@@ -96,27 +100,30 @@ class KegiatanController {
                 'jam_mulai' => $_POST['jamMulai'] ?? '',
                 'jam_selesai' => $_POST['jamSelesai'] ?? '',
                 'keterangan' => $_POST['keterangan'] ?? '',
-                'status' => $_POST['status'] ?? 'Belum Dimulai'
+                'status' => $_POST['status'] ?? 'Belum Dimulai',
+                'hadir_kakanwil' => isset($_POST['hadir_kakanwil']) ? 1 : 0,
+                'hadir_kadiv_p3h' => isset($_POST['hadir_kadiv_p3h']) ? 1 : 0,
+                'hadir_kadiv_yankum' => isset($_POST['hadir_kadiv_yankum']) ? 1 : 0
             ];
 
             // Validasi data
             if (empty($data['nama_kegiatan']) || empty($data['tanggal']) || 
                 empty($data['jam_mulai']) || empty($data['jam_selesai']) || 
                 empty($data['status'])) {
-                header('Location: index.php?page=edit-kegiatan&id=' . $id . '&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-kegiatan&id=' . $id . '&status=error');
                 exit;
             }
 
             // Validasi jam
             if ($data['jam_mulai'] >= $data['jam_selesai']) {
-                header('Location: index.php?page=edit-kegiatan&id=' . $id . '&status=error&message=jam');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-kegiatan&id=' . $id . '&status=error&message=jam');
                 exit;
             }
 
             if ($this->model->updateKegiatan($id, $data)) {
-                header('Location: index.php?page=edit-kegiatan&id=' . $id . '&status=success');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-kegiatan&id=' . $id . '&status=success');
             } else {
-                header('Location: index.php?page=edit-kegiatan&id=' . $id . '&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-kegiatan&id=' . $id . '&status=error');
             }
             exit;
         }
@@ -139,5 +146,12 @@ class KegiatanController {
             }
             exit;
         }
+    }
+
+    // Halaman rekap-jadwal-kegiatan.php
+    public function rekapJadwalKegiatan() {
+        include __DIR__ . '/../views/layouts/header.php';
+        include __DIR__ . '/../views/pages/rekap-jadwal-kegiatan.php';
+        include __DIR__ . '/../views/layouts/footer.php';
     }
 }

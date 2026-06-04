@@ -34,15 +34,20 @@ class PeminjamanRuanganModel {
                   : 2; // Fallback hanya jika benar-benar tidak ada
         
         // Cek apakah kolom durasi_kegiatan ada di tabel
-        $checkColumn = $this->db->query("SHOW COLUMNS FROM jadwal_peminjaman_ruangan LIKE 'durasi_kegiatan'");
-        $columnExists = $checkColumn->rowCount() > 0;
+        $columnExists = false;
+        try {
+            $this->db->query("SELECT durasi_kegiatan FROM jadwal_peminjaman_ruangan LIMIT 0");
+            $columnExists = true;
+        } catch (PDOException $e) {
+            $columnExists = false;
+        }
         
         if ($columnExists) {
-            $query = "INSERT INTO jadwal_peminjaman_ruangan (nama_peminjam, nama_ruangan, kegiatan, tanggal_kegiatan, waktu_kegiatan, durasi_kegiatan) 
-                      VALUES (:nama_peminjam, :nama_ruangan, :kegiatan, :tanggal_kegiatan, :waktu_kegiatan, :durasi_kegiatan)";
+            $query = "INSERT INTO jadwal_peminjaman_ruangan (nama_peminjam, nama_ruangan, kegiatan, tanggal_kegiatan, waktu_kegiatan, durasi_kegiatan, id_pengguna) 
+                      VALUES (:nama_peminjam, :nama_ruangan, :kegiatan, :tanggal_kegiatan, :waktu_kegiatan, :durasi_kegiatan, :id_pengguna)";
         } else {
-            $query = "INSERT INTO jadwal_peminjaman_ruangan (nama_peminjam, nama_ruangan, kegiatan, tanggal_kegiatan, waktu_kegiatan) 
-                      VALUES (:nama_peminjam, :nama_ruangan, :kegiatan, :tanggal_kegiatan, :waktu_kegiatan)";
+            $query = "INSERT INTO jadwal_peminjaman_ruangan (nama_peminjam, nama_ruangan, kegiatan, tanggal_kegiatan, waktu_kegiatan, id_pengguna) 
+                      VALUES (:nama_peminjam, :nama_ruangan, :kegiatan, :tanggal_kegiatan, :waktu_kegiatan, :id_pengguna)";
         }
         
         $stmt = $this->db->prepare($query);
@@ -55,6 +60,7 @@ class PeminjamanRuanganModel {
         if ($columnExists) {
             $stmt->bindValue(':durasi_kegiatan', $durasi, PDO::PARAM_STR); // Gunakan STR untuk DECIMAL
         }
+        $stmt->bindValue(':id_pengguna', $data['id_pengguna'] ?? null, PDO::PARAM_INT);
 
         return $stmt->execute();
     }
@@ -62,8 +68,13 @@ class PeminjamanRuanganModel {
     // Update peminjaman ruangan
     public function updatePeminjamanRuangan($id, $data) {
         // Cek apakah kolom durasi_kegiatan ada
-        $checkColumn = $this->db->query("SHOW COLUMNS FROM jadwal_peminjaman_ruangan LIKE 'durasi_kegiatan'");
-        $columnExists = $checkColumn->rowCount() > 0;
+        $columnExists = false;
+        try {
+            $this->db->query("SELECT durasi_kegiatan FROM jadwal_peminjaman_ruangan LIMIT 0");
+            $columnExists = true;
+        } catch (PDOException $e) {
+            $columnExists = false;
+        }
         
         // Gunakan durasi dari data yang dikirim (sudah divalidasi di controller)
         $durasi = isset($data['durasi_kegiatan']) && $data['durasi_kegiatan'] > 0 
@@ -178,6 +189,3 @@ class PeminjamanRuanganModel {
         return false; // Tidak ada overlap
     }
 }
-?>
-
-

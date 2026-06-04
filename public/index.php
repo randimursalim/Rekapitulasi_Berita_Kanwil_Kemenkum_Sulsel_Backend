@@ -1,7 +1,9 @@
 <?php
+require_once __DIR__ . '/../config/app.php';
+
 // Redirect ke landing page jika tidak ada parameter page
 if (!isset($_GET['page'])) {
-    header('Location: landing.php');
+    header('Location: ' . BASE_URL . '/landing.php');
     exit();
 }
 
@@ -37,7 +39,7 @@ if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'p3h') {
                      'logout', 'update-activity', 'jadwal-kegiatan', 'jadwal-peminjaman-ruangan'];
     
     if (!in_array($page, $allowedPages)) {
-        header('Location: index.php?page=harmonisasi');
+        header('Location: ' . BASE_URL . '/index.php?page=harmonisasi');
         exit;
     }
 }
@@ -84,7 +86,7 @@ switch ($page) {
         
         // Block access untuk role p3h
         if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'p3h') {
-            header('Location: index.php?page=harmonisasi');
+            header('Location: ' . BASE_URL . '/index.php?page=harmonisasi');
             exit;
         }
         
@@ -230,6 +232,15 @@ switch ($page) {
         $controller->updateProfilPengguna();
         break;
 
+    case 'statistik-pengguna':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin(); // Hanya admin yang bisa lihat statistik pengguna
+        
+        require_once __DIR__ . '/../app/controllers/PenggunaController.php';
+        $controller = new PenggunaController();
+        $controller->statistikPengguna();
+        break;
+
     // === KEGIATAN ===
     case 'jadwal-kegiatan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
@@ -283,6 +294,15 @@ switch ($page) {
         require_once __DIR__ . '/../app/controllers/KegiatanController.php';
         $controller = new KegiatanController();
         $controller->hapusKegiatan();
+        break;
+
+    case 'rekap-jadwal-kegiatan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireLogin();
+        
+        require_once __DIR__ . '/../app/controllers/KegiatanController.php';
+        $controller = new KegiatanController();
+        $controller->rekapJadwalKegiatan();
         break;
 
     // === PEMINJAMAN RUANGAN ===

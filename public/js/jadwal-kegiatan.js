@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       <div class="data kegiatan">
         <span class="data-title">Nama Kegiatan</span>
-        ${data.map(k => `<span class="data-list">${k.nama_kegiatan}</span>`).join('')}
+        ${data.map(k => `<span class="data-list" style="display: flex; flex-direction: column; justify-content: center; font-weight: 500;">${k.nama_kegiatan}</span>`).join('')}
       </div>
 
       <div class="data tanggal">
@@ -159,9 +159,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
       <div class="data actions">
         <span class="data-title">Aksi</span>
-        ${data.map((k, index) => `
+        ${data.map((k, index) => {
+          let pimti = [];
+          if (k.hadir_kakanwil == 1) pimti.push('Kakanwil');
+          if (k.hadir_kadiv_p3h == 1) pimti.push('Kadiv P3H');
+          if (k.hadir_kadiv_yankum == 1) pimti.push('Kadiv Yankum');
+          
+          let fullKeterangan = k.keterangan || '';
+          if (pimti.length > 0) {
+             let pimtiText = 'Pimpinan Tinggi Yang Hadir: ' + pimti.join(', ');
+             fullKeterangan = pimtiText + '\\n\\nKeterangan:\\n' + (k.keterangan ? k.keterangan : '-');
+          }
+          
+          let escapedKeterangan = fullKeterangan.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r');
+          
+          return `
           <span class="data-list">
-            <button class="btn-action-aksi view" onclick="showKeterangan('${k.keterangan ? k.keterangan.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r') : ''}')">
+            <button class="btn-action-aksi view" onclick="showKeterangan('${escapedKeterangan}')">
               <i class="fas fa-eye"></i>
             </button>
             <button class="btn-action-aksi edit" onclick="window.location.href='index.php?page=edit-kegiatan&id=${k.id_kegiatan}'">
@@ -170,8 +184,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <button class="btn-action-aksi delete" onclick="hapusKegiatan(${k.id_kegiatan}, '${k.nama_kegiatan.replace(/'/g, "\\'")}')">
               <i class="fas fa-trash-alt"></i>
             </button>
-          </span>
-        `).join('')}
+          </span>`;
+        }).join('')}
       </div>
     `;
 

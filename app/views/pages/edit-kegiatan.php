@@ -61,9 +61,24 @@ if (!isset($BASE)) {
         </div>
 
         <div class="form-group">
-            <label for="keterangan">Keterangan</label>
+            <label>Pimpinan Tinggi yang Menghadiri</label>
+            <div class="checkbox-group" style="display: flex; flex-direction: column; gap: 10px; margin-top: 5px;">
+                <label style="display: flex; align-items: center; font-weight: normal; cursor: pointer;">
+                    <input type="checkbox" name="hadir_kakanwil" value="1" <?= (isset($kegiatan['hadir_kakanwil']) && $kegiatan['hadir_kakanwil'] == 1) ? 'checked' : '' ?> style="margin-right: 10px; width: auto; height: auto;"> Kepala Kantor Wilayah
+                </label>
+                <label style="display: flex; align-items: center; font-weight: normal; cursor: pointer;">
+                    <input type="checkbox" name="hadir_kadiv_p3h" value="1" <?= (isset($kegiatan['hadir_kadiv_p3h']) && $kegiatan['hadir_kadiv_p3h'] == 1) ? 'checked' : '' ?> style="margin-right: 10px; width: auto; height: auto;"> Kepala Divisi Peraturan Perundang-undangan dan Pembinaan Hukum (Kadiv P3H)
+                </label>
+                <label style="display: flex; align-items: center; font-weight: normal; cursor: pointer;">
+                    <input type="checkbox" name="hadir_kadiv_yankum" value="1" <?= (isset($kegiatan['hadir_kadiv_yankum']) && $kegiatan['hadir_kadiv_yankum'] == 1) ? 'checked' : '' ?> style="margin-right: 10px; width: auto; height: auto;"> Kepala Divisi Pelayanan Hukum (Kadiv Yankum)
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="keterangan">Keterangan (Tempat / Peserta Lainnya)</label>
             <textarea id="keterangan" name="keterangan" rows="3" 
-                      placeholder="Masukkan keterangan kegiatan, misal peserta, tujuan, hasil rapat" required><?= htmlspecialchars($kegiatan['keterangan']) ?></textarea>
+                      placeholder="Masukkan keterangan kegiatan, misal tempat kegiatan, tujuan, hasil rapat, atau peserta lain di luar 3 Pimti di atas" required><?= htmlspecialchars($kegiatan['keterangan']) ?></textarea>
         </div>
 
         <div class="form-group">

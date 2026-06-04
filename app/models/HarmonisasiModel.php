@@ -78,8 +78,8 @@ class HarmonisasiModel {
     // Tambah data harmonisasi baru
     public function tambahHarmonisasi($data) {
         try {
-            $query = "INSERT INTO harmonisasi (judul_rancangan, pemrakarsa, pemerintah_daerah, tanggal_surat_diterima, tanggal_rapat, pemegang_draf, status, alasan_pengembalian_draf) 
-                      VALUES (:judul_rancangan, :pemrakarsa, :pemerintah_daerah, :tanggal_surat_diterima, :tanggal_rapat, :pemegang_draf, :status, :alasan_pengembalian_draf)";
+            $query = "INSERT INTO harmonisasi (judul_rancangan, pemrakarsa, pemerintah_daerah, tanggal_surat_diterima, tanggal_rapat, pemegang_draf, status, alasan_pengembalian_draf, id_pengguna) 
+                      VALUES (:judul_rancangan, :pemrakarsa, :pemerintah_daerah, :tanggal_surat_diterima, :tanggal_rapat, :pemegang_draf, :status, :alasan_pengembalian_draf, :id_pengguna)";
             
             $stmt = $this->db->prepare($query);
             $stmt->bindParam(':judul_rancangan', $data['judul_rancangan']);
@@ -105,6 +105,7 @@ class HarmonisasiModel {
             } else {
                 $stmt->bindValue(':alasan_pengembalian_draf', null, PDO::PARAM_NULL);
             }
+            $stmt->bindValue(':id_pengguna', $data['id_pengguna'] ?? null, PDO::PARAM_INT);
 
             return $stmt->execute();
         } catch (PDOException $e) {

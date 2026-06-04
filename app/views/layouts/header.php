@@ -219,12 +219,14 @@ function is_active($pageName) {
         <?php endif; ?>
         
         <li><a href="<?= $BASE ?>/index.php?page=jadwal-kegiatan" class="<?= is_active('jadwal-kegiatan') ?>"><i class="fas fa-calendar-alt"></i><span class="link-name">Jadwal Kegiatan</span></a></li>
+        <li><a href="<?= $BASE ?>/index.php?page=rekap-jadwal-kegiatan" class="<?= is_active('rekap-jadwal-kegiatan') ?>"><i class="fas fa-chart-pie"></i><span class="link-name">Rekap Jadwal</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=jadwal-peminjaman-ruangan" class="<?= is_active('jadwal-peminjaman-ruangan') ?>"><i class="fas fa-door-open"></i><span class="link-name">Peminjaman Ruangan</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=harmonisasi" class="<?= is_active('harmonisasi') ?>"><i class="fas fa-balance-scale"></i><span class="link-name">Data Harmonisasi</span></a></li>
         <li><a href="<?= $BASE ?>/index.php?page=rekap-harmonisasi" class="<?= is_active('rekap-harmonisasi') ?>"><i class="fas fa-chart-line"></i><span class="link-name">Rekap Harmonisasi</span></a></li>
         
         <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'Admin'): ?>
         <li><a href="<?= $BASE ?>/index.php?page=pengguna" class="<?= is_active('pengguna') ?>"><i class="fas fa-users"></i><span class="link-name">Pengguna</span></a></li>
+        <li><a href="<?= $BASE ?>/index.php?page=statistik-pengguna" class="<?= is_active('statistik-pengguna') ?>"><i class="fas fa-users-cog"></i><span class="link-name">Statistik Pengguna</span></a></li>
         <?php endif; ?>
       </ul>
 

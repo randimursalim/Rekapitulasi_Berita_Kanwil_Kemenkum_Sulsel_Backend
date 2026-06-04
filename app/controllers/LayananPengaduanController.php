@@ -38,7 +38,7 @@ class LayananPengaduanController {
             $noRegister = trim($_POST['no_register'] ?? '');
             
             if (empty($noRegister)) {
-                header('Location: index.php?page=tracking-layanan-pengaduan&status=error&message=' . urlencode('Nomor register tidak boleh kosong.'));
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tracking-layanan-pengaduan&status=error&message=' . urlencode('Nomor register tidak boleh kosong.'));
                 exit;
             }
             
@@ -47,9 +47,9 @@ class LayananPengaduanController {
             
             if ($pengaduan) {
                 // Redirect ke halaman tracking dengan data
-                header('Location: index.php?page=tracking-layanan-pengaduan&no_register=' . urlencode($noRegister) . '&found=1');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tracking-layanan-pengaduan&no_register=' . urlencode($noRegister) . '&found=1');
             } else {
-                header('Location: index.php?page=tracking-layanan-pengaduan&status=error&message=' . urlencode('Nomor register tidak ditemukan. Pastikan nomor register yang Anda masukkan benar.'));
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tracking-layanan-pengaduan&status=error&message=' . urlencode('Nomor register tidak ditemukan. Pastikan nomor register yang Anda masukkan benar.'));
             }
             exit;
         }
@@ -110,31 +110,31 @@ class LayananPengaduanController {
                 empty($data['isi_laporan']) || empty($data['tanggal_kejadian']) || 
                 empty($data['lokasi_kejadian']) || empty($data['kategori_laporan']) || 
                 empty($data['jenis_aduan'])) {
-                header('Location: index.php?page=tambah-layanan-pengaduan-masyarakat&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-layanan-pengaduan-masyarakat&status=error');
                 exit;
             }
 
             // Validasi jika pilihan "LAINNYA" atau "Lainnya" harus diisi field lainnya
             if ($data['jenis_tanda_pengenal'] === 'LAINNYA' && empty($data['jenis_tanda_pengenal_lainnya'])) {
-                header('Location: index.php?page=tambah-layanan-pengaduan-masyarakat&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-layanan-pengaduan-masyarakat&status=error');
                 exit;
             }
             if ($data['jenis_aduan'] === 'Lainnya' && empty($data['jenis_aduan_lainnya'])) {
-                header('Location: index.php?page=tambah-layanan-pengaduan-masyarakat&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-layanan-pengaduan-masyarakat&status=error');
                 exit;
             }
 
             try {
                 if ($this->model->tambahLayananPengaduan($data)) {
                     // Redirect dengan nomor register untuk ditampilkan ke user
-                    header('Location: index.php?page=tambah-layanan-pengaduan-masyarakat&status=success&no_register=' . urlencode($noRegister));
+                    header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-layanan-pengaduan-masyarakat&status=success&no_register=' . urlencode($noRegister));
                 } else {
                     error_log("[ERROR] Store Layanan Pengaduan Masyarakat: Failed to insert data");
-                    header('Location: index.php?page=tambah-layanan-pengaduan-masyarakat&status=error');
+                    header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-layanan-pengaduan-masyarakat&status=error');
                 }
             } catch (Exception $e) {
                 error_log("[ERROR] Store Layanan Pengaduan Masyarakat: " . $e->getMessage());
-                header('Location: index.php?page=tambah-layanan-pengaduan-masyarakat&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-layanan-pengaduan-masyarakat&status=error');
             }
             exit;
         }
@@ -189,7 +189,7 @@ class LayananPengaduanController {
                     error_log("[LAYANAN PENGADUAN] ✗ UPLOAD FAILED: " . $errorMsg);
                     // Jika tidak ada teks juga, redirect dengan error
                     if (empty($keteranganText)) {
-                        header('Location: index.php?page=tambah-layanan-pengaduan&status=error&message=' . urlencode($errorMsg));
+                        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-layanan-pengaduan&status=error&message=' . urlencode($errorMsg));
                         exit;
                     }
                 }
@@ -217,7 +217,8 @@ class LayananPengaduanController {
                 'jenis_aduan' => $_POST['jenisAduan'] ?? '',
                 'jenis_aduan_lainnya' => ($_POST['jenisAduan'] ?? '') === 'Lainnya' ? ($_POST['jenisAduanLainnya'] ?? '') : null,
                 'tindak_lanjut' => $_POST['tindakLanjut'] ?? 'belum diproses',
-                'keterangan' => $keterangan
+                'keterangan' => $keterangan,
+                'id_pengguna' => $_SESSION['user']['id'] ?? null
             ];
 
             // Validasi data wajib
@@ -227,17 +228,17 @@ class LayananPengaduanController {
                 empty($data['isi_laporan']) || empty($data['tanggal_kejadian']) || 
                 empty($data['lokasi_kejadian']) || empty($data['kategori_laporan']) || 
                 empty($data['jenis_aduan'])) {
-                header('Location: index.php?page=tambah-layanan-pengaduan&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-layanan-pengaduan&status=error');
                 exit;
             }
 
             // Validasi jika pilihan "LAINNYA" atau "Lainnya" harus diisi field lainnya
             if ($data['jenis_tanda_pengenal'] === 'LAINNYA' && empty($data['jenis_tanda_pengenal_lainnya'])) {
-                header('Location: index.php?page=tambah-layanan-pengaduan&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-layanan-pengaduan&status=error');
                 exit;
             }
             if ($data['jenis_aduan'] === 'Lainnya' && empty($data['jenis_aduan_lainnya'])) {
-                header('Location: index.php?page=tambah-layanan-pengaduan&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-layanan-pengaduan&status=error');
                 exit;
             }
 
@@ -248,14 +249,14 @@ class LayananPengaduanController {
                     $homeModel = new HomeModel();
                     $homeModel->addLogAktivitas("Menambahkan layanan pengaduan: " . $data['no_register_pengaduan']);
                     
-                    header('Location: index.php?page=tambah-layanan-pengaduan&status=success');
+                    header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-layanan-pengaduan&status=success');
                 } else {
                     error_log("[ERROR] Store Layanan Pengaduan: Failed to insert data");
-                    header('Location: index.php?page=tambah-layanan-pengaduan&status=error');
+                    header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-layanan-pengaduan&status=error');
                 }
             } catch (Exception $e) {
                 error_log("[ERROR] Store Layanan Pengaduan: " . $e->getMessage());
-                header('Location: index.php?page=tambah-layanan-pengaduan&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=tambah-layanan-pengaduan&status=error');
             }
             exit;
         }
@@ -266,14 +267,14 @@ class LayananPengaduanController {
         $id = $_GET['id'] ?? null;
         
         if (!$id) {
-            header('Location: index.php?page=layanan-pengaduan');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=layanan-pengaduan');
             exit;
         }
 
         $layananPengaduan = $this->model->getLayananPengaduanById($id);
         
         if (!$layananPengaduan) {
-            header('Location: index.php?page=layanan-pengaduan');
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=layanan-pengaduan');
             exit;
         }
 
@@ -288,7 +289,7 @@ class LayananPengaduanController {
             $id = $_POST['id'] ?? null;
             
             if (!$id) {
-                header('Location: index.php?page=layanan-pengaduan');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=layanan-pengaduan');
                 exit;
             }
 
@@ -424,17 +425,17 @@ class LayananPengaduanController {
                 empty($data['isi_laporan']) || empty($data['tanggal_kejadian']) || 
                 empty($data['lokasi_kejadian']) || empty($data['kategori_laporan']) || 
                 empty($data['jenis_aduan'])) {
-                header('Location: index.php?page=edit-layanan-pengaduan&id=' . $id . '&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-layanan-pengaduan&id=' . $id . '&status=error');
                 exit;
             }
 
             // Validasi jika pilihan "LAINNYA" atau "Lainnya" harus diisi field lainnya
             if ($data['jenis_tanda_pengenal'] === 'LAINNYA' && empty($data['jenis_tanda_pengenal_lainnya'])) {
-                header('Location: index.php?page=edit-layanan-pengaduan&id=' . $id . '&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-layanan-pengaduan&id=' . $id . '&status=error');
                 exit;
             }
             if ($data['jenis_aduan'] === 'Lainnya' && empty($data['jenis_aduan_lainnya'])) {
-                header('Location: index.php?page=edit-layanan-pengaduan&id=' . $id . '&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-layanan-pengaduan&id=' . $id . '&status=error');
                 exit;
             }
 
@@ -445,14 +446,14 @@ class LayananPengaduanController {
                     $homeModel = new HomeModel();
                     $homeModel->addLogAktivitas("Mengedit layanan pengaduan: " . $data['no_register_pengaduan']);
                     
-                    header('Location: index.php?page=edit-layanan-pengaduan&id=' . $id . '&status=success');
+                    header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-layanan-pengaduan&id=' . $id . '&status=success');
                 } else {
                     error_log("[ERROR] Update Layanan Pengaduan: Failed to update data");
-                    header('Location: index.php?page=edit-layanan-pengaduan&id=' . $id . '&status=error');
+                    header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-layanan-pengaduan&id=' . $id . '&status=error');
                 }
             } catch (Exception $e) {
                 error_log("[ERROR] Update Layanan Pengaduan: " . $e->getMessage());
-                header('Location: index.php?page=edit-layanan-pengaduan&id=' . $id . '&status=error');
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=edit-layanan-pengaduan&id=' . $id . '&status=error');
             }
             exit;
         }

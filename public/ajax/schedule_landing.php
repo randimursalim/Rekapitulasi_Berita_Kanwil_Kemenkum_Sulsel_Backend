@@ -7,6 +7,28 @@ header('Access-Control-Allow-Headers: Content-Type');
 try {
     require_once '../../config/database.php';
     
+    // Auto update status kegiatan yang belum mulai
+    $updateBelumDimulai = "UPDATE kegiatan 
+                           SET status = 'Belum Dimulai' 
+                           WHERE status IN ('Selesai', 'Sedang Berlangsung') 
+                           AND CONCAT(tanggal, ' ', jam_mulai) > NOW()";
+    $conn->exec($updateBelumDimulai);
+
+    // Auto update status kegiatan yang sudah lewat menjadi 'Selesai'
+    $updateSelesai = "UPDATE kegiatan 
+                      SET status = 'Selesai' 
+                      WHERE status IN ('Belum Dimulai', 'Sedang Berlangsung') 
+                      AND CONCAT(tanggal, ' ', jam_selesai) < NOW()";
+    $conn->exec($updateSelesai);
+    
+    // Auto update status kegiatan yang sedang berjalan
+    $updateBerlangsung = "UPDATE kegiatan 
+                          SET status = 'Sedang Berlangsung' 
+                          WHERE status IN ('Belum Dimulai', 'Selesai') 
+                          AND CONCAT(tanggal, ' ', jam_mulai) <= NOW() 
+                          AND CONCAT(tanggal, ' ', jam_selesai) >= NOW()";
+    $conn->exec($updateBerlangsung);
+
     // Ambil parameter untuk 7 hari ke depan (termasuk hari ini)
     $today = date('Y-m-d');
     $sevenDaysLater = date('Y-m-d', strtotime('+6 days'));
@@ -21,6 +43,9 @@ try {
             jam_selesai,
             keterangan,
             status,
+            hadir_kakanwil,
+            hadir_kadiv_p3h,
+            hadir_kadiv_yankum,
             created_at
         FROM kegiatan
         WHERE DATE(tanggal) BETWEEN ? AND ?
@@ -93,12 +118,25 @@ try {
             $type = 'ceremony';
         }
         
+        $pimti = [];
+        if (isset($kegiatan['hadir_kakanwil']) && $kegiatan['hadir_kakanwil'] == 1) $pimti[] = 'Kakanwil';
+        if (isset($kegiatan['hadir_kadiv_p3h']) && $kegiatan['hadir_kadiv_p3h'] == 1) $pimti[] = 'Kadiv P3H';
+        if (isset($kegiatan['hadir_kadiv_yankum']) && $kegiatan['hadir_kadiv_yankum'] == 1) $pimti[] = 'Kadiv Yankum';
+
+        $fullKeterangan = $kegiatan['keterangan'] ?: '';
+        if (count($pimti) > 0) {
+            $pimtiText = 'Pimpinan Tinggi Yang Hadir: ' . implode(', ', $pimti);
+            $fullKeterangan = $pimtiText . "\n\nKeterangan:\n" . ($kegiatan['keterangan'] ?: '-');
+        } else {
+            $fullKeterangan = $kegiatan['keterangan'] ?: 'Tidak ada keterangan';
+        }
+        
         $formattedData[] = [
             'id' => $kegiatan['id_kegiatan'],
             'title' => $kegiatan['nama_kegiatan'],
             'date' => $kegiatan['tanggal'],
             'time' => $kegiatan['jam_mulai'] . ' - ' . $kegiatan['jam_selesai'],
-            'description' => $kegiatan['keterangan'] ?: 'Tidak ada keterangan',
+            'description' => $fullKeterangan,
             'status' => $kegiatan['status'],
             'type' => $type,
             'color' => $selectedColor
