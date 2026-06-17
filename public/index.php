@@ -1,4 +1,9 @@
 <?php
+
+// GLOBAL HELPERS
+require_once __DIR__ . '/../app/helpers/status_helper.php';
+require_once __DIR__ . '/../app/helpers/path_helper.php';
+require_once __DIR__ . '/../app/helpers/text_helper.php';
 require_once __DIR__ . '/../config/app.php';
 
 // Redirect ke landing page jika tidak ada parameter page
@@ -32,12 +37,25 @@ $page = $_GET['page'] ?? $defaultPage;
 
 // Cek akses untuk role p3h (hanya bisa akses harmonisasi dan rekap-harmonisasi)
 if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'p3h') {
-    $allowedPages = ['harmonisasi', 'rekap-harmonisasi', 'tambah-harmonisasi', 'edit-harmonisasi', 
-                     'store-harmonisasi', 'update-harmonisasi', 'hapus-harmonisasi',
-                     'get-rekap-data-harmonisasi', 'get-rekap-tabel-harmonisasi', 
-                     'get-available-periods-harmonisasi', 'edit-profil', 'update-profil', 
-                     'logout', 'update-activity', 'jadwal-kegiatan', 'jadwal-peminjaman-ruangan'];
-    
+    $allowedPages = [
+        'harmonisasi',
+        'rekap-harmonisasi',
+        'tambah-harmonisasi',
+        'edit-harmonisasi',
+        'store-harmonisasi',
+        'update-harmonisasi',
+        'hapus-harmonisasi',
+        'get-rekap-data-harmonisasi',
+        'get-rekap-tabel-harmonisasi',
+        'get-available-periods-harmonisasi',
+        'edit-profil',
+        'update-profil',
+        'logout',
+        'update-activity',
+        'jadwal-kegiatan',
+        'jadwal-peminjaman-ruangan'
+    ];
+
     if (!in_array($page, $allowedPages)) {
         header('Location: ' . BASE_URL . '/index.php?page=harmonisasi');
         exit;
@@ -79,17 +97,17 @@ switch ($page) {
         exit;
         break;
 
-        // === DASHBOARD ===
+    // === DASHBOARD ===
     case 'dashboard':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin(); // Cek login dulu
-        
+
         // Block access untuk role p3h
         if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'p3h') {
             header('Location: ' . BASE_URL . '/index.php?page=harmonisasi');
             exit;
         }
-        
+
         require_once __DIR__ . '/../app/controllers/HomeController.php';
         $controller = new HomeController();
         $controller->index();
@@ -99,7 +117,7 @@ switch ($page) {
     case 'rekap-konten':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KontenController.php';
         $controller = new KontenController();
         $controller->rekapKonten();
@@ -108,7 +126,7 @@ switch ($page) {
     case 'input-konten':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KontenController.php';
         $controller = new KontenController();
         $controller->inputKonten();
@@ -117,7 +135,7 @@ switch ($page) {
     case 'store-konten':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once '../app/controllers/KontenController.php';
         $controller = new KontenController();
         $controller->storeKonten();
@@ -126,7 +144,7 @@ switch ($page) {
     case 'edit-konten':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KontenController.php';
         $controller = new KontenController();
         $controller->editKonten();
@@ -135,7 +153,7 @@ switch ($page) {
     case 'update-konten':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KontenController.php';
         $controller = new KontenController();
         $controller->updateKonten();
@@ -144,7 +162,7 @@ switch ($page) {
     case 'delete-konten':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KontenController.php';
         $controller = new KontenController();
         $controller->deleteKonten();
@@ -153,7 +171,7 @@ switch ($page) {
     case 'get-rekap-data':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KontenController.php';
         $controller = new KontenController();
         $controller->getRekapData();
@@ -162,7 +180,7 @@ switch ($page) {
     case 'get-rekap-tabel':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KontenController.php';
         $controller = new KontenController();
         $controller->getRekapTabel();
@@ -171,7 +189,7 @@ switch ($page) {
     case 'get-available-periods':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KontenController.php';
         $controller = new KontenController();
         $controller->getAvailablePeriods();
@@ -180,17 +198,133 @@ switch ($page) {
     case 'arsip':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KontenController.php';
         $controller = new KontenController();
         $controller->arsip();
+        break;
+
+    // === PERIZINAN MAGANG/PENELITIAN (Admin Only) ===
+    case 'izin':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+
+        require_once __DIR__ . '/../app/controllers/IzinController.php';
+        $controller = new IzinController();
+        $controller->daftarIzin();
+        break;
+
+    case 'simanis':
+        require_once __DIR__ . '/../app/controllers/IzinController.php';
+        $controller = new IzinController();
+        $controller->formPublic();
+        break;
+
+    case 'simanis-tracking':
+        require_once __DIR__ . '/../app/controllers/IzinController.php';
+        $controller = new IzinController();
+        $controller->trackingSurat();
+        break;
+
+    /* API TRACKING */
+    case 'tracking-surat-api':
+
+        header('Content-Type: application/json');
+
+        require_once __DIR__ . '/../app/models/IzinModel.php';
+
+        $model = new IzinModel();
+
+        $id = $_GET['id'] ?? '';
+
+        if (!$id) {
+            echo json_encode(['success' => false]);
+            exit;
+        }
+
+        $data = $model->getIzinById($id);
+
+        if ($data) {
+            echo json_encode([
+                'success' => true,
+                'data' => $data
+            ]);
+        } else {
+            echo json_encode(['success' => false]);
+        }
+
+        exit;
+
+        break;
+
+    case 'tambah-izin':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+
+        require_once __DIR__ . '/../app/controllers/IzinController.php';
+        $controller = new IzinController();
+        $controller->tambahIzin();
+        break;
+
+    case 'store-izin':
+        // require_once __DIR__ . '/../app/controllers/AuthController.php';
+        // AuthController::requireAdmin(); // Hanya admin yang bisa akses
+
+        require_once __DIR__ . '/../app/controllers/IzinController.php';
+        $controller = new IzinController();
+        $controller->storeIzin();
+        break;
+
+    case 'update-status':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/IzinController.php';
+        $controller = new IzinController();
+        $controller->updateStatus();
+        break;
+
+    case 'upload-balasan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/IzinController.php';
+        $controller = new IzinController();
+        $controller->uploadBalasan();
+        break;
+
+    case 'kirim-balasan':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/IzinController.php';
+        $controller = new IzinController();
+        $controller->kirimBalasan();
+        break;
+
+    case 'kirim-wa':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/IzinController.php';
+        $controller = new IzinController();
+        $controller->kirimBalasan();
+        break;
+
+    case 'hapus-izin':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+
+        require_once __DIR__ . '/../app/controllers/IzinController.php';
+        $controller = new IzinController();
+        $controller->hapusIzin();
         break;
 
     // === PENGGUNA (Admin Only) ===
     case 'pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireAdmin(); // Hanya admin yang bisa akses
-        
+
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
         $controller->daftarPengguna();
@@ -199,7 +333,7 @@ switch ($page) {
     case 'tambah-pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireAdmin(); // Hanya admin yang bisa akses
-        
+
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
         $controller->tambahPengguna();
@@ -208,7 +342,7 @@ switch ($page) {
     case 'edit-pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireAdmin(); // Hanya admin yang bisa akses
-        
+
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
         $controller->editPengguna();
@@ -217,7 +351,7 @@ switch ($page) {
     case 'edit-profil':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin(); // Semua user bisa edit profil sendiri
-        
+
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
         $controller->editProfilPengguna();
@@ -226,7 +360,7 @@ switch ($page) {
     case 'update-profil':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin(); // Semua user bisa update profil sendiri
-        
+
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
         $controller->updateProfilPengguna();
@@ -235,7 +369,7 @@ switch ($page) {
     case 'statistik-pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireAdmin(); // Hanya admin yang bisa lihat statistik pengguna
-        
+
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
         $controller->statistikPengguna();
@@ -245,7 +379,7 @@ switch ($page) {
     case 'jadwal-kegiatan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KegiatanController.php';
         $controller = new KegiatanController();
         $controller->jadwalKegiatan();
@@ -254,7 +388,7 @@ switch ($page) {
     case 'tambah-kegiatan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KegiatanController.php';
         $controller = new KegiatanController();
         $controller->tambahKegiatan();
@@ -263,7 +397,7 @@ switch ($page) {
     case 'edit-kegiatan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KegiatanController.php';
         $controller = new KegiatanController();
         $controller->editKegiatan();
@@ -272,7 +406,7 @@ switch ($page) {
     case 'store-kegiatan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KegiatanController.php';
         $controller = new KegiatanController();
         $controller->storeKegiatan();
@@ -281,7 +415,7 @@ switch ($page) {
     case 'update-kegiatan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KegiatanController.php';
         $controller = new KegiatanController();
         $controller->updateKegiatan();
@@ -290,7 +424,7 @@ switch ($page) {
     case 'hapus-kegiatan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KegiatanController.php';
         $controller = new KegiatanController();
         $controller->hapusKegiatan();
@@ -299,7 +433,7 @@ switch ($page) {
     case 'rekap-jadwal-kegiatan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/KegiatanController.php';
         $controller = new KegiatanController();
         $controller->rekapJadwalKegiatan();
@@ -309,7 +443,7 @@ switch ($page) {
     case 'jadwal-peminjaman-ruangan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/PeminjamanRuanganController.php';
         $controller = new PeminjamanRuanganController();
         $controller->jadwalPeminjamanRuangan();
@@ -318,7 +452,7 @@ switch ($page) {
     case 'tambah-peminjaman-ruangan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/PeminjamanRuanganController.php';
         $controller = new PeminjamanRuanganController();
         $controller->tambahPeminjamanRuangan();
@@ -327,7 +461,7 @@ switch ($page) {
     case 'edit-peminjaman-ruangan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/PeminjamanRuanganController.php';
         $controller = new PeminjamanRuanganController();
         $controller->editPeminjamanRuangan();
@@ -336,7 +470,7 @@ switch ($page) {
     case 'store-peminjaman-ruangan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/PeminjamanRuanganController.php';
         $controller = new PeminjamanRuanganController();
         $controller->storePeminjamanRuangan();
@@ -345,7 +479,7 @@ switch ($page) {
     case 'update-peminjaman-ruangan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/PeminjamanRuanganController.php';
         $controller = new PeminjamanRuanganController();
         $controller->updatePeminjamanRuangan();
@@ -354,7 +488,7 @@ switch ($page) {
     case 'hapus-peminjaman-ruangan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/PeminjamanRuanganController.php';
         $controller = new PeminjamanRuanganController();
         $controller->hapusPeminjamanRuangan();
@@ -364,7 +498,7 @@ switch ($page) {
         // Form untuk masyarakat (wajib login)
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/PeminjamanRuanganController.php';
         $controller = new PeminjamanRuanganController();
         $controller->tambahPeminjamanRuanganMasyarakat();
@@ -374,7 +508,7 @@ switch ($page) {
         // Proses untuk masyarakat (wajib login)
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/PeminjamanRuanganController.php';
         $controller = new PeminjamanRuanganController();
         $controller->storePeminjamanRuanganMasyarakat();
@@ -384,7 +518,7 @@ switch ($page) {
     case 'daftar-aduan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/AduanController.php';
         $controller = new AduanController();
         $controller->daftarAduan();
@@ -393,7 +527,7 @@ switch ($page) {
     case 'tambah-aduan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/AduanController.php';
         $controller = new AduanController();
         $controller->tambahAduan();
@@ -402,7 +536,7 @@ switch ($page) {
     case 'edit-aduan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/AduanController.php';
         $controller = new AduanController();
         $controller->editAduan();
@@ -411,7 +545,7 @@ switch ($page) {
     case 'store-aduan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/AduanController.php';
         $controller = new AduanController();
         $controller->storeAduan();
@@ -420,7 +554,7 @@ switch ($page) {
     case 'update-aduan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/AduanController.php';
         $controller = new AduanController();
         $controller->updateAduan();
@@ -429,7 +563,7 @@ switch ($page) {
     case 'hapus-aduan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/AduanController.php';
         $controller = new AduanController();
         $controller->hapusAduan();
@@ -439,7 +573,7 @@ switch ($page) {
     case 'layanan-pengaduan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/LayananPengaduanController.php';
         $controller = new LayananPengaduanController();
         $controller->daftarLayananPengaduan();
@@ -448,7 +582,7 @@ switch ($page) {
     case 'tambah-layanan-pengaduan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/LayananPengaduanController.php';
         $controller = new LayananPengaduanController();
         $controller->tambahLayananPengaduan();
@@ -464,7 +598,7 @@ switch ($page) {
     case 'edit-layanan-pengaduan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/LayananPengaduanController.php';
         $controller = new LayananPengaduanController();
         $controller->editLayananPengaduan();
@@ -473,7 +607,7 @@ switch ($page) {
     case 'store-layanan-pengaduan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/LayananPengaduanController.php';
         $controller = new LayananPengaduanController();
         $controller->storeLayananPengaduan();
@@ -503,7 +637,7 @@ switch ($page) {
     case 'update-layanan-pengaduan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/LayananPengaduanController.php';
         $controller = new LayananPengaduanController();
         $controller->updateLayananPengaduan();
@@ -512,7 +646,7 @@ switch ($page) {
     case 'hapus-layanan-pengaduan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/LayananPengaduanController.php';
         $controller = new LayananPengaduanController();
         $controller->hapusLayananPengaduan();
@@ -521,7 +655,7 @@ switch ($page) {
     case 'download-keterangan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/LayananPengaduanController.php';
         $controller = new LayananPengaduanController();
         $controller->downloadKeterangan();
@@ -531,7 +665,7 @@ switch ($page) {
     case 'harmonisasi':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/HarmonisasiController.php';
         $controller = new HarmonisasiController();
         $controller->daftarHarmonisasi();
@@ -540,7 +674,7 @@ switch ($page) {
     case 'tambah-harmonisasi':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/HarmonisasiController.php';
         $controller = new HarmonisasiController();
         $controller->tambahHarmonisasi();
@@ -549,7 +683,7 @@ switch ($page) {
     case 'edit-harmonisasi':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/HarmonisasiController.php';
         $controller = new HarmonisasiController();
         $controller->editHarmonisasi();
@@ -558,7 +692,7 @@ switch ($page) {
     case 'store-harmonisasi':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/HarmonisasiController.php';
         $controller = new HarmonisasiController();
         $controller->storeHarmonisasi();
@@ -567,7 +701,7 @@ switch ($page) {
     case 'update-harmonisasi':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/HarmonisasiController.php';
         $controller = new HarmonisasiController();
         $controller->updateHarmonisasi();
@@ -576,7 +710,7 @@ switch ($page) {
     case 'hapus-harmonisasi':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/HarmonisasiController.php';
         $controller = new HarmonisasiController();
         $controller->hapusHarmonisasi();
@@ -585,7 +719,7 @@ switch ($page) {
     case 'rekap-harmonisasi':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/HarmonisasiController.php';
         $controller = new HarmonisasiController();
         $controller->rekapHarmonisasi();
@@ -594,7 +728,7 @@ switch ($page) {
     case 'get-rekap-data-harmonisasi':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/HarmonisasiController.php';
         $controller = new HarmonisasiController();
         $controller->getRekapData();
@@ -603,7 +737,7 @@ switch ($page) {
     case 'get-rekap-tabel-harmonisasi':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/HarmonisasiController.php';
         $controller = new HarmonisasiController();
         $controller->getRekapTabel();
@@ -612,7 +746,7 @@ switch ($page) {
     case 'get-available-periods-harmonisasi':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireLogin();
-        
+
         require_once __DIR__ . '/../app/controllers/HarmonisasiController.php';
         $controller = new HarmonisasiController();
         $controller->getAvailablePeriods();
@@ -621,7 +755,7 @@ switch ($page) {
     case 'store-pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireAdmin(); // Hanya admin yang bisa akses
-        
+
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
         $controller->storePengguna();
@@ -631,7 +765,7 @@ switch ($page) {
     case 'update-pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireAdmin(); // Hanya admin yang bisa akses
-        
+
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
         $controller->updatePengguna();
@@ -640,7 +774,7 @@ switch ($page) {
     case 'hapus-pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireAdmin(); // Hanya admin yang bisa akses
-        
+
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
         $controller->hapusPengguna();
@@ -652,8 +786,8 @@ switch ($page) {
         require_once __DIR__ . '/../app/views/pages/data-harmonisasi-public.php';
         exit;
         break;
-        
-        // === BUKU TAMU (Admin Only) ===
+
+    // === BUKU TAMU (Admin Only) ===
     case 'tamu':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireAdmin(); // Hanya admin yang bisa akses
@@ -696,6 +830,26 @@ switch ($page) {
         $controller->hapusTamu();
         break;
 
+    case 'export-excel':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/TamuController.php';
+        $controller = new TamuController();
+        $controller->exportExcel();
+        break;
+
+    case 'export-word':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/TamuController.php';
+
+        $controller = new TamuController();
+
+        $controller->exportWord();
+        break;
+
     case 'print-tamu':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         AuthController::requireAdmin();
@@ -704,7 +858,7 @@ switch ($page) {
         $controller = new TamuController();
         $controller->printTamu();
         break;
-        
+
     // === DEFAULT ===
     default:
         echo "404 - Halaman tidak ditemukan";

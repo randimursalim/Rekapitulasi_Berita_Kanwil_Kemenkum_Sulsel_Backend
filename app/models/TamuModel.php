@@ -25,21 +25,23 @@ class TamuModel
     {
         try {
             $sql = "INSERT INTO tb_tamu 
-                    (nama, telp, email, alamat, tujuan, foto, ttd, tgl, jam, id_pengguna) 
+                    (nama, telp, email, alamat, tujuan, layanan, layanan_item, entrain, foto, ttd, tgl, jam) 
                     VALUES 
-                    (:nama, :telp, :email, :alamat, :tujuan, :foto, :ttd, CURDATE(), CURTIME(), :id_pengguna)";
+                    (:nama, :telp, :email, :alamat, :tujuan, :layanan, :layanan_item, :entrain, :foto, :ttd, CURDATE(), CURTIME())";
 
             $stmt = $this->db->prepare($sql);
 
             return $stmt->execute([
-                ':nama'   => $data['nama'],
-                ':telp'   => $data['telp'],
-                ':email'  => $data['email'],
+                ':nama' => $data['nama'],
+                ':telp' => $data['telp'],
+                ':email' => $data['email'],
                 ':alamat' => $data['alamat'],
                 ':tujuan' => $data['tujuan'],
-                ':foto'   => $data['foto'],
-                ':ttd'    => $data['ttd'],
-                ':id_pengguna' => $data['id_pengguna'] ?? null,
+                ':layanan' => $data['layanan'],
+                ':layanan_item' => $data['layanan_item'],
+                ':entrain' => $data['entrain'],
+                ':foto' => $data['foto'],
+                ':ttd' => $data['ttd'],
             ]);
         } catch (PDOException $e) {
             // Untuk debugging (hapus di production)
@@ -70,11 +72,44 @@ class TamuModel
     public function getTamuByTahun($tahun)
     {
         $stmt = $this->db->prepare("
-        SELECT * FROM tb_tamu
-        WHERE YEAR(tgl) = ?
-        ORDER BY tgl ASC, jam ASC
-    ");
+            SELECT * FROM tb_tamu
+            WHERE YEAR(tgl) = ?
+            ORDER BY tgl ASC, jam ASC
+        ");
         $stmt->execute([$tahun]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // fungsi export excel
+    public function getTamuExportExcel($tahun)
+    {
+        $stmt = $this->db->prepare("
+            SELECT *
+            FROM tb_tamu
+            WHERE YEAR(tgl) = ?
+
+            ORDER BY
+
+            MONTH(tgl) ASC,
+
+            FIELD(
+                layanan,
+                'priority',
+                'adm',
+                'ahu',
+                'ki',
+                'p3h'
+            ) ASC,
+
+            layanan_item ASC,
+
+            tgl ASC,
+
+            jam ASC
+        ");
+
+        $stmt->execute([$tahun]);
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

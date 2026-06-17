@@ -21,35 +21,86 @@ document.addEventListener('DOMContentLoaded', function () {
                 method: 'POST',
                 body: formData
             })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Terima kasih 🙏',
-                        text: data.message,
-                        timer: 2000,
-                        showConfirmButton: false
-                    }).then(() => {
-                        form.reset();
-                        document.getElementById('foto').value = '';
-                        document.getElementById('ttd').value = '';
-                        if (typeof clearTTD === 'function') clearTTD();
-                        document.getElementById('previewFoto').style.display = 'none';
-                    });
-                } else {
-                    Swal.fire('Gagal', data.message, 'error');
-                }
-            })
-            .catch(() => {
-                Swal.fire('Error', 'Terjadi kesalahan server', 'error');
-            });
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Terima kasih 🙏',
+                            text: data.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            form.reset();
+                            document.getElementById('foto').value = '';
+                            document.getElementById('ttd').value = '';
+                            if (typeof clearTTD === 'function') clearTTD();
+                            document.getElementById('previewFoto').style.display = 'none';
+                        });
+                    } else {
+                        Swal.fire('Gagal', data.message, 'error');
+                    }
+                })
+                .catch(() => {
+                    Swal.fire('Error', 'Terjadi kesalahan server', 'error');
+                });
         });
     });
 });
 
+// LAYANAN ITEM DINAMIS
+document.addEventListener('DOMContentLoaded', function () {
 
-// Fungsi ttd
+    const layanan = document.querySelector('select[name="layanan"]');
+    const layananItem = document.getElementById('layanan_item');
+
+    if (!layanan || !layananItem) return;
+
+    layanan.addEventListener('change', async function () {
+
+        const value = this.value;
+
+        layananItem.innerHTML =
+            '<option value="">Memuat data...</option>';
+
+        layananItem.disabled = true;
+
+        try {
+
+            const response = await fetch(
+                `api/get-layanan-item.php?layanan=${value}`
+            );
+
+            const result = await response.json();
+
+            layananItem.innerHTML =
+                '<option value="">-- Pilih Item Layanan --</option>';
+
+            if (result.success && result.items.length > 0) {
+
+                result.items.forEach(item => {
+
+                    layananItem.innerHTML += `
+                        <option value="${item}">
+                            ${item}
+                        </option>
+                    `;
+                });
+
+                layananItem.disabled = false;
+            }
+
+        } catch (error) {
+
+            layananItem.innerHTML =
+                '<option value="">Gagal memuat data</option>';
+
+            layananItem.disabled = true;
+        }
+    });
+
+});
+
 // Fungsi TTD (DESKTOP + HP)
 document.addEventListener("DOMContentLoaded", function () {
     const sigBox = document.getElementById("sig");

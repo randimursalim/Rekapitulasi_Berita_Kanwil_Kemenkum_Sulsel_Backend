@@ -1,0 +1,614 @@
+/* =======================
+   LOCAL FONT: MONTSERRAT
+======================= */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/montserrat/Montserrat-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/montserrat/Montserrat-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/montserrat/Montserrat-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../fonts/montserrat/Montserrat-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* =======================
+     GLOBAL
+  ======================= */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* Sticky Footer Layout */
+html,
+body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+section,
+div[id] {
+    scroll-margin-top: 80px;
+}
+
+/* =======================
+     SIMTAMU SECTION
+  ======================= */
+#simanis {
+    padding: 20px 0;
+    font-family: 'Montserrat', Arial, sans-serif;
+    flex: 1;
+}
+
+/* HEADER KEMENKUM */
+.simanis-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: 12px;
+    margin-right: 12px;
+    background-color: #ffffff;
+    position: sticky;
+    top: 0px;
+}
+
+/* FORCE LOGO KEMENKUM SIZE */
+.simanis-header img.simanis-logo {
+    width: 48px !important;
+    height: 48px !important;
+    max-width: 48px !important;
+    max-height: 48px !important;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+/* HEADER TEXT */
+.simanis-header-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    margin-top: 0;
+}
+
+.simanis-header-text .line-1 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.simanis-header-text .line-2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+#simanis .section-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* LAYOUT */
+.simanis-container {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 64px;
+    align-items: flex-start;
+}
+
+/* SIMTAMU LEFT IMAGE */
+.simanis-image img {
+    width: 100%;
+    max-width: 520px;
+}
+
+.simanis-image {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.sicakap-header-center {
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* SIMTAMU TEXT */
+.sicakap-title {
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #ffcb05
+}
+
+/* simanis-tracking.php */
+/* =======================
+TRACKING PAGE
+======================= */
+
+.tracking-wrapper {
+    text-align: center;
+    padding: 40px 0;
+}
+
+.tracking-title {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.tracking-desc {
+    color: #6b7280;
+    margin-bottom: 30px;
+}
+
+.tracking-search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #f5f5f5;
+    padding: 12px;
+    border-radius: 8px;
+    max-width: 520px;
+    margin: 0 auto 30px auto;
+}
+
+.tracking-search i {
+    color: #333;
+}
+
+.tracking-search input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.tracking-search button {
+    background: #16a34a;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.tracking-search button:hover {
+    opacity: .9;
+}
+
+
+/* KETERANGAN */
+
+.tracking-detail {
+    max-width: 600px;
+    margin: 40px auto;
+    text-align: left;
+}
+
+.tracking-detail h2 {
+    margin-bottom: 10px;
+}
+
+.tracking-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tracking-table td {
+    padding: 10px 5px;
+    border-bottom: 1px solid #eee;
+}
+
+
+/* TIMELINE */
+
+.tracking-timeline {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    max-width: 900px;
+    margin: 50px auto 0 auto;
+}
+
+/* garis utama */
+.tracking-timeline::before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+/* item */
+.timeline-item {
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+/* garis aktif */
+.timeline-item.active::before {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: -50%;
+    width: 100%;
+    height: 6px;
+    background: #22c55e;
+    z-index: 1;
+}
+
+.timeline-item:first-child.active::before {
+    display: none;
+}
+
+/* lingkaran */
+.timeline-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #d1d5db;
+    color: white;
+    line-height: 36px;
+    margin: auto;
+    position: relative;
+    z-index: 2;
+    font-weight: 600;
+}
+
+/* lingkaran aktif */
+.timeline-item.active .timeline-circle {
+    background: #22c55e;
+}
+
+/* teks */
+.timeline-text {
+    font-size: 12px;
+    margin-top: 10px;
+    color: #16a34a;
+    padding: 0 10px;
+    min-height: 36px;
+}
+
+.btn-tracking {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #1C2B5C;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-tracking:hover {
+    opacity: .9;
+}
+
+.tracking-section {
+    max-width: 900px;
+    margin: 40px auto;
+    text-align: center;
+}
+
+.tracking-error {
+    background: #fef3c7;
+    padding: 15px;
+    border-radius: 6px;
+    margin-top: 20px;
+}
+
+.tracking-table td {
+    padding: 8px 10px;
+}
+
+.tracking-timeline {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+}
+
+.timeline-item {
+    flex: 1;
+    text-align: center;
+}
+
+.timeline-item .circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #d1d5db;
+    color: white;
+    line-height: 40px;
+    margin: auto;
+}
+
+.timeline-item.active .circle {
+    background: #22c55e;
+}
+
+.timeline-item .text {
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* ILLUSTRATION IMAGE */
+.simanis-illustration {
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    margin-top: 12px;
+}
+
+/* FORM CARD */
+.simanis-form {
+    margin-left: 20px;
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 19px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+    max-width: 420px;
+}
+
+/* HEADER FORM */
+.simanis-subtitle {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.9px;
+    color: #1C2B5C;
+    margin-bottom: 13px;
+}
+
+.simanis-title {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.simanis-desc {
+    font-size: 15px;
+    line-height: 26px;
+    color: #6b7280;
+    margin-bottom: 22px;
+}
+
+/* FORM */
+.form-group {
+    margin-bottom: 14px;
+    /* 1.2rem */
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border-radius: 9px;
+    border: 1px solid #dcdcdc;
+    font-size: 13px;
+    transition: border-color 0.2s;
+    font-family: 'Montserrat', Arial, sans-serif;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: #fff;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #ffcb05;
+    box-shadow: 0 0 0 2px rgba(255, 203, 5, 0.15);
+}
+
+.form-group select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image:
+        linear-gradient(45deg, transparent 50%, #6b7280 50%),
+        linear-gradient(135deg, #6b7280 50%, transparent 50%);
+    background-position:
+        calc(100% - 18px) 16px,
+        calc(100% - 12px) 16px;
+    background-size: 6px 6px;
+    background-repeat: no-repeat;
+
+    padding-right: 36px;
+    cursor: pointer;
+}
+
+.form-group input[type="file"] {
+    padding: 8px 10px;
+    font-size: 13px;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.form-group input[type="file"]::-webkit-file-upload-button {
+    background: #ffcb05;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-right: 10px;
+}
+
+.form-group input[type="file"]::-webkit-file-upload-button:hover {
+    opacity: 0.9;
+}
+
+/* BUTTONS */
+.btn-clear {
+    margin-top: 10px;
+    background: #222;
+    color: #fff;
+    padding: 6px 16px;
+    font-size: 12px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-submit {
+    width: 100%;
+    margin-top: 26px;
+    padding: 14px;
+    border-radius: 10px;
+    background: #ffcb05;
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-submit:hover {
+    opacity: 0.9;
+}
+
+.simanis-back {
+    display: block;
+    text-align: center;
+    margin-top: 19px;
+    /* 1.2rem */
+    font-size: 14px;
+    /* 0.85rem */
+    color: #ffcb05;
+    text-decoration: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .simanis-container {
+        grid-template-columns: 1fr;
+    }
+
+    .simanis-image {
+        display: none;
+    }
+
+    .simanis-form {
+        margin: 0 auto;
+    }
+}
+
+/* FOOTER */
+.footer-section {
+    background: #ffcb05;
+    color: #7a7a7a;
+    padding: 28px 16px;
+    margin-top: auto;
+    width: 100%;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 24px;
+    align-items: center;
+}
+
+.footer-logo p {
+    font-size: 13px;
+    line-height: 18px;
+    margin: 0;
+}
+
+.footer-social a {
+    color: #7a7a7a;
+    margin-right: 12px;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+.footer-social a:hover {
+    color: #f25f5c;
+}
+
+.footer-contact p {
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.footer-contact a {
+    color: #22c55e;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.footer-contact a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+    .simanis-header {
+        justify-content: center;
+        text-align: center;
+    }
+
+    .simanis-header-text {
+        align-items: center;
+    }
+}
+
+/* FOOTER RESPONSIVE */
+@media (max-width: 900px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footer-social {
+        margin: 10px 0;
+    }
+}

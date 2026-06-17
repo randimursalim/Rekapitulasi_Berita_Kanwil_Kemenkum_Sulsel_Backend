@@ -108,29 +108,46 @@ document.addEventListener('DOMContentLoaded', function () {
 
         <div class="data nama">
           <span class="data-title">Nama Tamu</span>
-          ${data.map(t => `<span class="data-list"><span class="text-content" title="${t.nama}">${t.nama}</span></span>`).join('')}
+          ${data.map(t => `<span class="data-list">${t.nama}</span>`).join('')}
         </div>
   
         <div class="data kontak">
           <span class="data-title">Kontak</span>
           ${data.map(t => `
             <span class="data-list">
-              <span class="text-content" title="${t.telp} | ${t.email ?? '-'}">
-                ${t.telp}<br>
-                <small>${t.email ?? '-'}</small>
-              </span>
+              ${t.telp}<br>
+              <small>${t.email ?? '-'}</small>
             </span>
           `).join('')}          
         </div>
   
         <div class="data alamat">
           <span class="data-title">Alamat</span>
-          ${data.map(t => `<span class="data-list"><span class="text-content" title="${t.alamat}">${t.alamat}</span></span>`).join('')}
+          ${data.map(t => `<span class="data-list">${t.alamat}</span>`).join('')}
+        </div>
+
+        <div class="data layanan">
+          <span class="data-title">Layanan</span>
+          ${data.map(t => `<span class="data-list">${t.layanan}</span>`).join('')}
+        </div>
+
+        <div class="data layanan-item">
+            <span class="data-title">Item Layanan</span>
+            ${data.map(t => `
+                <span class="data-list">
+                    ${t.layanan_item ?? '-'}
+                </span>
+            `).join('')}
         </div>
 
         <div class="data tujuan">
           <span class="data-title">Maksud/Tujuan</span>
-          ${data.map(t => `<span class="data-list"><span class="text-content" title="${t.tujuan}">${t.tujuan}</span></span>`).join('')}
+          ${data.map(t => `<span class="data-list">${t.tujuan}</span>`).join('')}
+        </div>
+
+        <div class="data entrain">
+          <span class="data-title">Ambil Antrean</span>
+          ${data.map(t => `<span class="data-list">${t.entrain === 'yes' ? 'Ya' : 'Tidak'}</span>`).join('')}
         </div>
         
         <div class="data ttd">
@@ -138,13 +155,13 @@ document.addEventListener('DOMContentLoaded', function () {
             ${data.map(t => `
                 <span class="data-list ttd">
                 ${t.ttd
-                    ? `<img 
+                ? `<img 
                         src="${getImageUrl('storage/uploads/ttd/' + t.ttd)}" 
                         alt="TTD ${t.nama}" 
                         class="img-ttd img-preview"
                         data-caption="TTD ${t.nama}"
                     >`
-                    : '-'}
+                : '-'}
                 </span>
             `).join('')}
         </div>
@@ -154,13 +171,13 @@ document.addEventListener('DOMContentLoaded', function () {
             ${data.map(t => `
                 <span class="data-list foto">
                 ${t.foto
-                    ? `<img 
+                        ? `<img 
                         src="${getImageUrl('storage/uploads/foto/' + t.foto)}"
                         alt="Foto ${t.nama}" 
                         class="img-foto img-preview"
                         data-caption="Foto ${t.nama}"
                     >`
-                    : '-'}
+                        : '-'}
                 </span>
             `).join('')}
         </div>
@@ -359,13 +376,35 @@ document.addEventListener('click', function (e) {
     }
 });
 
-// Print daftar Tamu
+// export pdf
 document.querySelector('.btn-print').addEventListener('click', () => {
     const tahun = document.getElementById('filterTahun').value;
     const bulan = document.getElementById('filterBulan').value;
 
     window.open(
         `index.php?page=print-tamu&tahun=${tahun}&bulan=${bulan}`,
+        '_blank'
+    );
+});
+
+// export excel
+document.querySelector('.btn-export-excel').addEventListener('click', () => {
+    const tahun =
+        document.getElementById('filterTahun').value;
+
+    window.open(
+        `index.php?page=export-excel&tahun=${tahun}`,
+        '_blank'
+    );
+});
+
+// EXPORT WORD
+document.querySelector('.btn-export-word').addEventListener('click', () => {
+    const tahun =
+        document.getElementById('filterTahun').value;
+
+    window.open(
+        `index.php?page=export-word&tahun=${tahun}`,
         '_blank'
     );
 });

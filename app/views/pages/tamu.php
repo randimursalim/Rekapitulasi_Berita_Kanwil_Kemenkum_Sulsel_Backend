@@ -70,11 +70,33 @@ if (!isset($BASE)) {
 
     </div>
 
-    <!-- Tombol Tambah -->
-    <div class="btn-container" style="margin: 15px 0;">
-        <button class="btn-tambah" onclick="window.location.href='index.php?page=tambah-tamu'">
-            <i class="fas fa-plus"></i> Tambah Tamu
-        </button>
+    <!-- ACTION BUTTONS -->
+    <div class="action-bar">
+
+        <!-- LEFT -->
+        <div class="action-left">
+            <button class="btn-tambah" onclick="window.location.href='index.php?page=tambah-tamu'">
+
+                <i class="fas fa-plus"></i>
+                Tambah Tamu
+            </button>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="action-right">
+
+            <button class="btn-export-word">
+                <i class="fas fa-file-word"></i>
+                Export Word
+            </button>
+
+            <button class="btn-export-excel">
+                <i class="fas fa-file-excel"></i>
+                Export Excel
+            </button>
+
+        </div>
+
     </div>
 
     <!-- Data Tamu -->

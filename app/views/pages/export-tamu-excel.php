@@ -1,0 +1,165 @@
+<?php
+// Auto-detect BASE_URL (SAMA SEPERTI tamu.php)
+if (!isset($BASE)) {
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+    $serverName = $_SERVER['SERVER_NAME'] ?? '';
+    $httpHost = $_SERVER['HTTP_HOST'] ?? '';
+
+    $isLocalhost = (
+        strpos($serverName, 'localhost') !== false ||
+        strpos($serverName, '127.0.0.1') !== false ||
+        strpos($httpHost, 'localhost') !== false ||
+        strpos($requestUri, '/rekap-konten/public') !== false ||
+        strpos($scriptName, '/rekap-konten/public') !== false
+    );
+
+    $BASE = $isLocalhost
+        ? (defined('BASE_URL') ? BASE_URL : '/rekap-konten/public')
+        : '';
+}
+
+header("Content-Type: application/vnd.ms-excel");
+header("Content-Disposition: attachment; filename=rekap-pelayanan-$tahun.xls");
+
+$bulanIndonesia = [
+    1 => 'Januari',
+    2 => 'Februari',
+    3 => 'Maret',
+    4 => 'April',
+    5 => 'Mei',
+    6 => 'Juni',
+    7 => 'Juli',
+    8 => 'Agustus',
+    9 => 'September',
+    10 => 'Oktober',
+    11 => 'November',
+    12 => 'Desember'
+];
+?>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        .main-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .main-table th,
+        .main-table td {
+            border: 1px solid #000;
+            padding: 6px;
+        }
+
+        .title {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .header th {
+            background: #d9d9d9;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .bulan-row td {
+            background: #bfbfbf;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .center {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <table class="main-table">
+        <tr>
+            <td colspan="7" class="title">
+                REKAPITULASI DATA PELAYANAN KEMENTERIAN HUKUM
+            </td>
+        </tr>
+        <tr>
+            <td colspan="7" class="subtitle">
+                Pada Kantor Wilayah Kementerian Hukum Sulawesi Selatan
+            </td>
+        </tr>
+        <tr>
+            <td colspan="7" class="subtitle">
+                Periode Januari s/d Desember Tahun <?= $tahun ?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="7" height="20"></td>
+        </tr>
+        <tr class="header">
+            <th>No</th>
+            <th>Layanan Kemenkum</th>
+            <th>Jenis Layanan</th>
+            <th>Nama Layanan Yang Diterima</th>
+            <th>Waktu Pelaksanaan Layanan</th>
+            <th>Nama</th>
+            <th>Telp</th>
+        </tr>
+
+        <?php
+
+        $currentMonth = '';
+        $no = 1;
+
+        foreach ($data as $row):
+
+            $bulan = (int) date('n', strtotime($row['tgl']));
+
+            if ($currentMonth != $bulan):
+
+                $currentMonth = $bulan;
+                ?>
+
+                <tr class="bulan-row">
+                    <td colspan="7">
+                        BULAN <?= strtoupper($bulanIndonesia[$bulan]) ?>
+                    </td>
+                </tr>
+
+            <?php endif; ?>
+
+            <tr>
+                <td class="center"><?= $no++ ?></td>
+                <td><?= htmlspecialchars($row['layanan']) ?></td>
+                <td><?= htmlspecialchars($row['layanan_item']) ?></td>
+                <td><?= htmlspecialchars($row['tujuan']) ?></td>
+                <td>
+                    <?= date('j', strtotime($row['tgl'])) . ' ' .
+                        $bulanIndonesia[(int) date('n', strtotime($row['tgl']))] . ' ' .
+                        date('Y', strtotime($row['tgl'])) ?>
+                </td>
+                <td><?= htmlspecialchars($row['nama']) ?></td>
+                <td><?= htmlspecialchars($row['telp']) ?></td>
+            </tr>
+
+        <?php endforeach; ?>
+
+    </table>
+
+</body>
+
+</html>

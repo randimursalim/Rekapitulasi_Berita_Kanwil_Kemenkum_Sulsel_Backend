@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Helper function untuk generate image URL (jika belum didefinisikan)
   if (typeof getImageUrl === 'undefined') {
-    window.getImageUrl = function(path) {
+    window.getImageUrl = function (path) {
       if (!path) return null;
       // Jika sudah full URL atau absolute path, return as is
       if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/')) {
@@ -19,9 +19,9 @@ document.addEventListener('DOMContentLoaded', function () {
   function formatKategori(str) {
     if (!str) return '-';
     return str.replace(/_/g, ' ')
-              .split(' ')
-              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-              .join(' ');
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   }
 
   // Render hasil search ke container (arsip.php)
@@ -40,33 +40,33 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let no = 1;
     let html = '';
-    const columns = ['no','title-news','jenis','kategori','date','dokumentasi','actions'];
+    const columns = ['no', 'title-news', 'jenis', 'kategori', 'date', 'dokumentasi', 'actions'];
 
     columns.forEach(col => {
       html += `<div class="data ${col}">`;
 
       // Header kolom
-      if(col==='no') html += '<span class="data-title">No</span>';
-      else if(col==='title-news') html += '<span class="data-title">Judul</span>';
-      else if(col==='jenis') html += '<span class="data-title">Jenis</span>';
-      else if(col==='kategori') html += '<span class="data-title">Kategori/Platform</span>';
-      else if(col==='date') html += '<span class="data-title">Tanggal</span>';
-      else if(col==='dokumentasi') html += '<span class="data-title">Dokumentasi</span>';
-      else if(col==='actions') html += '<span class="data-title">Aksi</span>';
+      if (col === 'no') html += '<span class="data-title">No</span>';
+      else if (col === 'title-news') html += '<span class="data-title">Judul</span>';
+      else if (col === 'jenis') html += '<span class="data-title">Jenis</span>';
+      else if (col === 'kategori') html += '<span class="data-title">Kategori/Platform</span>';
+      else if (col === 'date') html += '<span class="data-title">Tanggal</span>';
+      else if (col === 'dokumentasi') html += '<span class="data-title">Dokumentasi</span>';
+      else if (col === 'actions') html += '<span class="data-title">Aksi</span>';
 
       // Isi data
       data.forEach(konten => {
-        if(col==='no') html += `<span class="data-list">${no++}</span>`;
-        else if(col==='title-news') html += `<span class="data-list">${konten.judul}</span>`;
-        else if(col==='jenis') html += `<span class="data-list">${konten.jenis==='berita'?'Berita':'Sosial Media'}</span>`;
-        else if(col==='kategori') html += `<span class="data-list">${konten.jenis==='berita'?formatKategori(konten.jenis_berita):(konten.jenis||'-')}</span>`;
-        else if(col==='date') html += `<span class="data-list">${konten.jenis==='berita'?konten.tanggal_berita:konten.tanggal_post}</span>`;
-        else if(col==='dokumentasi') {
+        if (col === 'no') html += `<span class="data-list">${no++}</span>`;
+        else if (col === 'title-news') html += `<span class="data-list">${konten.judul}</span>`;
+        else if (col === 'jenis') html += `<span class="data-list">${konten.jenis === 'berita' ? 'Berita' : 'Sosial Media'}</span>`;
+        else if (col === 'kategori') html += `<span class="data-list">${konten.jenis === 'berita' ? formatKategori(konten.jenis_berita) : (konten.jenis || '-')}</span>`;
+        else if (col === 'date') html += `<span class="data-list">${konten.jenis === 'berita' ? konten.tanggal_berita : konten.tanggal_post}</span>`;
+        else if (col === 'dokumentasi') {
           const imgUrl = konten.dokumentasi ? getImageUrl(konten.dokumentasi) : null;
           html += `<span class="data-list">${imgUrl ? `<img src="${imgUrl}" style="width:60px;cursor:pointer;" onerror="this.style.display='none'; this.parentElement.innerHTML='-';" onload="this.style.display='block';">` : '-'}</span>`;
         }
-        else if(col==='actions') html += `<span class="data-list">
-          <button class="btn-action-aksi view" onclick="window.open('${konten.jenis==='berita'?konten.link_berita:konten.link_post}','_blank')"><i class="fas fa-eye"></i></button>
+        else if (col === 'actions') html += `<span class="data-list">
+          <button class="btn-action-aksi view" onclick="window.open('${konten.jenis === 'berita' ? konten.link_berita : konten.link_post}','_blank')"><i class="fas fa-eye"></i></button>
           <button class="btn-action-aksi edit" onclick="window.location.href='index.php?page=edit-konten&id=${konten.id_konten}'"><i class="fas fa-edit"></i></button>
           <button class="btn-action-aksi delete" data-id="${konten.id_konten}"><i class="fas fa-trash-alt"></i></button>
         </span>`;
@@ -94,32 +94,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let no = 1;
     let html = '';
-    const columns = ['no','kegiatan','tanggal','waktu','keterangan','status','actions'];
+    const columns = ['no', 'kegiatan', 'tanggal', 'waktu', 'keterangan', 'status', 'actions'];
 
     columns.forEach(col => {
       html += `<div class="data ${col}">`;
 
       // Header kolom
-      if(col==='no') html += '<span class="data-title">No</span>';
-      else if(col==='kegiatan') html += '<span class="data-title">Nama Kegiatan</span>';
-      else if(col==='tanggal') html += '<span class="data-title">Tanggal</span>';
-      else if(col==='waktu') html += '<span class="data-title">Waktu</span>';
-      else if(col==='keterangan') html += '<span class="data-title">Keterangan</span>';
-      else if(col==='status') html += '<span class="data-title">Status</span>';
-      else if(col==='actions') html += '<span class="data-title">Aksi</span>';
+      if (col === 'no') html += '<span class="data-title">No</span>';
+      else if (col === 'kegiatan') html += '<span class="data-title">Nama Kegiatan</span>';
+      else if (col === 'tanggal') html += '<span class="data-title">Tanggal</span>';
+      else if (col === 'waktu') html += '<span class="data-title">Waktu</span>';
+      else if (col === 'keterangan') html += '<span class="data-title">Keterangan</span>';
+      else if (col === 'status') html += '<span class="data-title">Status</span>';
+      else if (col === 'actions') html += '<span class="data-title">Aksi</span>';
 
       // Isi data
       data.forEach(kegiatan => {
-        if(col==='no') html += `<span class="data-list">${no++}</span>`;
-        else if(col==='kegiatan') html += `<span class="data-list">${kegiatan.nama_kegiatan}</span>`;
-        else if(col==='tanggal') html += `<span class="data-list">${formatDateKegiatan(kegiatan.tanggal)}</span>`;
-        else if(col==='waktu') html += `<span class="data-list">${formatTimeKegiatan(kegiatan.jam_mulai)}-${formatTimeKegiatan(kegiatan.jam_selesai)}</span>`;
-        else if(col==='keterangan') html += `<span class="data-list">${kegiatan.keterangan ? (kegiatan.keterangan.length > 50 ? kegiatan.keterangan.substring(0, 50) + '...' : kegiatan.keterangan) : '-'}</span>`;
-        else if(col==='status') {
+        if (col === 'no') html += `<span class="data-list">${no++}</span>`;
+        else if (col === 'kegiatan') html += `<span class="data-list">${kegiatan.nama_kegiatan}</span>`;
+        else if (col === 'tanggal') html += `<span class="data-list">${formatDateKegiatan(kegiatan.tanggal)}</span>`;
+        else if (col === 'waktu') html += `<span class="data-list">${formatTimeKegiatan(kegiatan.jam_mulai)}-${formatTimeKegiatan(kegiatan.jam_selesai)}</span>`;
+        else if (col === 'keterangan') html += `<span class="data-list">${kegiatan.keterangan ? (kegiatan.keterangan.length > 50 ? kegiatan.keterangan.substring(0, 50) + '...' : kegiatan.keterangan) : '-'}</span>`;
+        else if (col === 'status') {
           const statusInfo = getDynamicStatusKegiatan(kegiatan);
           html += `<span class="data-list ${statusInfo.class}" data-status="${kegiatan.status}" data-tanggal="${kegiatan.tanggal}" data-jam-mulai="${kegiatan.jam_mulai}" data-jam-selesai="${kegiatan.jam_selesai}">${statusInfo.text}</span>`;
         }
-        else if(col==='actions') html += `<span class="data-list">
+        else if (col === 'actions') html += `<span class="data-list">
           <button class="btn-action-aksi view" onclick="showKeterangan('${kegiatan.keterangan || ''}')"><i class="fas fa-eye"></i></button>
           <button class="btn-action-aksi edit" onclick="window.location.href='index.php?page=edit-kegiatan&id=${kegiatan.id_kegiatan}'"><i class="fas fa-edit"></i></button>
           <button class="btn-action-aksi delete" onclick="hapusKegiatan(${kegiatan.id_kegiatan}, '${kegiatan.nama_kegiatan.replace(/'/g, "\\'")}')"><i class="fas fa-trash-alt"></i></button>
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const now = new Date();
     const jamMulai = new Date(kegiatan.tanggal + ' ' + kegiatan.jam_mulai);
     const jamSelesai = new Date(kegiatan.tanggal + ' ' + kegiatan.jam_selesai);
-    
+
     if (!['Selesai', 'Ditunda', 'Dibatalkan'].includes(kegiatan.status)) {
       if (now > jamSelesai) {
         return { text: 'Selesai', class: 'status-selesai' };
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return { text: 'Belum Dimulai', class: 'status-belum' };
       }
     } else {
-      switch(kegiatan.status) {
+      switch (kegiatan.status) {
         case 'Selesai': return { text: 'Selesai', class: 'status-selesai' };
         case 'Ditunda': return { text: 'Ditunda', class: 'status-ditunda' };
         case 'Dibatalkan': return { text: 'Dibatalkan', class: 'status-dibatalkan' };
@@ -166,79 +166,95 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // Event listener live search
-  document.querySelectorAll('.live-search').forEach(input=>{
-    input.addEventListener('input', function(){
+  document.querySelectorAll('.live-search').forEach(input => {
+    input.addEventListener('input', function () {
       const page = input.dataset.page;
       const query = input.value.trim();
-      
-      if(page==='arsip') {
+
+      if (page === 'arsip') {
         // Gunakan pagination system untuk arsip
-        if(typeof window.setCurrentFilters === 'function') {
+        if (typeof window.setCurrentFilters === 'function') {
           // Langsung kirim query tanpa validasi panjang
           window.setCurrentFilters({ search: query });
         }
         return;
       }
-      
-      if(page==='jadwal-kegiatan') {
+
+      if (page === 'jadwal-kegiatan') {
         // Gunakan pagination system untuk jadwal kegiatan
-        if(typeof window.setCurrentFiltersKegiatan === 'function') {
+        if (typeof window.setCurrentFiltersKegiatan === 'function') {
           window.setCurrentFiltersKegiatan({ search: query });
         }
         return;
       }
-      
-      if(page==='jadwal-peminjaman-ruangan') {
+
+      if (page === 'jadwal-peminjaman-ruangan') {
         // Gunakan pagination system untuk jadwal peminjaman ruangan
-        if(typeof window.setCurrentFiltersPeminjamanRuangan === 'function') {
+        if (typeof window.setCurrentFiltersPeminjamanRuangan === 'function') {
           window.setCurrentFiltersPeminjamanRuangan({ search: query });
         }
         return;
       }
-      
-      if(page==='pengguna') {
+
+      if (page === 'tamu') {
+        // Gunakan pagination system untuk tamu
+        if (typeof window.setCurrentFiltersTamu === 'function') {
+          window.setCurrentFiltersTamu({ search: query });
+        }
+        return;
+      }
+
+      if (page === 'izin') {
+        // Gunakan pagination system untuk izin
+        if (typeof window.setCurrentFiltersIzin === 'function') {
+          window.setCurrentFiltersIzin({ search: query });
+        }
+        return;
+      }
+
+      if (page === 'pengguna') {
         // Gunakan pagination system untuk pengguna
-        if(typeof window.setCurrentFiltersPengguna === 'function') {
+        if (typeof window.setCurrentFiltersPengguna === 'function') {
           window.setCurrentFiltersPengguna({ search: query });
         }
         return;
       }
-      
-      if(page==='daftar-aduan') {
+
+      if (page === 'daftar-aduan') {
         // Gunakan pagination system untuk daftar aduan
-        if(typeof window.setCurrentFiltersAduan === 'function') {
+        if (typeof window.setCurrentFiltersAduan === 'function') {
           window.setCurrentFiltersAduan({ search: query });
         }
         return;
       }
-      
-      if(page==='layanan-pengaduan') {
+
+      if (page === 'layanan-pengaduan') {
         // Gunakan pagination system untuk layanan pengaduan
-        if(typeof window.setCurrentFiltersLayananPengaduan === 'function') {
+        if (typeof window.setCurrentFiltersLayananPengaduan === 'function') {
           window.setCurrentFiltersLayananPengaduan({ search: query });
         }
         return;
       }
-      
-      if(page==='harmonisasi') {
+
+      if (page === 'harmonisasi') {
         // Gunakan pagination system untuk harmonisasi
-        if(typeof window.setCurrentFiltersHarmonisasi === 'function') {
+        if (typeof window.setCurrentFiltersHarmonisasi === 'function') {
           window.setCurrentFiltersHarmonisasi({ search: query });
         }
         return;
       }
-      
+
       // Untuk halaman lain, gunakan sistem lama
-      if(query==='') return renderArsip(null);
+      if (query === '') return renderArsip(null);
 
       let url = '';
       // nanti tambah else if untuk pengguna
 
-      if(url==='') return;
+      if (url === '') return;
       fetch(url)
-        .then(res=>res.json())
-        .then(data=>renderArsip(data))
-        .catch(err=>{
+        .then(res => res.json())
+        .then(data => renderArsip(data))
+        .catch(err => {
           // Error handling tanpa console log
         });
     });

@@ -56,10 +56,7 @@ $BASE = rtrim($BASE, '/');
     <section id="simtamu" class="section white-background">
         <!-- HEADER KEMENKUM -->
         <div class="simtamu-header">
-            <img
-                src="<?= $BASE ?>/Images/LOGO KEMENKUM.jpeg"
-                alt="Logo Kemenkum"
-                class="simtamu-logo">
+            <img src="<?= $BASE ?>/Images/LOGO KEMENKUM.jpeg" alt="Logo Kemenkum" class="simtamu-logo">
 
             <div class="simtamu-header-text">
                 <div class="line-1">KANTOR WILAYAH KEMENTERIAN HUKUM</div>
@@ -83,9 +80,7 @@ $BASE = rtrim($BASE, '/');
                     </div>
 
                     <!-- GAMBAR -->
-                    <img
-                        src="<?= $BASE ?>/Images/simtamu-image.svg"
-                        alt="Ilustrasi Simtamu"
+                    <img src="<?= $BASE ?>/Images/simtamu-image.svg" alt="Ilustrasi Simtamu"
                         class="simtamu-illustration">
                 </div>
 
@@ -117,8 +112,43 @@ $BASE = rtrim($BASE, '/');
                         </div>
 
                         <div class="form-group">
+                            <label>Pilih Layanan</label>
+                            <select name="layanan" required>
+                                <option value="">--Pilih Layanan--</option>
+                                <option value="adm">ADMINISTRASI</option>
+                                <option value="ahu">AHU</option>
+                                <option value="ki">KI</option>
+                                <option value="p3h">P3H</option>
+                                <option value="priority">PRIORITY</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Pilih Item Layanan</label>
+
+                            <select name="layanan_item" id="layanan_item" required disabled>
+                                <option value="">-- Pilih Item Layanan --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
                             <label>Maksud/Tujuan Bertamu</label>
                             <input type="text" name="tujuan" placeholder="Maksud/Tujuan Bertamu" required>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="switch-wrapper">
+
+                                <div class="switch-text">
+                                    <label class="switch-label">Ambil Antrean</label>
+                                    <small>Aktifkan jika ingin mengambil nomor antrean</small>
+                                </div>
+
+                                <label class="switch">
+                                    <input type="checkbox" name="entrain" value="yes">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
                         </div>
 
                         <!-- Kamera -->
@@ -176,16 +206,22 @@ $BASE = rtrim($BASE, '/');
             </div>
 
             <div class="footer-social">
-                <a href="https://www.instagram.com/kemenkumsulsel" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.tiktok.com/@kemenkumsulsel" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-                <a href="https://www.facebook.com/kemenkumsulsel" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
-                <a href="https://www.youtube.com/@kemenkumsulsel" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                <a href="https://x.com/kemenkumsulsel" target="_blank" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.instagram.com/kemenkumsulsel" target="_blank" aria-label="Instagram"><i
+                        class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@kemenkumsulsel" target="_blank" aria-label="TikTok"><i
+                        class="fab fa-tiktok"></i></a>
+                <a href="https://www.facebook.com/kemenkumsulsel" target="_blank" aria-label="Facebook"><i
+                        class="fab fa-facebook"></i></a>
+                <a href="https://www.youtube.com/@kemenkumsulsel" target="_blank" aria-label="YouTube"><i
+                        class="fab fa-youtube"></i></a>
+                <a href="https://x.com/kemenkumsulsel" target="_blank" aria-label="X"><i
+                        class="fab fa-x-twitter"></i></a>
             </div>
 
             <div class="footer-contact">
                 <p>Layanan Pengaduan:</p>
-                <a href="https://wa.me/6282196735747" target="_blank"><i class="fab fa-whatsapp"></i> +62 821-9673-5747</a>
+                <a href="https://wa.me/6282196735747" target="_blank"><i class="fab fa-whatsapp"></i> +62
+                    821-9673-5747</a>
             </div>
 
         </div>

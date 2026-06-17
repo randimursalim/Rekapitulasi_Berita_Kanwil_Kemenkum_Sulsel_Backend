@@ -40,23 +40,39 @@ class TamuController
             exit;
         }
 
-        $nama   = trim($_POST['nama'] ?? '');
-        $telp   = trim($_POST['telp'] ?? '');
-        $email  = $_POST['email'] ?? '';
+        $nama = trim($_POST['nama'] ?? '');
+        $telp = trim($_POST['telp'] ?? '');
+        $email = $_POST['email'] ?? '';
         $alamat = $_POST['alamat'] ?? '';
         $tujuan = $_POST['tujuan'] ?? '';
+        $layanan = $_POST['layanan'] ?? '';
+        $layanan_item = $_POST['layanan_item'] ?? '';
+        $entrain = isset($_POST['entrain']) ? 'yes' : 'no';
         $fotoBase64 = $_POST['foto'] ?? '';
         $ttdBase64 = $_POST['ttd'] ?? '';
 
         // VALIDASI
         $errors = [];
-        if (!$nama)   $errors[] = 'Nama harus diisi';
-        if (!$telp)   $errors[] = 'No Telepon harus diisi';
-        if (!$email)  $errors[] = 'Email harus diisi';
-        if (!$alamat) $errors[] = 'Alamat harus diisi';
-        if (!$tujuan) $errors[] = 'Tujuan harus diisi';
-        if (!$fotoBase64) $errors[] = 'Foto harus diisi';
-        if (!$ttdBase64) $errors[] = 'Tanda tangan harus diisi';
+        if (!$nama)
+            $errors[] = 'Nama harus diisi';
+        if (!$telp)
+            $errors[] = 'No Telepon harus diisi';
+        if (!$email)
+            $errors[] = 'Email harus diisi';
+        if (!$alamat)
+            $errors[] = 'Alamat harus diisi';
+        if (!$tujuan)
+            $errors[] = 'Tujuan harus diisi';
+        if (!$layanan)
+            $errors[] = 'Layanan harus diisi';
+        if (!$layanan_item)
+            $errors[] = 'Item layanan harus diisi';
+        if (!$entrain)
+            $errors[] = 'Status ambil antrean harus diisi';
+        if (!$fotoBase64)
+            $errors[] = 'Foto harus diisi';
+        if (!$ttdBase64)
+            $errors[] = 'Tanda tangan harus diisi';
 
         if ($errors) {
             echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
@@ -113,14 +129,16 @@ class TamuController
 
         // SIMPAN KE DATABASE
         $data = [
-            'nama'   => $nama,
-            'telp'   => $telp,
-            'email'  => $email,
+            'nama' => $nama,
+            'telp' => $telp,
+            'email' => $email,
             'alamat' => $alamat,
             'tujuan' => $tujuan,
-            'foto'   => $fotoFilename,
-            'ttd'    => $ttdFilename,
-            'id_pengguna' => $_SESSION['user']['id'] ?? null
+            'layanan' => $layanan,
+            'layanan_item' => $layanan_item,
+            'entrain' => $entrain,
+            'foto' => $fotoFilename,
+            'ttd' => $ttdFilename
         ];
 
         if ($this->model->tambahTamu($data)) {
@@ -180,6 +198,7 @@ class TamuController
         exit;
     }
 
+    // export pdf
     public function printTamu()
     {
         require_once __DIR__ . '/../models/TamuModel.php';
@@ -197,5 +216,33 @@ class TamuController
         }
 
         require_once __DIR__ . '/../views/pages/print-tamu.php';
+    }
+
+    // export excel
+    public function exportExcel()
+    {
+        require_once __DIR__ . '/../models/TamuModel.php';
+
+        $model = new TamuModel();
+
+        $tahun = $_GET['tahun'] ?? date('Y');
+
+        $data = $model->getTamuExportExcel($tahun);
+
+        require __DIR__ . '/../views/pages/export-tamu-excel.php';
+    }
+
+    // export word
+    public function exportWord()
+    {
+        require_once __DIR__ . '/../models/TamuModel.php';
+
+        $model = new TamuModel();
+
+        $tahun = $_GET['tahun'] ?? date('Y');
+
+        $data = $model->getTamuExportExcel($tahun);
+
+        require __DIR__ . '/../views/pages/export-tamu-word.php';
     }
 }

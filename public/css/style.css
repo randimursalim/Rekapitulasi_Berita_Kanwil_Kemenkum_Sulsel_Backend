@@ -1,111 +1,131 @@
 /* ===== Google Font Import - Poppins ===== */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
-:root{
-    /* ===== Colors ===== */
-    --primary-color: #0E4BF1;
-    --primary-color-dark: #0A3BC7;
-    --panel-color: #FFF;
-    --text-color: #000;
-    --black-light-color: #707070;
-    --border-color: #e6e5e5;
-    --toggle-color: #DDD;
-    --box1-color: #4DA3FF;
-    --box2-color: #FFE6AC;
-    --box3-color: #E7D1FC;
-    --title-icon-color: #fff;
-    
-    /* ====== Transition ====== */
-    --tran-05: all 0.5s ease;
-    --tran-03: all 0.3s ease;
-    --tran-03: all 0.2s ease;
+:root {
+  /* ===== Colors ===== */
+  --primary-color: #0E4BF1;
+  --primary-color-dark: #0A3BC7;
+  --panel-color: #FFF;
+  --text-color: #000;
+  --black-light-color: #707070;
+  --border-color: #e6e5e5;
+  --toggle-color: #DDD;
+  --box1-color: #4DA3FF;
+  --box2-color: #FFE6AC;
+  --box3-color: #E7D1FC;
+  --title-icon-color: #fff;
+
+  /* ====== Transition ====== */
+  --tran-05: all 0.5s ease;
+  --tran-03: all 0.3s ease;
+  --tran-03: all 0.2s ease;
 }
 
-body{
-    min-height: 100vh;
-    background-color: var(--primary-color);
-    overflow-x: hidden;
+body {
+  min-height: 100vh;
+  background-color: var(--primary-color);
+  overflow-x: hidden;
 }
-body.dark{
-    --primary-color: #3A3B3C;
-    --primary-color-dark: #2A2B2C;
-    --primary-color-light: #4A4B4C;
-    --panel-color: #242526;
-    --text-color: #CCC;
-    --black-light-color: #CCC;
-    --border-color: #4D4C4C;
-    --toggle-color: #FFF;
-    --box1-color: #3A3B3C;
-    --box2-color: #3A3B3C;
-    --box3-color: #3A3B3C;
-    --title-icon-color: #CCC;
+
+body.dark {
+  --primary-color: #3A3B3C;
+  --primary-color-dark: #2A2B2C;
+  --primary-color-light: #4A4B4C;
+  --panel-color: #242526;
+  --text-color: #CCC;
+  --black-light-color: #CCC;
+  --border-color: #4D4C4C;
+  --toggle-color: #FFF;
+  --box1-color: #3A3B3C;
+  --box2-color: #3A3B3C;
+  --box3-color: #3A3B3C;
+  --title-icon-color: #CCC;
 }
+
 /* === Custom Scroll Bar CSS === */
 ::-webkit-scrollbar {
-    width: 8px;
+  width: 8px;
 }
+
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+  background: #f1f1f1;
 }
+
 ::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
-    border-radius: 12px;
-    transition: all 0.3s ease;
+  background: var(--primary-color);
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #0b3cc1;
+  background: #0b3cc1;
 }
 
 /* Dark mode untuk scrollbar vertikal */
 body.dark::-webkit-scrollbar-track {
-    background: #3A3B3C;
+  background: #3A3B3C;
 }
 
 body.dark::-webkit-scrollbar-thumb {
-    background: var(--primary-color);
+  background: var(--primary-color);
 }
 
 body.dark::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-color-dark);
+  background: var(--primary-color-dark);
 }
 
 /* 🔹 Wrapper utama untuk arsip - hanya scroll horizontal */
 .activity-wrapper {
-  overflow-x: auto;        /* scroll horizontal untuk tabel */
-  overflow-y: visible;     /* tidak ada scroll vertikal di wrapper */
+  overflow-x: auto;
+  /* scroll horizontal untuk tabel */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal di wrapper */
   position: relative;
-  padding-bottom: 8px;     /* beri sedikit jarak biar tidak tertutup */
+  padding-bottom: 8px;
+  /* beri sedikit jarak biar tidak tertutup */
 }
 
 /* 🔹 Wrapper khusus untuk form - scroll vertikal normal */
 .activity-wrapper.form-wrapper {
-  overflow-x: visible;     /* tidak ada scroll horizontal */
-  overflow-y: auto;        /* scroll vertikal normal */
-  max-height: calc(100vh - 200px); /* batasi tinggi untuk scrolling */
-  padding-bottom: 20px;     /* jarak lebih besar untuk form */
+  overflow-x: visible;
+  /* tidak ada scroll horizontal */
+  overflow-y: auto;
+  /* scroll vertikal normal */
+  max-height: calc(100vh - 200px);
+  /* batasi tinggi untuk scrolling */
+  padding-bottom: 20px;
+  /* jarak lebih besar untuk form */
 }
 
 /* 🔹 Area dalamnya - tidak ada scroll vertikal */
 .activity {
-  max-height: none;        /* tidak ada batasan tinggi */
-  overflow-y: visible;     /* tidak ada scroll vertikal */
-  overflow-x: visible;     /* biarkan scroll horizontal dari child */
-  width: 100%;             /* lebar penuh */
+  max-height: none;
+  /* tidak ada batasan tinggi */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
+  overflow-x: visible;
+  /* biarkan scroll horizontal dari child */
+  width: 100%;
+  /* lebar penuh */
 }
 
 /* 🔹 Area khusus untuk form - scroll vertikal normal */
 .activity.form-activity {
-  max-height: none;        /* tidak ada batasan tinggi */
-  overflow-y: visible;     /* tidak ada scroll vertikal */
-  overflow-x: visible;     /* tidak ada scroll horizontal */
-  width: 100%;             /* lebar penuh */
+  max-height: none;
+  /* tidak ada batasan tinggi */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
+  overflow-x: visible;
+  /* tidak ada scroll horizontal */
+  width: 100%;
+  /* lebar penuh */
 }
 
 /* 🔹 Scrollbar untuk form wrapper */
@@ -147,31 +167,43 @@ body.dark .activity-wrapper.form-wrapper::-webkit-scrollbar-thumb:hover {
   display: grid;
   grid-template-columns: 50px 1fr 150px 150px 120px 120px 150px;
   min-width: 1000px;
-  gap: 0;                  /* tidak ada gap antar kolom */
-  overflow-x: auto;        /* scroll horizontal jika perlu */
-  overflow-y: visible;     /* tidak ada scroll vertikal */
-  width: 100%;             /* lebar penuh container */
+  gap: 0;
+  /* tidak ada gap antar kolom */
+  overflow-x: auto;
+  /* scroll horizontal jika perlu */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
+  width: 100%;
+  /* lebar penuh container */
 }
 
 /* CSS khusus untuk halaman Layanan Pengaduan - sama seperti arsip-page */
 .layanan-pengaduan-page .activity-wrapper {
-  overflow-x: auto;        /* hanya scroll horizontal */
-  overflow-y: visible;    /* tidak ada scroll vertikal */
-  max-height: none;        /* tidak ada batasan tinggi */
+  overflow-x: auto;
+  /* hanya scroll horizontal */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
+  max-height: none;
+  /* tidak ada batasan tinggi */
 }
 
 .layanan-pengaduan-page .activity {
-  max-height: none;        /* tidak ada batasan tinggi */
-  overflow-y: visible;    /* tidak ada scroll vertikal */
+  max-height: none;
+  /* tidak ada batasan tinggi */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
 }
 
 .layanan-pengaduan-page .activity-data {
-  display: grid !important;  /* override CSS lain */
+  display: grid !important;
+  /* override CSS lain */
   grid-template-columns: 50px 140px 170px 350px 140px 130px 130px 160px 150px !important;
   min-width: 1520px !important;
   gap: 0 !important;
-  overflow-x: auto;        /* scroll horizontal jika perlu */
-  overflow-y: visible;    /* tidak ada scroll vertikal */
+  overflow-x: auto;
+  /* scroll horizontal jika perlu */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
 }
 
 /* Pastikan layanan-pengaduan-page tidak terpengaruh styling dari rekap-page */
@@ -192,7 +224,8 @@ body.dark .activity-wrapper.form-wrapper::-webkit-scrollbar-thumb:hover {
   background: var(--panel-color) !important;
   position: sticky !important;
   top: 0 !important;
-  z-index: 999 !important; /* Z-index sangat tinggi agar tidak tertutup saat scroll */
+  z-index: 999 !important;
+  /* Z-index sangat tinggi agar tidak tertutup saat scroll */
   margin: 0;
   display: flex;
   align-items: center;
@@ -202,7 +235,8 @@ body.dark .activity-wrapper.form-wrapper::-webkit-scrollbar-thumb:hover {
   word-wrap: break-word;
   line-height: 1.3;
   hyphens: auto;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow untuk efek sticky */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Shadow untuk efek sticky */
 }
 
 /* Pastikan wrapper tidak mengganggu sticky */
@@ -226,11 +260,13 @@ body.dark .activity-wrapper.form-wrapper::-webkit-scrollbar-thumb:hover {
   color: var(--text-color);
   font-size: 0.9rem;
   text-align: center;
-  white-space: nowrap; /* Default nowrap untuk truncation */
+  white-space: nowrap;
+  /* Default nowrap untuk truncation */
   border: none !important;
   border-bottom: none !important;
   overflow: hidden;
-  text-overflow: ellipsis; /* Ellipsis untuk teks panjang */
+  text-overflow: ellipsis;
+  /* Ellipsis untuk teks panjang */
   max-width: 100%;
   justify-content: center;
 }
@@ -418,7 +454,8 @@ body.dark .activity-wrapper.form-wrapper::-webkit-scrollbar-thumb:hover {
 .layanan-pengaduan-page .btn-action-aksi.view i,
 .layanan-pengaduan-page .data.actions .btn-action-aksi.view i,
 .layanan-pengaduan-page .data-list .btn-action-aksi.view i {
-  color: #3498db !important; /* biru */
+  color: #3498db !important;
+  /* biru */
 }
 
 .layanan-pengaduan-page .btn-action-aksi.edit,
@@ -427,7 +464,8 @@ body.dark .activity-wrapper.form-wrapper::-webkit-scrollbar-thumb:hover {
 .layanan-pengaduan-page .btn-action-aksi.edit i,
 .layanan-pengaduan-page .data.actions .btn-action-aksi.edit i,
 .layanan-pengaduan-page .data-list .btn-action-aksi.edit i {
-  color: #f39c12 !important; /* oranye */
+  color: #f39c12 !important;
+  /* oranye */
 }
 
 .layanan-pengaduan-page .btn-action-aksi.delete,
@@ -436,13 +474,14 @@ body.dark .activity-wrapper.form-wrapper::-webkit-scrollbar-thumb:hover {
 .layanan-pengaduan-page .btn-action-aksi.delete i,
 .layanan-pengaduan-page .data.actions .btn-action-aksi.delete i,
 .layanan-pengaduan-page .data-list .btn-action-aksi.delete i {
-  color: #e74c3c !important; /* merah */
+  color: #e74c3c !important;
+  /* merah */
 }
 
 .layanan-pengaduan-page .btn-action-aksi:hover,
 .layanan-pengaduan-page .data.actions .btn-action-aksi:hover,
 .layanan-pengaduan-page .data-list .btn-action-aksi:hover {
-  background: rgba(0,0,0,0.1) !important;
+  background: rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Dark mode untuk tombol aksi */
@@ -476,7 +515,7 @@ body.dark .layanan-pengaduan-page .data-list .btn-action-aksi.delete i {
 body.dark .layanan-pengaduan-page .btn-action-aksi:hover,
 body.dark .layanan-pengaduan-page .data.actions .btn-action-aksi:hover,
 body.dark .layanan-pengaduan-page .data-list .btn-action-aksi:hover {
-  background: rgba(255,255,255,0.1) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Scrollbar untuk layanan pengaduan */
@@ -524,1682 +563,17 @@ body.dark .layanan-pengaduan-page .activity-data::-webkit-scrollbar-thumb:hover 
   .layanan-pengaduan-page .activity-data {
     min-width: 1000px;
   }
-  
+
   .layanan-pengaduan-page .data-title {
     font-size: 0.85rem;
   }
-  
+
   .layanan-pengaduan-page .data-list {
     font-size: 0.85rem;
   }
 }
 
 /* CSS khusus untuk halaman Tamu */
-.tamu-page .activity-wrapper {
-  overflow-x: auto;
-  overflow-y: visible;
-  max-height: none;
-}
-
-.tamu-page .activity {
-  max-height: none;
-  overflow-y: visible;
-}
-
-.tamu-page .activity-data {
-  display: grid !important;
-  /* Disesuaikan: No, Tgl, Nama, Kontak, Alamat, Tujuan, TTD, Foto, Aksi */
-  grid-template-columns: 50px 170px 220px 200px 250px 250px 100px 100px 120px !important;
-  min-width: 1460px !important;
-  gap: 0 !important;
-  overflow-x: auto;
-  overflow-y: visible;
-}
-
-/* Styling untuk data-title */
-.tamu-page .data-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text-color);
-  padding: 0 15px;
-  text-align: center;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: unset;
-  background: var(--panel-color) !important;
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 999 !important;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 60px;
-  height: auto;
-  word-wrap: break-word;
-  line-height: 1.3;
-  hyphens: auto;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.tamu-page .activity-wrapper,
-.tamu-page .activity {
-  position: relative;
-  z-index: 1;
-}
-
-/* Styling untuk data-list - biarkan multiline */
-/* Text alignment & wrap */
-.tamu-page .activity-data .data .data-list .text-content {
-  display: block; /* Kembalikan ke block */
-}
-
-/* Styling untuk data-list - style arsip (truncation normal) */
-.tamu-page .data-list {
-  display: flex;
-  align-items: center;
-  height: 60px;
-  padding: 0 15px;
-  margin: 0;
-  color: var(--text-color);
-  font-size: 0.9rem;
-  text-align: center;
-  white-space: nowrap; 
-  border: none !important;
-  border-bottom: none !important;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  justify-content: center;
-}
-
-/* Image preview in table */
-.tamu-page .data-list img.img-preview {
-  max-height: 40px;
-  max-width: 80px;
-  object-fit: cover;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-/* Text alignment & wrap - hapus text wrap */
-.tamu-page .activity-data .data .data-list .text-content {
-  display: block;
-  width: 100%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tamu-page .data {
-  min-width: 0;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.tamu-page .data.nama .data-list,
-.tamu-page .data.alamat .data-list,
-.tamu-page .data.tujuan .data-list,
-.tamu-page .data.kontak .data-list,
-.tamu-page .data.tanggal .data-list,
-.tamu-page .data.no .data-list,
-.tamu-page .data.ttd .data-list,
-.tamu-page .data.foto .data-list {
-  justify-content: center !important; /* Kembali center seperti arsip */
-  text-align: center !important;
-}
-
-.tamu-page .data.nama .data-title,
-.tamu-page .data.alamat .data-title,
-.tamu-page .data.tujuan .data-title,
-.tamu-page .data.kontak .data-title {
-  justify-content: center;
-  text-align: center;
-}
-
-.tamu-page .data.no { min-width: 50px; max-width: 50px; }
-.tamu-page .data.tanggal { min-width: 170px; max-width: 170px; }
-.tamu-page .data.nama { min-width: 220px; max-width: 220px; }
-.tamu-page .data.kontak { min-width: 200px; max-width: 200px; }
-.tamu-page .data.alamat { min-width: 250px; max-width: 250px; }
-.tamu-page .data.tujuan { min-width: 250px; max-width: 250px; }
-.tamu-page .data.ttd { min-width: 100px; max-width: 100px; }
-.tamu-page .data.foto { min-width: 100px; max-width: 100px; }
-.tamu-page .data.actions { min-width: 120px; max-width: 120px; }
-
-/* Actions */
-.tamu-page .data.actions .data-list {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-}
-
-.tamu-page .btn-action-aksi {
-  margin: 0 3px;
-  border: none !important;
-  background: transparent !important;
-  cursor: pointer;
-  font-size: 18px;
-  border-radius: 6px;
-  transition: 0.3s;
-}
-.tamu-page .btn-action-aksi.delete,
-.tamu-page .btn-action-aksi.delete i {
-  color: #e74c3c !important;
-}
-.tamu-page .btn-action-aksi:hover {
-  background: rgba(0,0,0,0.1) !important;
-}
-body.dark .tamu-page .btn-action-aksi.delete {
-  color: #e74c3c !important;
-}
-body.dark .tamu-page .btn-action-aksi:hover {
-  background: rgba(255,255,255,0.1) !important;
-}
-
-/* Scrollbar */
-.tamu-page .activity-data::-webkit-scrollbar {
-  height: 8px;
-}
-.tamu-page .activity-data::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-.tamu-page .activity-data::-webkit-scrollbar-thumb {
-  background: var(--primary-color);
-  border-radius: 4px;
-}
-.tamu-page .activity-data::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color-dark);
-}
-
-body.dark .tamu-page .activity-data::-webkit-scrollbar-track {
-  background: #3A3B3C;
-}
-body.dark .tamu-page .activity-data::-webkit-scrollbar-thumb {
-  background: var(--primary-color);
-}
-body.dark .tamu-page .activity-data::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color-dark);
-}
-
-/* Responsive Medium */
-@media (max-width: 1400px) {
-  .tamu-page .activity-data {
-    min-width: 1100px !important;
-    grid-template-columns: 50px 120px 150px 140px 200px 200px 90px 90px 100px !important;
-  }
-  .tamu-page .data.no { min-width: 50px; max-width: 50px; }
-  .tamu-page .data.tanggal { min-width: 120px; max-width: 120px; }
-  .tamu-page .data.nama { min-width: 150px; max-width: 150px; }
-  .tamu-page .data.kontak { min-width: 140px; max-width: 140px; }
-  .tamu-page .data.alamat { min-width: 200px; max-width: 200px; }
-  .tamu-page .data.tujuan { min-width: 200px; max-width: 200px; }
-  .tamu-page .data.ttd { min-width: 90px; max-width: 90px; }
-  .tamu-page .data.foto { min-width: 90px; max-width: 90px; }
-  .tamu-page .data.actions { min-width: 100px; max-width: 100px; }
-}
-
-@media (max-width: 1200px) {
-  .tamu-page .activity-data {
-    min-width: 1000px !important;
-  }
-  .tamu-page .data-title, .tamu-page .data-list {
-    font-size: 0.85rem;
-  }
-}
-
-/* Styling untuk scrollbar horizontal */
-.activity-data::-webkit-scrollbar {
-  height: 8px;
-}
-
-.activity-data::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.activity-data::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-.activity-data::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-/* Dark mode untuk scrollbar horizontal */
-body.dark .activity-data::-webkit-scrollbar-track {
-  background: #3A3B3C;
-}
-
-body.dark .activity-data::-webkit-scrollbar-thumb {
-  background: var(--primary-color);
-  border-radius: 4px;
-}
-
-body.dark .activity-data::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-color-dark);
-}
-
-body.dark::-webkit-scrollbar-thumb:hover,
-body.dark .activity-data::-webkit-scrollbar-thumb:hover{
-    background: var(--primary-color-dark);
-}
-
-nav{
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    max-height: 100vh;
-    width: 250px;
-    padding: 10px 14px;
-    background-color: var(--panel-color);
-    border-right: 1px solid var(--border-color);
-    transition: var(--tran-05);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-nav.close{
-    width: 73px;
-}
-nav .logo-name{
-    display: flex;
-    align-items: center;
-}
-nav .logo-image{
-    display: flex;
-    justify-content: center;
-    min-width: 45px;
-}
-nav .logo-image img{
-    width: 40px;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-nav .logo-name .logo_name{
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--text-color);
-    margin-left: 14px;
-    transition: var(--tran-05);
-}
-nav.close .logo_name{
-    opacity: 0;
-    pointer-events: none;
-}
-nav .menu-items{
-    margin-top: 40px;
-    height: calc(100vh - 100px) !important;
-    max-height: calc(100vh - 100px) !important;
-    min-height: calc(100vh - 100px) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-    overflow-y: auto !important;
-    overflow-x: visible !important;
-    position: relative !important;
-    padding-bottom: 25px !important;
-}
-nav .menu-items .nav-links{
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    flex: 1 1 auto;
-    min-height: 0;
-    padding-right: 8px;
-    max-height: calc(100vh - 280px) !important;
-    height: auto !important;
-    scrollbar-width: thin !important;
-    scrollbar-color: var(--primary-color) #f5f5f5 !important;
-    -webkit-overflow-scrolling: touch;
-}
-nav .menu-items .nav-links::-webkit-scrollbar {
-    width: 8px !important;
-    display: block !important;
-    -webkit-appearance: none !important;
-}
-nav .menu-items .nav-links::-webkit-scrollbar-track {
-    background: #f5f5f5 !important;
-    border-radius: 4px !important;
-    margin: 5px 0 !important;
-}
-nav .menu-items .nav-links::-webkit-scrollbar-thumb {
-    background: var(--primary-color) !important;
-    border-radius: 4px !important;
-    transition: background 0.3s ease !important;
-    min-height: 30px !important;
-}
-nav .menu-items .nav-links::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-color-dark) !important;
-}
-nav .menu-items .nav-links:hover::-webkit-scrollbar-thumb {
-    background: var(--primary-color) !important;
-}
-body.dark nav .menu-items .nav-links {
-    scrollbar-color: #666 #3A3B3C !important;
-}
-body.dark nav .menu-items .nav-links::-webkit-scrollbar {
-    width: 8px !important;
-}
-body.dark nav .menu-items .nav-links::-webkit-scrollbar-track {
-    background: #3A3B3C !important;
-}
-body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb {
-    background: #666 !important;
-}
-body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-color) !important;
-}
-body.dark nav .menu-items .nav-links:hover::-webkit-scrollbar-thumb {
-    background: var(--primary-color) !important;
-}
-/* Override untuk memastikan scrollbar nav-links tidak di-override oleh CSS global */
-nav .menu-items .nav-links::-webkit-scrollbar-thumb {
-    background: var(--primary-color) !important;
-}
-body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb {
-    background: #666 !important;
-}
-.menu-items li{
-    list-style: none;
-}
-.menu-items li a{
-    display: flex;
-    align-items: center;
-    height: 50px;
-    text-decoration: none;
-    position: relative;
-}
-.nav-links li a:hover:before{
-    content: "";
-    position: absolute;
-    left: -7px;
-    height: 5px;
-    width: 5px;
-    border-radius: 50%;
-    background-color: var(--primary-color);
-}
-body.dark li a:hover:before{
-    background-color: var(--text-color);
-}
-.menu-items li a i{
-    font-size: 24px;
-    min-width: 45px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--black-light-color);
-}
-.menu-items li a .link-name{
-    font-size: 18px;
-    font-weight: 400;
-    color: var(--black-light-color);    
-    transition: var(--tran-05);
-}
-nav.close li a .link-name{
-    opacity: 0;
-    pointer-events: none;
-}
-/* Saat sidebar ditutup, sembunyikan icon dan text dark mode, hanya tampilkan toggle switch */
-nav.close .menu-items .logout-mode li.mode a .link-name,
-nav.close .menu-items .logout-mode li.mode a i,
-nav.close .logout-mode li.mode a .link-name,
-nav.close .logout-mode li.mode a i,
-nav.close .logout-mode li.mode a{
-    opacity: 0 !important;
-    pointer-events: none !important;
-    display: none !important;
-    visibility: hidden !important;
-}
-/* Pastikan mode-toggle tetap terlihat saat sidebar ditutup dan di-center */
-nav.close .menu-items .logout-mode li.mode .mode-toggle,
-nav.close .logout-mode li.mode .mode-toggle,
-nav.close .mode-toggle{
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: static !important;
-    right: auto !important;
-    left: auto !important;
-    margin: 0 auto !important;
-}
-/* Pastikan mode li tetap terlihat untuk menampung toggle switch dan di-center */
-nav.close .menu-items .logout-mode li.mode,
-nav.close .logout-mode li.mode{
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    justify-content: center !important;
-    align-items: center !important;
-    height: 50px !important;
-}
-/* Tambahkan margin-top pada mode untuk spacing dengan logout */
-nav.close .menu-items .logout-mode li.mode,
-nav.close .logout-mode li.mode{
-    margin-top: 10px !important;
-}
-.nav-links li a:hover i,
-.nav-links li a:hover .link-name{
-    color: var(--primary-color);
-}
-body.dark .nav-links li a:hover i,
-body.dark .nav-links li a:hover .link-name{
-    color: var(--text-color);
-}
-.menu-items .logout-mode{
-    padding-top: 10px !important;
-    padding-bottom: 25px !important;
-    border-top: 1px solid var(--border-color);
-    flex-shrink: 0 !important;
-    margin-top: auto !important;
-    position: relative !important;
-    z-index: 100 !important;
-    overflow: visible !important;
-    background-color: var(--panel-color) !important;
-    margin-bottom: 0 !important;
-}
-.menu-items .mode{
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-    position: relative;
-    z-index: 101;
-    overflow: visible;
-}
-.menu-items .mode-toggle{
-    position: absolute;
-    right: 14px;
-    height: 50px;
-    min-width: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 102;
-    overflow: visible;
-}
-/* Pastikan mode-toggle tetap terlihat saat sidebar ditutup */
-nav.close .mode-toggle{
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    right: 14px !important;
-}
-.mode-toggle .switch{
-    position: relative;
-    display: inline-block;
-    height: 22px;
-    width: 40px;
-    border-radius: 25px;
-    background-color: var(--toggle-color);
-}
-.switch:before{
-    content: "";
-    position: absolute;
-    left: 5px;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 15px;
-    width: 15px;
-    background-color: var(--panel-color);
-    border-radius: 50%;
-    transition: var(--tran-03);
-}
-body.dark .switch:before{
-    left: 20px;
-}
-
-.dashboard{
-    position: relative;
-    left: 250px;
-    background-color: var(--panel-color);
-    min-height: 100vh;
-    width: calc(100% - 250px);
-    padding: 10px 14px;
-    transition: var(--tran-05);
-}
-nav.close ~ .dashboard{
-    left: 73px;
-    width: calc(100% - 73px);
-}
-.dashboard .top{
-    position: fixed;
-    top: 0;
-    left: 250px;
-    display: flex;
-    width: calc(100% - 250px);
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 14px;
-    background-color: var(--panel-color);
-    transition: var(--tran-05);
-    z-index: 1000; /* Z-index lebih tinggi dari header tabel (999) agar foto profil tidak tertutup */
-}
-nav.close ~ .dashboard .top{
-    left: 73px;
-    width: calc(100% - 73px);
-}
-.dashboard .top .sidebar-toggle{
-    font-size: 26px;
-    color: var(--text-color);
-    cursor: pointer;
-}
-.dashboard .top .search-box{
-    position: relative;
-    height: 45px;
-    max-width: 600px;
-    width: 100%;
-    margin: 0 30px;
-}
-.top .search-box input{
-    position: absolute;
-    border: 1px solid var(--border-color);
-    background-color: var(--panel-color);
-    padding: 0 25px 0 50px;
-    border-radius: 5px;
-    height: 100%;
-    width: 100%;
-    color: var(--text-color);
-    font-size: 15px;
-    font-weight: 400;
-    outline: none;
-}
-.top .search-box i{
-    position: absolute;
-    left: 15px;
-    font-size: 22px;
-    z-index: 10;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--black-light-color);
-}
-.top img{
-    width: 40px;
-    border-radius: 50%;
-}
-.dashboard .dash-content{
-    padding-top: 50px;
-}
-.dash-content .title{
-    display: flex;
-    align-items: center;
-    margin: 60px 0 30px 0;
-}
-.dash-content .title i{
-    position: relative;
-    height: 35px;
-    width: 35px;
-    background-color: var(--primary-color);
-    border-radius: 6px;
-    color: var(--title-icon-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-}
-.dash-content .title .text{
-    font-size: 24px;
-    font-weight: 500;
-    color: var(--text-color);
-    margin-left: 10px;
-}
-.dash-content .boxes{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-.dash-content .boxes .box{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 12px;
-    width: calc(100% / 3 - 15px);
-    padding: 15px 20px;
-    background-color: var(--box1-color);
-    transition: var(--tran-05);
-}
-.boxes .box i{
-    font-size: 35px;
-    color: var(--text-color);
-}
-.boxes .box .text{
-    white-space: nowrap;
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--text-color);
-}
-.boxes .box .number{
-    font-size: 40px;
-    font-weight: 500;
-    color: var(--text-color);
-}
-.boxes .box.box2{
-    background-color: var(--box2-color);
-}
-.boxes .box.box3{
-    background-color: var(--box3-color);
-}
-/* CSS untuk dashboard (bukan arsip) */
-.dash-content .activity-wrapper {
-    overflow-x: auto;             /* scroll horizontal jika perlu */
-    overflow-y: visible;          /* tidak ada scroll vertikal */
-    position: relative;
-    padding-bottom: 8px;          /* beri sedikit jarak biar tidak tertutup */
-}
-
-.dash-content .activity {
-    max-height: none;             /* tidak ada batasan tinggi */
-    overflow-y: visible;          /* tidak ada scroll vertikal */
-    overflow-x: visible;          /* biarkan scroll horizontal dari child */
-    width: 100%;                  /* lebar penuh */
-}
-
-.dash-content .activity .activity-data:not(.arsip-page .activity-data){
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    overflow-x: auto;             /* scroll horizontal jika perlu */
-    overflow-y: visible;         /* tidak ada scroll vertikal */
-}
-.activity .activity-data:not(.arsip-page .activity-data){
-    display: flex;
-    overflow-x: auto;             /* scroll horizontal jika perlu */
-    overflow-y: visible;         /* tidak ada scroll vertikal */
-}
-.activity-data .data{
-    display: flex;
-    flex-direction: column;
-    margin: 0 15px;
-}
-.activity-data .data-title{
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--text-color);
-}
-.activity-data .data .data-list{
-    font-size: 18px;
-    font-weight: 400;
-    margin-top: 20px;
-    white-space: nowrap;
-    color: var(--text-color);
-}
-
-/* Override untuk peminjaman-ruangan-page - pastikan tidak terpengaruh CSS default */
-.peminjaman-ruangan-page .activity-data .data {
-    margin: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-}
-
-/* Override CSS default untuk data-title di peminjaman-ruangan-page */
-.peminjaman-ruangan-page .activity-data .data .data-title {
-    font-size: 0.9rem !important;
-    font-weight: 600 !important;
-    color: #fff !important;
-    background: #0E4BF1 !important; /* Warna biru tetap, jangan pakai var(--primary-color) */
-    background-color: #0E4BF1 !important; /* Pastikan background-color juga biru */
-    margin-top: 0 !important;
-}
-
-/* Styling scrollbar khusus untuk dashboard */
-.dash-content .activity .activity-data::-webkit-scrollbar {
-    height: 8px;
-}
-
-.dash-content .activity .activity-data::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.dash-content .activity .activity-data::-webkit-scrollbar-thumb {
-    background: #4DA3FF;  /* warna biru seperti box1 */
-    border-radius: 4px;
-}
-
-.dash-content .activity .activity-data::-webkit-scrollbar-thumb:hover {
-    background: #3A8BDB;  /* warna biru lebih gelap saat hover */
-}
-
-/* Dark mode untuk dashboard scrollbar - dengan specificity tinggi */
-body.dark .dash-content .activity .activity-data::-webkit-scrollbar-track {
-    background: #3A3B3C !important;
-}
-
-body.dark .dash-content .activity .activity-data::-webkit-scrollbar-thumb {
-    background: #3A3B3C !important;
-    border-radius: 4px !important;
-}
-
-body.dark .dash-content .activity .activity-data::-webkit-scrollbar-thumb:hover {
-    background: #2A2B2C !important;
-}
-
-/* Override untuk semua scrollbar dashboard di dark mode */
-body.dark .dashboard .activity-data::-webkit-scrollbar-thumb {
-    background: #3A3B3C !important;
-}
-
-body.dark .dashboard .activity-data::-webkit-scrollbar-thumb:hover {
-    background: #2A2B2C !important;
-}
-
-/* Override agresif untuk semua scrollbar horizontal di dark mode */
-body.dark *::-webkit-scrollbar-thumb {
-    background: #3A3B3C !important;
-}
-
-body.dark *::-webkit-scrollbar-thumb:hover {
-    background: #2A2B2C !important;
-}
-
-/* Exception: nav-links scrollbar tidak di-override oleh CSS global */
-body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb {
-    background: #555 !important;
-}
-body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-color) !important;
-}
-
-/* Khusus untuk dashboard - override semua kemungkinan */
-body.dark .dash-content *::-webkit-scrollbar-thumb,
-body.dark .activity *::-webkit-scrollbar-thumb,
-body.dark .activity-data::-webkit-scrollbar-thumb {
-    background: #3A3B3C !important;
-}
-
-body.dark .dash-content *::-webkit-scrollbar-thumb:hover,
-body.dark .activity *::-webkit-scrollbar-thumb:hover,
-body.dark .activity-data::-webkit-scrollbar-thumb:hover {
-    background: #2A2B2C !important;
-}
-
-.profile-link {
-  border-radius: 50%;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.profile-link:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 8px rgba(0,0,0,0.3);
-}
-
-
-/* awal dashboard */
-/* Warna untuk status log aktivitas */
-/* 🔹 Status colors untuk log aktivitas */
-.status-berhasil {
-  color: #28a745 !important;
-  font-weight: 600;
-}
-
-.status-pending {
-  color: #ffc107 !important;
-  font-weight: 600;
-}
-
-.status-gagal {
-  color: #dc3545 !important;
-  font-weight: 600;
-}
-
-.status-info {
-  color: #17a2b8 !important;
-  font-weight: 600;
-}
-
-.status-error {
-  color: #dc3545 !important;
-  font-weight: 600;
-}
-
-/* 🔹 Dark mode status colors */
-body.dark .status-berhasil {
-  color: #4caf50 !important;
-}
-
-body.dark .status-pending {
-  color: #ff9800 !important;
-}
-
-body.dark .status-gagal {
-  color: #f44336 !important;
-}
-
-body.dark .status-info {
-  color: #00bcd4 !important;
-}
-
-body.dark .status-error {
-  color: #f44336 !important;
-}
-
-/* Tooltip saat hover */
-.box[data-tooltip] {
-  position: relative;
-}
-.box[data-tooltip]::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: 110%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.75);
-  color: #fff;
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 12px;
-  opacity: 0;
-  pointer-events: none;
-  white-space: nowrap;
-  transition: opacity 0.3s;
-}
-.box[data-tooltip]:hover::after {
-  opacity: 1;
-}
-
-/* Modal detail */
-.modal {
-  display: none; /* hidden default */
-  position: fixed;
-  z-index: 999;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-}
-.modal-content {
-  background: var(--panel-color);
-  margin: 10% auto;
-  padding: 20px;
-  border-radius: 12px;
-  width: 320px;
-  color: var(--text-color);
-  text-align: left;
-  position: relative;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-.modal-content h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 18px;
-}
-.modal-content ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.modal-content ul li {
-  padding: 6px 0;
-  border-bottom: 1px solid var(--border-color);
-  font-size: 14px;
-}
-.modal-content .close {
-  position: absolute;
-  top: 10px;
-  right: 14px;
-  font-size: 20px;
-  cursor: pointer;
-  color: var(--text-color);
-}
-
-
-
-/* Akhir dashboard */
-
-/* Form input konten / berita */
-
-.form-container {
-  background: var(--panel-color);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: var(--box-shadow);
-  margin-top: 20px;
-}
-
-.input-berita-form .form-group,
-.edit-berita-form .form-group {
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: column;
-}
-
-.input-berita-form label,
-.edit-berita-form label {
-  font-weight: 600;
-  margin-bottom: 5px;
-  color: var(--text-color);
-}
-
-.input-berita-form input,
-.edit-berita-form input {
-  padding: 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--panel-color-light);
-  color: var(--text-color);
-}
-
-.input-berita-form textarea,
-.edit-berita-form textarea {
-  padding: 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--panel-color-light);
-  color: var(--text-color);
-  font-family: inherit;
-  resize: vertical;
-  min-height: 80px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Styling khusus untuk textarea tertentu agar konsisten */
-#ringkasan,
-#caption,
-#keterangan,
-#alasan_pengembalian_draf {
-  padding: 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--panel-color-light);
-  color: var(--text-color);
-  font-family: inherit;
-  resize: vertical;
-  min-height: 80px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.input-berita-form textarea::placeholder,
-.edit-berita-form textarea::placeholder {
-  color: #9ca3af; /* placeholder agak abu2 biar tidak ganggu */
-}
-
-.btn-simpan,
-.btn-batal,
-.btn-tambah {
-  background: var(--primary-color);
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.btn-simpan:hover,
-.btn-batal:hover,
-.btn-tambah:hover {
-  background:   #0077ff;
-  color: #fff;
-}
-
-/* Custom Export Buttons */
-.btn-word {
-  background-color: #0E4BF1 !important;
-  color: #fff !important;
-}
-.btn-word:hover {
-  background-color: #0A3BC7 !important;
-}
-.btn-excel {
-  background-color: #217346 !important;
-  color: #fff !important;
-}
-.btn-excel:hover {
-  background-color: #185433 !important;
-}
-.btn-pdf {
-  background-color: #d32f2f !important;
-  color: #fff !important;
-}
-.btn-pdf:hover {
-  background-color: #b71c1c !important;
-}
-
-/* Dark Mode Export Buttons */
-body.dark .btn-word {
-  background-color: #2a5c9a !important;
-}
-body.dark .btn-word:hover {
-  background-color: #1f4575 !important;
-}
-body.dark .btn-excel {
-  background-color: #1d5f3d !important;
-}
-body.dark .btn-excel:hover {
-  background-color: #14422a !important;
-}
-body.dark .btn-pdf {
-  background-color: #ab2525 !important;
-}
-body.dark .btn-pdf:hover {
-  background-color: #821c1c !important;
-}
-
-.input-berita-form input::placeholder,
-.edit-berita-form input::placeholder {
-  color: #9ca3af; /* placeholder agak abu2 biar tidak ganggu */
-}
-
-body.dark .input-berita-form input,
-body.dark .edit-berita-form input {
-  background: var(--panel-color-light); /* ini akan pakai versi gelap */
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-}
-
-/* Dark mode untuk input readonly (No. Register Pengaduan) */
-body.dark .input-berita-form input[readonly],
-body.dark .edit-berita-form input[readonly],
-body.dark input[readonly] {
-  background-color: var(--panel-color-light) !important; /* Override inline style */
-  color: var(--text-color) !important;
-  border: 1px solid var(--border-color) !important;
-  opacity: 0.8; /* Sedikit transparan untuk menunjukkan readonly */
-}
-
-/* Dark mode untuk textarea (Alamat, Isi Laporan, Keterangan) */
-body.dark .input-berita-form textarea,
-body.dark .edit-berita-form textarea,
-body.dark textarea {
-  background: var(--panel-color-light) !important;
-  color: var(--text-color) !important;
-  border: 1px solid var(--border-color) !important;
-}
-
-body.dark .input-berita-form textarea::placeholder,
-body.dark .edit-berita-form textarea::placeholder,
-body.dark textarea::placeholder {
-  color: #9ca3af !important; /* Placeholder agak abu2 */
-}
-
-/* Dark mode untuk small text (helper text) */
-body.dark .input-berita-form small,
-body.dark .edit-berita-form small,
-body.dark .form-group small {
-  color: #9ca3af !important; /* Warna abu-abu terang untuk dark mode */
-}
-
-body.dark .btn-simpan:hover,
-body.dark .btn-batal:hover,
-body.dark .btn-tambah:hover {
-  background: var(--primary-color-light);
-}
-
-/* Ringkasan Berita - Dark Mode */
-body.dark #keterangan, 
-body.dark #ringkasan, 
-body.dark #caption,
-body.dark #alasan_pengembalian_draf {
-  background-color: #2c2c2c;   /* abu gelap */
-  color: #f1f1f1;              /* teks terang */
-  border: 1px solid #444;      /* border lebih lembut */
-}
-
-body.dark #keterangan::placeholder,
-body.dark #ringkasan::placeholder,
-body.dark #caption::placeholder,
-body.dark #alasan_pengembalian_draf::placeholder {
-  color: #aaa; /* warna placeholder lebih redup */
-}
-
-
-/* Akhir Form input konten / berita */
-
-/* Rekap Konten */
-
-/* ================================
-   FILTERS
-================================ */
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
-  align-items: center;
-}
-
-.filters button,
-.filters input,
-#apply-range {
-  padding: 8px 14px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--panel-color);
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 14px;
-  color: var(--text-color);
-}
-
-.filters button:hover,
-#apply-range:hover {
-  background: var(--primary-color);
-  color: #fff;
-}
-
-.filters button.active {
-  background: var(--primary-color-dark);
-  color: #fff !important;
-  opacity: 1;
-}
-
-/* ================================
-   CHART CONTAINER
-================================ */
-.chart-container {
-  background: var(--panel-color);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: background 0.3s, color 0.3s;
-  text-align: center;
-}
-
-.chart-container button {
-  padding: 8px 14px;
-  margin: 10px 5px 0 0;
-  border: none;
-  border-radius: 6px;
-  background: var(--primary-color);
-  color: #fff;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background 0.3s;
-}
-
-/* ================================
-   CHART CONTAINER BUTTONS
-================================ */
-.chart-container button {
-  background: var(--primary-color);
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  margin: 0 5px;
-  transition: background 0.3s, color 0.3s;
-}
-
-.chart-container button:hover {
-  background: #0077ff;
-  color: #fff;
-  opacity: 1;
-}
-
-/* ================================
-   TOTAL BERITA
-================================ */
-#totalBerita {
-  margin-top: 20px;
-  font-weight: bold;
-  font-size: 18px;
-  text-align: center;
-  color: var(--text-color);
-  transition: color 0.3s;
-}
-
-#totalHarmonisasi {
-  margin-top: 20px;
-  font-weight: bold;
-  font-size: 16px;
-  text-align: center;
-  color: var(--text-color);
-  transition: color 0.3s;
-}
-
-/* === FILTER TANGGAL (Light Mode) === */
-#start-date,
-#end-date,
-#startDate,
-#endDate {
-    padding: 8px 16px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background-color: #f1f3f6;
-    font-size: 14px;
-    cursor: pointer;
-    transition: 0.3s;
-    color: #333;
-}
-
-#start-date:hover,
-#end-date:hover,
-#startDate:hover,
-#endDate:hover {
-    border-color: #007bff;
-    background-color: #e8f0fe;
-}
-
-.filter-select {
-  padding: 8px 14px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--panel-color);
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 14px;
-  color: var(--text-color);
-}
-
-.filter-select:hover {
-  background: var(--primary-color);
-  color: #fff;
-}
-
-/* ================================
-   TABEL REKAP PUBLIKASI
-================================ */
-.table-container {
-  margin-top: 20px;
-  overflow-x: auto;
-}
-
-.table-container table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--panel-color);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: background 0.3s, color 0.3s;
-}
-
-.table-container th,
-.table-container td {
-  border: 1px solid var(--border-color);
-  padding: 10px 14px;
-  text-align: center;
-  font-size: 14px;
-  color: var(--text-color);
-}
-
-.table-container th {
-  background: var(--panel-color-light);
-  font-weight: 600;
-}
-
-.table-container tr:nth-child(even) {
-  background: rgba(0,0,0,0.02);
-}
-
-/* ================================
-   DARK MODE
-================================ */
-body.dark .filters button,
-body.dark .filters input,
-body.dark #apply-range {
-  background: var(--panel-color-dark);
-  color: #fff;   /* 👈 pastikan putih penuh */
-  border: 1px solid var(--border-color);
-}
-
-body.dark .filters button:hover,
-body.dark #apply-range:hover {
-  background: var(--primary-color);
-  color: #fff; /* tetap putih biar kontras */
-}
-
-body.dark .filters button.active {
-  background: var(--primary-color-dark);
-  color: #fff !important;
-  opacity: 1;
-}
-
-
-
-body.dark .rekap-page {
-  overflow-x: hidden;      /* tidak ada scroll horizontal */
-  overflow-y: auto;        /* scroll vertikal jika perlu */
-  width: 100%;             /* lebar penuh */
-  max-width: 100%;         /* tidak melebihi lebar container */
-}
-
-body.dark .chart-container {
-  background: var(--panel-color-dark);
-  color: var(--text-color-light);
-}
-
-body.dark .chart-container button {
-  background: var(--primary-color);
-  color: #fff;
-}
-
-body.dark .chart-container button:hover {
-  background: var(--primary-color-light);
-  color: #fff;
-  opacity: 1;
-}
-
-body.dark #totalBerita {
-  color: #fff; /* putih biar jelas di dark mode */
-}
-
-body.dark #totalHarmonisasi {
-  color: #fff; /* putih biar jelas di dark mode */
-}
-
-body.dark h3{
-    color: #fff;
-}
-
-/* === FILTER TANGGAL (Dark Mode) === */
-body.dark #start-date,
-body.dark #end-date, 
-body.dark #startDate,
-body.dark #endDate {
-    background-color: var(--panel-color-light);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-}
-
-body.dark #start-date:hover,
-body.dark #end-date:hover, 
-body.dark #startDate:hover, 
-body.dark #endDate:hover {
-    background-color: var(--primary-color-light);
-    border-color: var(--primary-color);
-    color: #fff;
-}
-
-/* Dark mode untuk filter-select */
-body.dark .filter-select {
-  background: var(--panel-color);
-  color: var(--text-color);
-  border: 1px solid var(--border-color);
-}
-
-body.dark .filter-select:hover {
-  background: var(--primary-color);
-  color: #fff;
-}
-
-body.dark .filter-select option {
-  background-color: var(--panel-color);
-  color: var(--text-color);
-}
-
-/* Akhir Rekap Konten */
-
-/* Arsip Berita */
-
-.btn-action-aksi {
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    /* padding: 6px; */
-    font-size: 18px;
-    border-radius: 6px;
-    transition: 0.3s;
-}
-
-.btn-action-aksi.view {
-    color: #3498db; /* biru */
-}
-
-.btn-action-aksi.edit {
-    color: #f39c12; /* oranye */
-}
-
-.btn-action-aksi.delete {
-    color: #e74c3c; /* merah */
-}
-
-.btn-action-aksi:hover {
-    background: rgba(0,0,0,0.1);
-}
-
-.activity-data .data-list,
-.activity-data .data-title {
-    text-align: center;
-}
-
-.arsip-page .data-list {
-    display: flex;
-    align-items: center;
-    height: 60px;
-  }
-
-.data-list img {
-  width: 70px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 6px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  transition: transform 0.2s ease;
-  display: block;
-  margin: 0 auto; /* tengah secara horizontal */
-}
-
-.data-list img:hover {
- transform: scale(1.05);
-}
-
-
-/* Arsip Aksi Column Alignment */
-.arsip-page .data.actions .data-list {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-}
-
-.arsip-page .data.actions .data-title {
-  text-align: center;
-}
-
-/* Styling untuk tombol aksi - pastikan warna sama dengan jadwal-kegiatan */
-.arsip-page .btn-action-aksi,
-.arsip-page .data.actions .btn-action-aksi,
-.arsip-page .data-list .btn-action-aksi {
-  margin: 0 3px;
-  border: none !important;
-  background: transparent !important;
-  cursor: pointer;
-  font-size: 18px;
-  border-radius: 6px;
-  transition: 0.3s;
-}
-
-.arsip-page .btn-action-aksi.view,
-.arsip-page .data.actions .btn-action-aksi.view,
-.arsip-page .data-list .btn-action-aksi.view,
-.arsip-page .btn-action-aksi.view i,
-.arsip-page .data.actions .btn-action-aksi.view i,
-.arsip-page .data-list .btn-action-aksi.view i {
-  color: #3498db !important; /* biru - sama dengan jadwal-kegiatan */
-}
-
-.arsip-page .btn-action-aksi.edit,
-.arsip-page .data.actions .btn-action-aksi.edit,
-.arsip-page .data-list .btn-action-aksi.edit,
-.arsip-page .btn-action-aksi.edit i,
-.arsip-page .data.actions .btn-action-aksi.edit i,
-.arsip-page .data-list .btn-action-aksi.edit i {
-  color: #f39c12 !important; /* oranye - sama dengan jadwal-kegiatan */
-}
-
-.arsip-page .btn-action-aksi.delete,
-.arsip-page .data.actions .btn-action-aksi.delete,
-.arsip-page .data-list .btn-action-aksi.delete,
-.arsip-page .btn-action-aksi.delete i,
-.arsip-page .data.actions .btn-action-aksi.delete i,
-.arsip-page .data-list .btn-action-aksi.delete i {
-  color: #e74c3c !important; /* merah - sama dengan jadwal-kegiatan */
-}
-
-.arsip-page .btn-action-aksi:hover,
-.arsip-page .data.actions .btn-action-aksi:hover,
-.arsip-page .data-list .btn-action-aksi:hover {
-  background: rgba(0,0,0,0.1) !important;
-}
-
-/* Dark mode untuk tombol aksi di arsip */
-body.dark .arsip-page .btn-action-aksi.view,
-body.dark .arsip-page .data.actions .btn-action-aksi.view,
-body.dark .arsip-page .data-list .btn-action-aksi.view,
-body.dark .arsip-page .btn-action-aksi.view i,
-body.dark .arsip-page .data.actions .btn-action-aksi.view i,
-body.dark .arsip-page .data-list .btn-action-aksi.view i {
-  color: #3498db !important;
-}
-
-body.dark .arsip-page .btn-action-aksi.edit,
-body.dark .arsip-page .data.actions .btn-action-aksi.edit,
-body.dark .arsip-page .data-list .btn-action-aksi.edit,
-body.dark .arsip-page .btn-action-aksi.edit i,
-body.dark .arsip-page .data.actions .btn-action-aksi.edit i,
-body.dark .arsip-page .data-list .btn-action-aksi.edit i {
-  color: #f39c12 !important;
-}
-
-body.dark .arsip-page .btn-action-aksi.delete,
-body.dark .arsip-page .data.actions .btn-action-aksi.delete,
-body.dark .arsip-page .data-list .btn-action-aksi.delete,
-body.dark .arsip-page .btn-action-aksi.delete i,
-body.dark .arsip-page .data.actions .btn-action-aksi.delete i,
-body.dark .arsip-page .data-list .btn-action-aksi.delete i {
-  color: #e74c3c !important;
-}
-
-body.dark .arsip-page .btn-action-aksi:hover,
-body.dark .arsip-page .data.actions .btn-action-aksi:hover,
-body.dark .arsip-page .data-list .btn-action-aksi:hover {
-  background: rgba(255,255,255,0.1) !important;
-}
-
-
-/* Modal */
-.modal-img {
-    display: none;
-    position: fixed;
-    z-index: 999;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.7);
-    justify-content: center;
-    align-items: center;
-}
-  .modal-img img {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 10px;
-    box-shadow: 0 0 15px rgba(255,255,255,0.3);
-}
-
-/* Pagination style */
-.pagination {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-}
-
-.pagination button {
-    padding: 6px 14px;
-    border: none;
-    border-radius: 8px;
-    background: var(--primary-color);
-    color: var(--text-color);
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background 0.3s, transform 0.2s, color 0.3s;
-}
-
-.pagination button:hover {
-    background: var(--panel-color); /* ikut warna panel sesuai mode */
-    transform: scale(1.05);
-}
-
-.pagination button.active {
-    background: var(--toggle-color);
-    color: var(--text-color);
-    font-weight: 600;
-}
-
-.pagination-dots {
-    padding: 6px 8px;
-    color: var(--black-light-color);
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-}
-
-.pagination-btn {
-    padding: 6px 14px;
-    border: none;
-    border-radius: 8px;
-    background: var(--primary-color);
-    color: var(--text-color);
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background 0.3s, transform 0.2s, color 0.3s;
-}
-
-.pagination-btn:hover {
-    background: var(--panel-color);
-    transform: scale(1.05);
-}
-
-.pagination-btn.active {
-    background: var(--toggle-color);
-    color: var(--text-color);
-    font-weight: 600;
-}
-
-/* Search ajax */
-.table-search {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-.table-search th, .table-search td {
-  border: 1px solid #ddd;
-  padding: 8px;
-}
-
-.table-search th {
-  background-color: #f2f2f2;
-  text-align: left;
-}
-
-.table-search tr:nth-child(even) {background-color: #f9f9f9;}
-.table-search tr:hover {background-color: #e9e9e9;}
-
-
-/* Mode gelap override */
-body.dark-mode .pagination button,
-body.dark-mode .pagination button.active {
-    color: #fff; /* tulisan putih saat dark mode */
-}
-
-body.dark .btn-action-aksi:hover {
-    background: rgba(255,255,255,0.1);
-}
-
-/* 🌙 Warna label di dark mode */
-body.dark label,
-body.dark .filters label,
-body.dark .filters span {
-  color: var(--text-color) !important; /* gunakan warna teks terang */
-}
-
 /* CSS untuk Halaman Tamu - Public */
 /* simtamu.js */
 #sig canvas {
@@ -2211,19 +585,181 @@ body.dark .filters span {
   touch-action: none;
 }
 
+.action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin: 15px 0;
+  gap: 12px;
+}
+
+.action-left,
+.action-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* BASE BUTTON */
+.action-bar button {
+  border: none;
+  border-radius: 10px;
+
+  padding: 10px 16px;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+/* TAMBAH */
+.btn-tambah {
+  background: #2563eb;
+  color: #fff;
+}
+
+.btn-tambah:hover {
+  background: #1d4ed8;
+}
+
+/* WORD */
+.btn-export-word {
+  background: #2563eb;
+  color: #fff;
+}
+
+.btn-export-word:hover {
+  background: #1d4ed8;
+}
+
+/* EXCEL */
+.btn-export-excel {
+  background: #16a34a;
+  color: #fff;
+}
+
+.btn-export-excel:hover {
+  background: #15803d;
+}
+
+/* DARK MODE */
+.dark .btn-tambah {
+  background: #1d4ed8;
+}
+
+.dark .btn-export-word {
+  background: #1e40af;
+}
+
+.dark .btn-export-excel {
+  background: #166534;
+}
+
+/* SWITCH ENTRAIN TOGGLE */
+.switch-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 14px 16px;
+  border: 1px solid #dcdcdc;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.switch-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.switch-label {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: #374151;
+  margin-bottom: 2px !important;
+}
+
+.switch-text small {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* SWITCH */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 30px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* BACKGROUND */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #d1d5db;
+  transition: .3s;
+  border-radius: 999px;
+}
+
+/* BULATAN */
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  top: 4px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .15);
+}
+
+/* ACTIVE */
+.switch input:checked+.slider {
+  background-color: #22c55e;
+}
+
+.switch input:checked+.slider:before {
+  transform: translateX(22px);
+}
+
 /* CSS untuk Halaman Tamu - Admin */
 .tamu-page .activity-data {
   display: grid;
   grid-template-columns:
-    60px      /* no */
-    160px     /* tanggal */
-    180px     /* nama */
-    160px     /* kontak */
-    160px     /* alamat */
-    180px     /* tujuan */
-    120px     /* ttd */
-    120px     /* foto */
-    80px;     /* aksi */
+    60px
+    /* no */
+    160px
+    /* tanggal */
+    180px
+    /* nama */
+    160px
+    /* kontak */
+    160px
+    /* alamat */
+    180px
+    /* tujuan */
+    120px
+    /* ttd */
+    120px
+    /* foto */
+    80px;
+  /* aksi */
 
   gap: 0;
 }
@@ -2241,8 +777,10 @@ body.dark .filters span {
 /* gambar ttd di table tamu */
 .img-ttd,
 .img-foto {
-  width: 100px;          /* boleh diperkecil */
-  max-height: 50px;      /* INI KUNCI */
+  width: 100px;
+  /* boleh diperkecil */
+  max-height: 50px;
+  /* INI KUNCI */
   object-fit: contain;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -2346,7 +884,8 @@ body.dark .filters span {
 .page-header {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* KIRI - KANAN */
+  justify-content: space-between;
+  /* KIRI - KANAN */
   margin: 20px 0;
 }
 
@@ -2365,7 +904,8 @@ body.dark .filters span {
 
 .page-title i {
   font-size: 26px;
-  color: #1e40af; /* biru ikon */
+  color: #1e40af;
+  /* biru ikon */
 }
 
 /* Filter kanan */
@@ -2428,7 +968,1920 @@ body.dark .filters span {
 
 .dark .filter-bar select,
 .dark .filter-bar button {
-  background: #2a2d2f;       /* dark soft */
+  background: #2a2d2f;
+  /* dark soft */
+  color: #e5e7eb;
+  border: 1px solid #3a3d40;
+  outline: none;
+}
+
+/* Select arrow dark */
+.dark .filter-bar select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #9ca3af 50%),
+    linear-gradient(135deg, #9ca3af 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 14px,
+    calc(100% - 12px) 14px;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 34px;
+}
+
+/* Hover dark */
+.dark .filter-bar select:hover,
+.dark .filter-bar button:hover {
+  background: #34373a;
+}
+
+.dark .filter-bar select:focus {
+  border-color: #2563eb;
+}
+
+/* Tombol Cari - dark */
+.dark .btn-cari {
+  background: #374151;
+  border: 1px solid #4b5563;
+  color: #f9fafb;
+}
+
+.dark .btn-cari:hover {
+  background: #4b5563;
+}
+
+/* Tombol Print - dark */
+.dark .btn-print {
+  background: #030712;
+  border: 1px solid #111827;
+  color: #ffffff;
+}
+
+.dark .btn-print:hover {
+  background: #111827;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .filter-bar {
+    flex-wrap: wrap;
+  }
+
+  .action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .action-left,
+  .action-right {
+    width: 100%;
+  }
+
+  .action-right {
+    justify-content: flex-end;
+  }
+
+  .action-bar button {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* Styling untuk scrollbar horizontal */
+.activity-data::-webkit-scrollbar {
+  height: 8px;
+}
+
+.activity-data::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.activity-data::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.activity-data::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Dark mode untuk scrollbar horizontal */
+body.dark .activity-data::-webkit-scrollbar-track {
+  background: #3A3B3C;
+}
+
+body.dark .activity-data::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+body.dark .activity-data::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color-dark);
+}
+
+body.dark::-webkit-scrollbar-thumb:hover,
+body.dark .activity-data::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color-dark);
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  max-height: 100vh;
+  width: 250px;
+  padding: 10px 14px;
+  background-color: var(--panel-color);
+  border-right: 1px solid var(--border-color);
+  transition: var(--tran-05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+nav.close {
+  width: 73px;
+}
+
+nav .logo-name {
+  display: flex;
+  align-items: center;
+}
+
+nav .logo-image {
+  display: flex;
+  justify-content: center;
+  min-width: 45px;
+}
+
+nav .logo-image img {
+  width: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+nav .logo-name .logo_name {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-left: 14px;
+  transition: var(--tran-05);
+}
+
+nav.close .logo_name {
+  opacity: 0;
+  pointer-events: none;
+}
+
+nav .menu-items {
+  margin-top: 40px;
+  height: calc(100vh - 100px) !important;
+  max-height: calc(100vh - 100px) !important;
+  min-height: calc(100vh - 100px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  overflow-y: auto !important;
+  overflow-x: visible !important;
+  position: relative !important;
+  padding-bottom: 25px !important;
+}
+
+nav .menu-items .nav-links {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  flex: 1 1 auto;
+  min-height: 0;
+  padding-right: 8px;
+  max-height: calc(100vh - 280px) !important;
+  height: auto !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: var(--primary-color) #f5f5f5 !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+nav .menu-items .nav-links::-webkit-scrollbar {
+  width: 8px !important;
+  display: block !important;
+  -webkit-appearance: none !important;
+}
+
+nav .menu-items .nav-links::-webkit-scrollbar-track {
+  background: #f5f5f5 !important;
+  border-radius: 4px !important;
+  margin: 5px 0 !important;
+}
+
+nav .menu-items .nav-links::-webkit-scrollbar-thumb {
+  background: var(--primary-color) !important;
+  border-radius: 4px !important;
+  transition: background 0.3s ease !important;
+  min-height: 30px !important;
+}
+
+nav .menu-items .nav-links::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color-dark) !important;
+}
+
+nav .menu-items .nav-links:hover::-webkit-scrollbar-thumb {
+  background: var(--primary-color) !important;
+}
+
+body.dark nav .menu-items .nav-links {
+  scrollbar-color: #666 #3A3B3C !important;
+}
+
+body.dark nav .menu-items .nav-links::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+body.dark nav .menu-items .nav-links::-webkit-scrollbar-track {
+  background: #3A3B3C !important;
+}
+
+body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb {
+  background: #666 !important;
+}
+
+body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color) !important;
+}
+
+body.dark nav .menu-items .nav-links:hover::-webkit-scrollbar-thumb {
+  background: var(--primary-color) !important;
+}
+
+/* Override untuk memastikan scrollbar nav-links tidak di-override oleh CSS global */
+nav .menu-items .nav-links::-webkit-scrollbar-thumb {
+  background: var(--primary-color) !important;
+}
+
+body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb {
+  background: #666 !important;
+}
+
+.menu-items li {
+  list-style: none;
+}
+
+.menu-items li a {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  text-decoration: none;
+  position: relative;
+}
+
+.nav-links li a:hover:before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  height: 5px;
+  width: 5px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+}
+
+body.dark li a:hover:before {
+  background-color: var(--text-color);
+}
+
+.menu-items li a i {
+  font-size: 24px;
+  min-width: 45px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--black-light-color);
+}
+
+.menu-items li a .link-name {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--black-light-color);
+  transition: var(--tran-05);
+}
+
+nav.close li a .link-name {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Saat sidebar ditutup, sembunyikan icon dan text dark mode, hanya tampilkan toggle switch */
+nav.close .menu-items .logout-mode li.mode a .link-name,
+nav.close .menu-items .logout-mode li.mode a i,
+nav.close .logout-mode li.mode a .link-name,
+nav.close .logout-mode li.mode a i,
+nav.close .logout-mode li.mode a {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Pastikan mode-toggle tetap terlihat saat sidebar ditutup dan di-center */
+nav.close .menu-items .logout-mode li.mode .mode-toggle,
+nav.close .logout-mode li.mode .mode-toggle,
+nav.close .mode-toggle {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  position: static !important;
+  right: auto !important;
+  left: auto !important;
+  margin: 0 auto !important;
+}
+
+/* Pastikan mode li tetap terlihat untuk menampung toggle switch dan di-center */
+nav.close .menu-items .logout-mode li.mode,
+nav.close .logout-mode li.mode {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  justify-content: center !important;
+  align-items: center !important;
+  height: 50px !important;
+}
+
+/* Tambahkan margin-top pada mode untuk spacing dengan logout */
+nav.close .menu-items .logout-mode li.mode,
+nav.close .logout-mode li.mode {
+  margin-top: 10px !important;
+}
+
+.nav-links li a:hover i,
+.nav-links li a:hover .link-name {
+  color: var(--primary-color);
+}
+
+body.dark .nav-links li a:hover i,
+body.dark .nav-links li a:hover .link-name {
+  color: var(--text-color);
+}
+
+.menu-items .logout-mode {
+  padding-top: 10px !important;
+  padding-bottom: 25px !important;
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0 !important;
+  margin-top: auto !important;
+  position: relative !important;
+  z-index: 100 !important;
+  overflow: visible !important;
+  background-color: var(--panel-color) !important;
+  margin-bottom: 0 !important;
+}
+
+.menu-items .mode {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  position: relative;
+  z-index: 101;
+  overflow: visible;
+}
+
+.menu-items .mode-toggle {
+  position: absolute;
+  right: 14px;
+  height: 50px;
+  min-width: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 102;
+  overflow: visible;
+}
+
+/* Pastikan mode-toggle tetap terlihat saat sidebar ditutup */
+nav.close .mode-toggle {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  right: 14px !important;
+}
+
+.mode-toggle .switch {
+  position: relative;
+  display: inline-block;
+  height: 22px;
+  width: 40px;
+  border-radius: 25px;
+  background-color: var(--toggle-color);
+}
+
+.switch:before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 15px;
+  width: 15px;
+  background-color: var(--panel-color);
+  border-radius: 50%;
+  transition: var(--tran-03);
+}
+
+body.dark .switch:before {
+  left: 20px;
+}
+
+.dashboard {
+  position: relative;
+  left: 250px;
+  background-color: var(--panel-color);
+  min-height: 100vh;
+  width: calc(100% - 250px);
+  padding: 10px 14px;
+  transition: var(--tran-05);
+}
+
+nav.close~.dashboard {
+  left: 73px;
+  width: calc(100% - 73px);
+}
+
+.dashboard .top {
+  position: fixed;
+  top: 0;
+  left: 250px;
+  display: flex;
+  width: calc(100% - 250px);
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background-color: var(--panel-color);
+  transition: var(--tran-05);
+  z-index: 1000;
+  /* Z-index lebih tinggi dari header tabel (999) agar foto profil tidak tertutup */
+}
+
+nav.close~.dashboard .top {
+  left: 73px;
+  width: calc(100% - 73px);
+}
+
+.dashboard .top .sidebar-toggle {
+  font-size: 26px;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.dashboard .top .search-box {
+  position: relative;
+  height: 45px;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 30px;
+}
+
+.top .search-box input {
+  position: absolute;
+  border: 1px solid var(--border-color);
+  background-color: var(--panel-color);
+  padding: 0 25px 0 50px;
+  border-radius: 5px;
+  height: 100%;
+  width: 100%;
+  color: var(--text-color);
+  font-size: 15px;
+  font-weight: 400;
+  outline: none;
+}
+
+.top .search-box i {
+  position: absolute;
+  left: 15px;
+  font-size: 22px;
+  z-index: 10;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--black-light-color);
+}
+
+.top img {
+  width: 40px;
+  border-radius: 50%;
+}
+
+.dashboard .dash-content {
+  padding-top: 50px;
+}
+
+.dash-content .title {
+  display: flex;
+  align-items: center;
+  margin: 60px 0 30px 0;
+}
+
+.dash-content .title i {
+  position: relative;
+  height: 35px;
+  width: 35px;
+  background-color: var(--primary-color);
+  border-radius: 6px;
+  color: var(--title-icon-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.dash-content .title .text {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-left: 10px;
+}
+
+.dash-content .boxes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.dash-content .boxes .box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 12px;
+  width: calc(100% / 3 - 15px);
+  padding: 15px 20px;
+  background-color: var(--box1-color);
+  transition: var(--tran-05);
+}
+
+.boxes .box i {
+  font-size: 35px;
+  color: var(--text-color);
+}
+
+.boxes .box .text {
+  white-space: nowrap;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.boxes .box .number {
+  font-size: 40px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.boxes .box.box2 {
+  background-color: var(--box2-color);
+}
+
+.boxes .box.box3 {
+  background-color: var(--box3-color);
+}
+
+/* CSS untuk dashboard (bukan arsip) */
+.dash-content .activity-wrapper {
+  overflow-x: auto;
+  /* scroll horizontal jika perlu */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
+  position: relative;
+  padding-bottom: 8px;
+  /* beri sedikit jarak biar tidak tertutup */
+}
+
+.dash-content .activity {
+  max-height: none;
+  /* tidak ada batasan tinggi */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
+  overflow-x: visible;
+  /* biarkan scroll horizontal dari child */
+  width: 100%;
+  /* lebar penuh */
+}
+
+.dash-content .activity .activity-data:not(.arsip-page .activity-data) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  overflow-x: auto;
+  /* scroll horizontal jika perlu */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
+}
+
+.activity .activity-data:not(.arsip-page .activity-data) {
+  display: flex;
+  overflow-x: auto;
+  /* scroll horizontal jika perlu */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
+}
+
+.activity-data .data {
+  display: flex;
+  flex-direction: column;
+  margin: 0 15px;
+}
+
+.activity-data .data-title {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.activity-data .data .data-list {
+  font-size: 18px;
+  font-weight: 400;
+  margin-top: 20px;
+  white-space: nowrap;
+  color: var(--text-color);
+}
+
+/* Override untuk peminjaman-ruangan-page - pastikan tidak terpengaruh CSS default */
+.peminjaman-ruangan-page .activity-data .data {
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Override CSS default untuk data-title di peminjaman-ruangan-page */
+.peminjaman-ruangan-page .activity-data .data .data-title {
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  color: #fff !important;
+  background: #0E4BF1 !important;
+  /* Warna biru tetap, jangan pakai var(--primary-color) */
+  background-color: #0E4BF1 !important;
+  /* Pastikan background-color juga biru */
+  margin-top: 0 !important;
+}
+
+/* Styling scrollbar khusus untuk dashboard */
+.dash-content .activity .activity-data::-webkit-scrollbar {
+  height: 8px;
+}
+
+.dash-content .activity .activity-data::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.dash-content .activity .activity-data::-webkit-scrollbar-thumb {
+  background: #4DA3FF;
+  /* warna biru seperti box1 */
+  border-radius: 4px;
+}
+
+.dash-content .activity .activity-data::-webkit-scrollbar-thumb:hover {
+  background: #3A8BDB;
+  /* warna biru lebih gelap saat hover */
+}
+
+/* Dark mode untuk dashboard scrollbar - dengan specificity tinggi */
+body.dark .dash-content .activity .activity-data::-webkit-scrollbar-track {
+  background: #3A3B3C !important;
+}
+
+body.dark .dash-content .activity .activity-data::-webkit-scrollbar-thumb {
+  background: #3A3B3C !important;
+  border-radius: 4px !important;
+}
+
+body.dark .dash-content .activity .activity-data::-webkit-scrollbar-thumb:hover {
+  background: #2A2B2C !important;
+}
+
+/* Override untuk semua scrollbar dashboard di dark mode */
+body.dark .dashboard .activity-data::-webkit-scrollbar-thumb {
+  background: #3A3B3C !important;
+}
+
+body.dark .dashboard .activity-data::-webkit-scrollbar-thumb:hover {
+  background: #2A2B2C !important;
+}
+
+/* Override agresif untuk semua scrollbar horizontal di dark mode */
+body.dark *::-webkit-scrollbar-thumb {
+  background: #3A3B3C !important;
+}
+
+body.dark *::-webkit-scrollbar-thumb:hover {
+  background: #2A2B2C !important;
+}
+
+/* Exception: nav-links scrollbar tidak di-override oleh CSS global */
+body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb {
+  background: #555 !important;
+}
+
+body.dark nav .menu-items .nav-links::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color) !important;
+}
+
+/* Khusus untuk dashboard - override semua kemungkinan */
+body.dark .dash-content *::-webkit-scrollbar-thumb,
+body.dark .activity *::-webkit-scrollbar-thumb,
+body.dark .activity-data::-webkit-scrollbar-thumb {
+  background: #3A3B3C !important;
+}
+
+body.dark .dash-content *::-webkit-scrollbar-thumb:hover,
+body.dark .activity *::-webkit-scrollbar-thumb:hover,
+body.dark .activity-data::-webkit-scrollbar-thumb:hover {
+  background: #2A2B2C !important;
+}
+
+.profile-link {
+  border-radius: 50%;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.profile-link:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+
+/* awal dashboard */
+/* Warna untuk status log aktivitas */
+/* 🔹 Status colors untuk log aktivitas */
+.status-berhasil {
+  color: #28a745 !important;
+  font-weight: 600;
+}
+
+.status-pending {
+  color: #ffc107 !important;
+  font-weight: 600;
+}
+
+.status-gagal {
+  color: #dc3545 !important;
+  font-weight: 600;
+}
+
+.status-info {
+  color: #17a2b8 !important;
+  font-weight: 600;
+}
+
+.status-error {
+  color: #dc3545 !important;
+  font-weight: 600;
+}
+
+/* 🔹 Dark mode status colors */
+body.dark .status-berhasil {
+  color: #4caf50 !important;
+}
+
+body.dark .status-pending {
+  color: #ff9800 !important;
+}
+
+body.dark .status-gagal {
+  color: #f44336 !important;
+}
+
+body.dark .status-info {
+  color: #00bcd4 !important;
+}
+
+body.dark .status-error {
+  color: #f44336 !important;
+}
+
+/* Tooltip saat hover */
+.box[data-tooltip] {
+  position: relative;
+}
+
+.box[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.3s;
+}
+
+.box[data-tooltip]:hover::after {
+  opacity: 1;
+}
+
+/* Modal detail */
+.modal {
+  display: none;
+  /* hidden default */
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background: var(--panel-color);
+  margin: 10% auto;
+  padding: 20px;
+  border-radius: 12px;
+  width: 320px;
+  color: var(--text-color);
+  text-align: left;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.modal-content ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.modal-content ul li {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 14px;
+}
+
+.modal-content .close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+
+
+/* Akhir dashboard */
+
+/* Form input konten / berita */
+
+.form-container {
+  background: var(--panel-color);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: var(--box-shadow);
+  margin-top: 20px;
+}
+
+.input-berita-form .form-group,
+.edit-berita-form .form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-berita-form label,
+.edit-berita-form label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--text-color);
+}
+
+.input-berita-form input,
+.edit-berita-form input {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--panel-color-light);
+  color: var(--text-color);
+}
+
+.input-berita-form textarea,
+.edit-berita-form textarea {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--panel-color-light);
+  color: var(--text-color);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Styling khusus untuk textarea tertentu agar konsisten */
+#ringkasan,
+#caption,
+#keterangan,
+#alasan_pengembalian_draf {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--panel-color-light);
+  color: var(--text-color);
+  font-family: inherit;
+  resize: vertical;
+  min-height: 80px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-berita-form textarea::placeholder,
+.edit-berita-form textarea::placeholder {
+  color: #9ca3af;
+  /* placeholder agak abu2 biar tidak ganggu */
+}
+
+.btn-simpan,
+.btn-batal,
+.btn-tambah {
+  background: var(--primary-color);
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-simpan:hover,
+.btn-batal:hover,
+.btn-tambah:hover {
+  background: #0077ff;
+  color: #fff;
+}
+
+/* Custom Export Buttons */
+.btn-word {
+  background-color: #0E4BF1 !important;
+  color: #fff !important;
+}
+
+.btn-word:hover {
+  background-color: #0A3BC7 !important;
+}
+
+.btn-excel {
+  background-color: #217346 !important;
+  color: #fff !important;
+}
+
+.btn-excel:hover {
+  background-color: #185433 !important;
+}
+
+.btn-pdf {
+  background-color: #d32f2f !important;
+  color: #fff !important;
+}
+
+.btn-pdf:hover {
+  background-color: #b71c1c !important;
+}
+
+/* Dark Mode Export Buttons */
+body.dark .btn-word {
+  background-color: #2a5c9a !important;
+}
+
+body.dark .btn-word:hover {
+  background-color: #1f4575 !important;
+}
+
+body.dark .btn-excel {
+  background-color: #1d5f3d !important;
+}
+
+body.dark .btn-excel:hover {
+  background-color: #14422a !important;
+}
+
+body.dark .btn-pdf {
+  background-color: #ab2525 !important;
+}
+
+body.dark .btn-pdf:hover {
+  background-color: #821c1c !important;
+}
+
+.input-berita-form input::placeholder,
+.edit-berita-form input::placeholder {
+  color: #9ca3af;
+  /* placeholder agak abu2 biar tidak ganggu */
+}
+
+body.dark .input-berita-form input,
+body.dark .edit-berita-form input {
+  background: var(--panel-color-light);
+  /* ini akan pakai versi gelap */
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+/* Dark mode untuk input readonly (No. Register Pengaduan) */
+body.dark .input-berita-form input[readonly],
+body.dark .edit-berita-form input[readonly],
+body.dark input[readonly] {
+  background-color: var(--panel-color-light) !important;
+  /* Override inline style */
+  color: var(--text-color) !important;
+  border: 1px solid var(--border-color) !important;
+  opacity: 0.8;
+  /* Sedikit transparan untuk menunjukkan readonly */
+}
+
+/* Dark mode untuk textarea (Alamat, Isi Laporan, Keterangan) */
+body.dark .input-berita-form textarea,
+body.dark .edit-berita-form textarea,
+body.dark textarea {
+  background: var(--panel-color-light) !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+body.dark .input-berita-form textarea::placeholder,
+body.dark .edit-berita-form textarea::placeholder,
+body.dark textarea::placeholder {
+  color: #9ca3af !important;
+  /* Placeholder agak abu2 */
+}
+
+/* Dark mode untuk small text (helper text) */
+body.dark .input-berita-form small,
+body.dark .edit-berita-form small,
+body.dark .form-group small {
+  color: #9ca3af !important;
+  /* Warna abu-abu terang untuk dark mode */
+}
+
+body.dark .btn-simpan:hover,
+body.dark .btn-batal:hover,
+body.dark .btn-tambah:hover {
+  background: var(--primary-color-light);
+}
+
+/* Ringkasan Berita - Dark Mode */
+body.dark #keterangan,
+body.dark #ringkasan,
+body.dark #caption,
+body.dark #alasan_pengembalian_draf {
+  background-color: #2c2c2c;
+  /* abu gelap */
+  color: #f1f1f1;
+  /* teks terang */
+  border: 1px solid #444;
+  /* border lebih lembut */
+}
+
+body.dark #keterangan::placeholder,
+body.dark #ringkasan::placeholder,
+body.dark #caption::placeholder,
+body.dark #alasan_pengembalian_draf::placeholder {
+  color: #aaa;
+  /* warna placeholder lebih redup */
+}
+
+
+/* Akhir Form input konten / berita */
+
+/* Rekap Konten */
+
+/* ================================
+   FILTERS
+================================ */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.filters button,
+.filters input,
+#apply-range {
+  padding: 8px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--panel-color);
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.filters button:hover,
+#apply-range:hover {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.filters button.active {
+  background: var(--primary-color-dark);
+  color: #fff !important;
+  opacity: 1;
+}
+
+/* ================================
+   CHART CONTAINER
+================================ */
+.chart-container {
+  background: var(--panel-color);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: background 0.3s, color 0.3s;
+  text-align: center;
+}
+
+.chart-container button {
+  padding: 8px 14px;
+  margin: 10px 5px 0 0;
+  border: none;
+  border-radius: 6px;
+  background: var(--primary-color);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+/* ================================
+   CHART CONTAINER BUTTONS
+================================ */
+.chart-container button {
+  background: var(--primary-color);
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin: 0 5px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.chart-container button:hover {
+  background: #0077ff;
+  color: #fff;
+  opacity: 1;
+}
+
+/* ================================
+   TOTAL BERITA
+================================ */
+#totalBerita {
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  color: var(--text-color);
+  transition: color 0.3s;
+}
+
+#totalHarmonisasi {
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  color: var(--text-color);
+  transition: color 0.3s;
+}
+
+/* === FILTER TANGGAL (Light Mode) === */
+#start-date,
+#end-date,
+#startDate,
+#endDate {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f1f3f6;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+  color: #333;
+}
+
+#start-date:hover,
+#end-date:hover,
+#startDate:hover,
+#endDate:hover {
+  border-color: #007bff;
+  background-color: #e8f0fe;
+}
+
+.filter-select {
+  padding: 8px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--panel-color);
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.filter-select:hover {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+/* ================================
+   TABEL REKAP PUBLIKASI
+================================ */
+.table-container {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: background 0.3s, color 0.3s;
+}
+
+.table-container th,
+.table-container td {
+  border: 1px solid var(--border-color);
+  padding: 10px 14px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.table-container th {
+  background: var(--panel-color-light);
+  font-weight: 600;
+}
+
+.table-container tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* ================================
+   DARK MODE
+================================ */
+body.dark .filters button,
+body.dark .filters input,
+body.dark #apply-range {
+  background: var(--panel-color-dark);
+  color: #fff;
+  /* 👈 pastikan putih penuh */
+  border: 1px solid var(--border-color);
+}
+
+body.dark .filters button:hover,
+body.dark #apply-range:hover {
+  background: var(--primary-color);
+  color: #fff;
+  /* tetap putih biar kontras */
+}
+
+body.dark .filters button.active {
+  background: var(--primary-color-dark);
+  color: #fff !important;
+  opacity: 1;
+}
+
+
+
+body.dark .rekap-page {
+  overflow-x: hidden;
+  /* tidak ada scroll horizontal */
+  overflow-y: auto;
+  /* scroll vertikal jika perlu */
+  width: 100%;
+  /* lebar penuh */
+  max-width: 100%;
+  /* tidak melebihi lebar container */
+}
+
+body.dark .chart-container {
+  background: var(--panel-color-dark);
+  color: var(--text-color-light);
+}
+
+body.dark .chart-container button {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+body.dark .chart-container button:hover {
+  background: var(--primary-color-light);
+  color: #fff;
+  opacity: 1;
+}
+
+body.dark #totalBerita {
+  color: #fff;
+  /* putih biar jelas di dark mode */
+}
+
+body.dark #totalHarmonisasi {
+  color: #fff;
+  /* putih biar jelas di dark mode */
+}
+
+body.dark h3 {
+  color: #fff;
+}
+
+/* === FILTER TANGGAL (Dark Mode) === */
+body.dark #start-date,
+body.dark #end-date,
+body.dark #startDate,
+body.dark #endDate {
+  background-color: var(--panel-color-light);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+body.dark #start-date:hover,
+body.dark #end-date:hover,
+body.dark #startDate:hover,
+body.dark #endDate:hover {
+  background-color: var(--primary-color-light);
+  border-color: var(--primary-color);
+  color: #fff;
+}
+
+/* Dark mode untuk filter-select */
+body.dark .filter-select {
+  background: var(--panel-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+body.dark .filter-select:hover {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+body.dark .filter-select option {
+  background-color: var(--panel-color);
+  color: var(--text-color);
+}
+
+/* Akhir Rekap Konten */
+
+/* Arsip Berita */
+
+.btn-action-aksi {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  /* padding: 6px; */
+  font-size: 18px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.btn-action-aksi.view {
+  color: #3498db;
+  /* biru */
+}
+
+.btn-action-aksi.edit {
+  color: #f39c12;
+  /* oranye */
+}
+
+.btn-action-aksi.delete {
+  color: #e74c3c;
+  /* merah */
+}
+
+.btn-action-aksi:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.activity-data .data-list,
+.activity-data .data-title {
+  text-align: center;
+}
+
+.arsip-page .data-list {
+  display: flex;
+  align-items: center;
+  height: 60px;
+}
+
+.data-list img {
+  width: 70px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  transition: transform 0.2s ease;
+  display: block;
+  margin: 0 auto;
+  /* tengah secara horizontal */
+}
+
+.data-list img:hover {
+  transform: scale(1.05);
+}
+
+
+/* Arsip Aksi Column Alignment */
+.arsip-page .data.actions .data-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.arsip-page .data.actions .data-title {
+  text-align: center;
+}
+
+/* Styling untuk tombol aksi - pastikan warna sama dengan jadwal-kegiatan */
+.arsip-page .btn-action-aksi,
+.arsip-page .data.actions .btn-action-aksi,
+.arsip-page .data-list .btn-action-aksi {
+  margin: 0 3px;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.arsip-page .btn-action-aksi.view,
+.arsip-page .data.actions .btn-action-aksi.view,
+.arsip-page .data-list .btn-action-aksi.view,
+.arsip-page .btn-action-aksi.view i,
+.arsip-page .data.actions .btn-action-aksi.view i,
+.arsip-page .data-list .btn-action-aksi.view i {
+  color: #3498db !important;
+  /* biru - sama dengan jadwal-kegiatan */
+}
+
+.arsip-page .btn-action-aksi.edit,
+.arsip-page .data.actions .btn-action-aksi.edit,
+.arsip-page .data-list .btn-action-aksi.edit,
+.arsip-page .btn-action-aksi.edit i,
+.arsip-page .data.actions .btn-action-aksi.edit i,
+.arsip-page .data-list .btn-action-aksi.edit i {
+  color: #f39c12 !important;
+  /* oranye - sama dengan jadwal-kegiatan */
+}
+
+.arsip-page .btn-action-aksi.delete,
+.arsip-page .data.actions .btn-action-aksi.delete,
+.arsip-page .data-list .btn-action-aksi.delete,
+.arsip-page .btn-action-aksi.delete i,
+.arsip-page .data.actions .btn-action-aksi.delete i,
+.arsip-page .data-list .btn-action-aksi.delete i {
+  color: #e74c3c !important;
+  /* merah - sama dengan jadwal-kegiatan */
+}
+
+.arsip-page .btn-action-aksi:hover,
+.arsip-page .data.actions .btn-action-aksi:hover,
+.arsip-page .data-list .btn-action-aksi:hover {
+  background: rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Dark mode untuk tombol aksi di arsip */
+body.dark .arsip-page .btn-action-aksi.view,
+body.dark .arsip-page .data.actions .btn-action-aksi.view,
+body.dark .arsip-page .data-list .btn-action-aksi.view,
+body.dark .arsip-page .btn-action-aksi.view i,
+body.dark .arsip-page .data.actions .btn-action-aksi.view i,
+body.dark .arsip-page .data-list .btn-action-aksi.view i {
+  color: #3498db !important;
+}
+
+body.dark .arsip-page .btn-action-aksi.edit,
+body.dark .arsip-page .data.actions .btn-action-aksi.edit,
+body.dark .arsip-page .data-list .btn-action-aksi.edit,
+body.dark .arsip-page .btn-action-aksi.edit i,
+body.dark .arsip-page .data.actions .btn-action-aksi.edit i,
+body.dark .arsip-page .data-list .btn-action-aksi.edit i {
+  color: #f39c12 !important;
+}
+
+body.dark .arsip-page .btn-action-aksi.delete,
+body.dark .arsip-page .data.actions .btn-action-aksi.delete,
+body.dark .arsip-page .data-list .btn-action-aksi.delete,
+body.dark .arsip-page .btn-action-aksi.delete i,
+body.dark .arsip-page .data.actions .btn-action-aksi.delete i,
+body.dark .arsip-page .data-list .btn-action-aksi.delete i {
+  color: #e74c3c !important;
+}
+
+body.dark .arsip-page .btn-action-aksi:hover,
+body.dark .arsip-page .data.actions .btn-action-aksi:hover,
+body.dark .arsip-page .data-list .btn-action-aksi:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+
+/* Modal */
+.modal-img {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-img img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Pagination style */
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pagination button {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary-color);
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.3s, transform 0.2s, color 0.3s;
+}
+
+.pagination button:hover {
+  background: var(--panel-color);
+  /* ikut warna panel sesuai mode */
+  transform: scale(1.05);
+}
+
+.pagination button.active {
+  background: var(--toggle-color);
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.pagination-dots {
+  padding: 6px 8px;
+  color: var(--black-light-color);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+
+.pagination-btn {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary-color);
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.3s, transform 0.2s, color 0.3s;
+}
+
+.pagination-btn:hover {
+  background: var(--panel-color);
+  transform: scale(1.05);
+}
+
+.pagination-btn.active {
+  background: var(--toggle-color);
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+/* Search ajax */
+.table-search {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.table-search th,
+.table-search td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.table-search th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+.table-search tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.table-search tr:hover {
+  background-color: #e9e9e9;
+}
+
+
+/* Mode gelap override */
+body.dark-mode .pagination button,
+body.dark-mode .pagination button.active {
+  color: #fff;
+  /* tulisan putih saat dark mode */
+}
+
+body.dark .btn-action-aksi:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* 🌙 Warna label di dark mode */
+body.dark label,
+body.dark .filters label,
+body.dark .filters span {
+  color: var(--text-color) !important;
+  /* gunakan warna teks terang */
+}
+
+/* CSS untuk Halaman Tamu - Public */
+/* simtamu.js */
+#sig canvas {
+  touch-action: none;
+}
+
+/* tambah-tamu.js */
+#signature-pad {
+  touch-action: none;
+}
+
+/* CSS untuk Halaman Tamu - Admin */
+.tamu-page .activity-data {
+  display: grid;
+  grid-template-columns:
+    60px
+    /* no */
+    160px
+    /* tanggal */
+    180px
+    /* nama */
+    160px
+    /* kontak */
+    160px
+    /* alamat */
+    180px
+    /* tujuan */
+    120px
+    /* ttd */
+    120px
+    /* foto */
+    80px;
+  /* aksi */
+
+  gap: 0;
+}
+
+.tamu-page .activity-data .data-list {
+  min-height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* gambar ttd di table tamu */
+.img-ttd,
+.img-foto {
+  width: 100px;
+  /* boleh diperkecil */
+  max-height: 50px;
+  /* INI KUNCI */
+  object-fit: contain;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  padding: 2px;
+}
+
+.data-list.ttd,
+.data-list.foto {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signature-wrapper {
+  border: 1px solid #999;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 420px;
+  height: 200px;
+  background: #fff;
+}
+
+.signature-wrapper canvas {
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+.btn-clear {
+  width: auto;
+  max-width: 100px;
+  margin-top: 8px;
+  padding: 6px 14px;
+  background: #3793fc;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* preview gambar tabel tamu */
+.img-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  align-items: center;
+}
+
+/* Box putih */
+.img-modal-box {
+  background: #fff;
+  padding: 16px 16px 12px;
+  border-radius: 10px;
+  max-width: 92%;
+  max-height: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+/* Gambar */
+.img-modal-content {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+/* Caption */
+.img-modal-caption {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  color: #444;
+  text-align: center;
+  word-break: break-word;
+}
+
+/* Tombol close */
+.img-modal-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 26px;
+  cursor: pointer;
+  color: #555;
+}
+
+.img-modal-close:hover {
+  color: #000;
+}
+
+/* HEADER & FILTER BAR – LIGHT MODE (DEFAULT) */
+
+/* Filter bar daftar tamu */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* KIRI - KANAN */
+  margin: 20px 0;
+}
+
+/* Judul kiri */
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.page-title span {
+  color: #111827;
+}
+
+.page-title i {
+  font-size: 26px;
+  color: #1e40af;
+  /* biru ikon */
+}
+
+/* Filter kanan */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Select & button (light) */
+.filter-bar select,
+.filter-bar button {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 14px;
+  border-radius: 10px;
+
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid #d1d5db;
+}
+
+/* Hover light */
+.filter-bar select:hover,
+.filter-bar button:hover {
+  background: #f3f4f6;
+}
+
+/* Tombol Cari - light */
+.btn-cari {
+  background: #6b7280;
+  color: #ffffff;
+  border: none;
+}
+
+.btn-cari:hover {
+  background: #4b5563;
+}
+
+/* Tombol Print - light */
+.btn-print {
+  background: #111827;
+  color: #ffffff;
+  border: none;
+}
+
+.btn-print:hover {
+  background: #000000;
+}
+
+/* DARK MODE (AKTIF JIKA ADA .dark PARENT) */
+
+.dark .page-title span {
+  color: #f9fafb;
+}
+
+.dark .page-title i {
+  color: #2563eb;
+}
+
+.dark .filter-bar select,
+.dark .filter-bar button {
+  background: #2a2d2f;
+  /* dark soft */
   color: #e5e7eb;
   border: 1px solid #3a3d40;
   outline: none;
@@ -2492,26 +2945,464 @@ body.dark .filters span {
   }
 }
 
+/* CSS Khusus untuk Halaman Perizinan */
+/* MODAL WRAPPER */
+.pdf-modal {
+  position: fixed;
+  inset: 0;
+  /* = top:0 right:0 bottom:0 left:0 */
+  width: 100vw;
+  height: 100vh;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 999999;
+  /* HARUS PALING ATAS */
+}
+
+/* ISI MODAL */
+.pdf-modal-content {
+  width: 80%;
+  height: 85%;
+  background: #fff;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* IFRAME */
+#pdfViewer {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* TOMBOL CLOSE */
+.pdf-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* CSS Filter status pengajuan - Halaman perizinan */
+.status-filter {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.status-filter i {
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+.status-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .15);
+  min-width: 280px;
+  display: none;
+  z-index: 100;
+}
+
+.status-dropdown.show {
+  display: block;
+}
+
+.status-dropdown div {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.status-dropdown div:hover {
+  background: #f1f3f6;
+}
+
+/* ================================
+   MODAL UPDATE STATUS (KHUSUS)
+================================ */
+
+/* ukuran modal kecil */
+.status-modal .pdf-modal-content {
+  width: 420px;
+  max-width: 90%;
+  height: auto;
+  padding: 20px;
+  overflow: visible;
+  background: var(--panel-color);
+  color: var(--text-color);
+  border-radius: 10px;
+}
+
+/* judul */
+.status-modal .modal-title {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+/* form */
+.status-modal .form-group {
+  margin-bottom: 15px;
+}
+
+.status-modal .form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.status-modal input,
+.status-modal select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--panel-color);
+  color: var(--text-color);
+}
+
+.status-modal input[disabled] {
+  background: #eaeaea;
+  cursor: not-allowed;
+}
+
+/* tombol */
+.status-modal .form-actions {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.status-modal .btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.status-modal .btn-primary {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.status-modal .btn-primary:hover {
+  background: var(--primary-color-dark);
+}
+
+.status-modal .btn-secondary {
+  background: #6c757d;
+  color: #fff;
+  margin-right: 6px;
+}
+
+/* DARK MODE */
+body.dark .status-modal input,
+body.dark .status-modal select {
+  background: var(--panel-color);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+body.dark .status-modal input[disabled] {
+  background: #2c2c2c;
+}
+
+/* CSS SWITCH TABEL - Halaman perizinan */
+.btn-tambah {
+  opacity: 0.6;
+  transition: all 0.3s;
+  background-color: #6c757d;
+  /* Warna abu-abu saat tidak aktif */
+  border: none;
+}
+
+.btn-tambah.active {
+  opacity: 1;
+  background-color: #007bff;
+  /* Warna biru saat aktif (sesuaikan tema) */
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-tambah:hover {
+  opacity: 0.9;
+}
+
+/* Container Utama Tabel Baru */
+.new-table-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  background: #fff;
+  /* Sesuaikan dengan bg asli jika perlu */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Baris Header dan Baris Data */
+.new-table-header,
+.new-table-row {
+  display: grid;
+  align-items: center;
+  padding: 15px;
+  /* Sesuaikan padding agar sama dengan desain lama */
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Styling Khusus Header */
+.new-table-header {
+  font-weight: bold;
+  background-color: transparent;
+  /* Atau sesuaikan warna header */
+  color: var(--text-color, #333);
+}
+
+.new-table-header .data-title {
+  display: block;
+  margin-bottom: 0 !important;
+  /* Reset margin lama */
+}
+
+/* Styling Baris Data */
+.new-table-row:hover {
+  background-color: #f9f9f9;
+  /* Efek hover baris */
+}
+
+/* ==========================================================
+   DARK MODE ADAPTATION (Tambahkan di bagian paling bawah CSS)
+   ========================================================== */
+
+/* 1. Container Utama & Teks Global */
+body.dark .new-table-container {
+  background: var(--panel-color, #242526);
+  /* Fallback ke abu gelap jika var tidak ada */
+  color: var(--text-color, #e4e6eb);
+  border: 1px solid var(--border-color, #3a3b3c);
+}
+
+/* 2. Header & Row Borders */
+body.dark .new-table-header,
+body.dark .new-table-row {
+  border-bottom-color: var(--border-color, #3a3b3c);
+  /* Garis pemisah lebih gelap */
+  color: var(--text-color, #e4e6eb);
+}
+
+/* 3. Efek Hover pada Baris */
+body.dark .new-table-row:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  /* Efek highlight halus */
+}
+
+/* 4. Bagian Detail (Expand Row) */
+body.dark .detail-row {
+  background-color: #18191a;
+  /* Latar detail lebih gelap dari tabel utama */
+  border-bottom-color: var(--border-color, #3a3b3c);
+}
+
+/* 5. Teks di dalam Detail */
+body.dark .detail-item {
+  color: #b0b3b8;
+  /* Teks abu terang */
+}
+
+body.dark .detail-item strong {
+  color: #e4e6eb;
+  /* Judul detail putih */
+}
+
+/* 6. Kotak Keterangan (Full Width) */
+body.dark .detail-item.full-width {
+  background: var(--panel-color, #242526);
+  border-color: var(--border-color, #3a3b3c);
+  color: var(--text-color, #e4e6eb);
+}
+
+/* 7. Dropdown Filter Status */
+body.dark .status-dropdown {
+  background: var(--panel-color, #242526);
+  border: 1px solid var(--border-color, #3a3b3c);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+body.dark .status-dropdown div {
+  color: var(--text-color, #e4e6eb);
+}
+
+body.dark .status-dropdown div:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* 8. Tombol & Link dalam Dark Mode */
+body.dark .btn-upload-action {
+  color: #64b5f6 !important;
+  /* Biru yang lebih terang agar terbaca */
+}
+
+body.dark .detail-item a {
+  color: #64b5f6 !important;
+}
+
+body.dark .data.no-data span {
+  color: var(--text-color, #b0b3b8) !important;
+}
+
+/* Mengatur Lebar Kolom (Grid Template) */
+/* Template untuk Tab Surat Masuk (6 Kolom) */
+.grid-masuk {
+  /* No | ID | Nama | File | Status | Aksi */
+  grid-template-columns: 50px 1.2fr 2fr 1.7fr 0.8fr 0.3fr;
+  gap: 15px;
+}
+
+/* Template untuk Tab Surat Balasan (6 Kolom) */
+.grid-balasan {
+  /* No | ID | Nama | Status | Jenis | File Balasan | Status Kirim */
+  grid-template-columns: 50px 1fr 1fr 1fr 0.5fr 0.5fr 1fr;
+  gap: 15px;
+}
+
+/* Helper untuk sel (agar isinya rapi) */
+.new-cell {
+  word-break: break-word;
+}
+
+/* Mempertahankan style dropdown status yang lama */
+.status-filter {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+}
+
+/* Tombol Toggle (+) */
+.btn-toggle-detail {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #28a745;
+  /* Warna hijau default (plus) */
+  padding: 0;
+  transition: transform 0.2s;
+  outline: none;
+}
+
+.btn-toggle-detail:hover {
+  transform: scale(1.2);
+}
+
+.btn-toggle-detail.active {
+  color: #dc3545;
+  /* Warna merah saat aktif (minus) */
+}
+
+/* Detail Row Wrapper */
+.detail-row {
+  background-color: #f8f9fa;
+  /* Warna latar sedikit abu */
+  border-bottom: 1px solid #e0e0e0;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Container Grid di dalam Detail */
+.detail-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* 3 Kolom data */
+  gap: 15px;
+  padding: 15px 20px 15px 70px;
+  /* Padding kiri 70px supaya agak menjorok ke dalam */
+}
+
+/* Item Detail */
+.detail-item {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.detail-item strong {
+  color: #333;
+  display: block;
+  /* Label di atas nilai */
+  font-size: 0.85rem;
+  margin-bottom: 2px;
+}
+
+/* Agar keterangan (yang biasanya panjang) mengambil lebar penuh */
+.detail-item.full-width {
+  grid-column: 1 / -1;
+  /* Span semua kolom */
+  background: #fff;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px dashed #ccc;
+}
+
+/* Animasi Halus */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+  .detail-container {
+    grid-template-columns: 1fr;
+    /* Jadi 1 kolom di HP */
+    padding-left: 20px;
+  }
+}
 
 /* 🔹 CSS Khusus untuk Halaman Arsip */
 .arsip-page .activity-wrapper {
-  overflow-x: auto;        /* hanya scroll horizontal */
-  overflow-y: visible;    /* tidak ada scroll vertikal */
-  max-height: none;        /* tidak ada batasan tinggi */
+  overflow-x: auto;
+  /* hanya scroll horizontal */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
+  max-height: none;
+  /* tidak ada batasan tinggi */
 }
 
 .arsip-page .activity {
-  max-height: none;        /* tidak ada batasan tinggi */
-  overflow-y: visible;    /* tidak ada scroll vertikal */
+  max-height: none;
+  /* tidak ada batasan tinggi */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
 }
 
 .arsip-page .activity-data {
-  display: grid !important;  /* override CSS lain */
+  display: grid !important;
+  /* override CSS lain */
   grid-template-columns: 50px 1fr 150px 150px 120px 120px 150px !important;
   min-width: 1000px !important;
   gap: 0 !important;
-  overflow-x: auto;        /* scroll horizontal jika perlu */
-  overflow-y: visible;    /* tidak ada scroll vertikal */
+  overflow-x: auto;
+  /* scroll horizontal jika perlu */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
 }
 
 /* Pastikan arsip-page tidak terpengaruh styling searchResults dari rekap-page */
@@ -2555,23 +3446,31 @@ body.dark .filters span {
 
 /* 🔹 CSS Khusus untuk Halaman Harmonisasi - sama seperti jadwal-kegiatan */
 .harmonisasi-page .activity-wrapper {
-  overflow-x: auto;        /* hanya scroll horizontal */
-  overflow-y: visible;    /* tidak ada scroll vertikal */
-  max-height: none;        /* tidak ada batasan tinggi */
+  overflow-x: auto;
+  /* hanya scroll horizontal */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
+  max-height: none;
+  /* tidak ada batasan tinggi */
 }
 
 .harmonisasi-page .activity {
-  max-height: none;        /* tidak ada batasan tinggi */
-  overflow-y: visible;    /* tidak ada scroll vertikal */
+  max-height: none;
+  /* tidak ada batasan tinggi */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
 }
 
 .harmonisasi-page .activity-data {
-  display: grid !important;  /* override CSS lain */
+  display: grid !important;
+  /* override CSS lain */
   grid-template-columns: 50px 1fr 180px 260px 180px 200px 120px 150px 150px !important;
   min-width: 1490px !important;
   gap: 0 !important;
-  overflow-x: auto;        /* scroll horizontal jika perlu */
-  overflow-y: visible;     /* tidak ada scroll vertikal */
+  overflow-x: auto;
+  /* scroll horizontal jika perlu */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
 }
 
 /* Styling khusus untuk header harmonisasi - pastikan tidak wrap */
@@ -2718,7 +3617,8 @@ body.dark .filters span {
 .harmonisasi-page .btn-action-aksi.view i,
 .harmonisasi-page .data.actions .btn-action-aksi.view i,
 .harmonisasi-page .data-list .btn-action-aksi.view i {
-  color: #3498db !important; /* biru */
+  color: #3498db !important;
+  /* biru */
 }
 
 .harmonisasi-page .btn-action-aksi.edit,
@@ -2727,7 +3627,8 @@ body.dark .filters span {
 .harmonisasi-page .btn-action-aksi.edit i,
 .harmonisasi-page .data.actions .btn-action-aksi.edit i,
 .harmonisasi-page .data-list .btn-action-aksi.edit i {
-  color: #f39c12 !important; /* oranye */
+  color: #f39c12 !important;
+  /* oranye */
 }
 
 .harmonisasi-page .btn-action-aksi.delete,
@@ -2736,13 +3637,14 @@ body.dark .filters span {
 .harmonisasi-page .btn-action-aksi.delete i,
 .harmonisasi-page .data.actions .btn-action-aksi.delete i,
 .harmonisasi-page .data-list .btn-action-aksi.delete i {
-  color: #e74c3c !important; /* merah */
+  color: #e74c3c !important;
+  /* merah */
 }
 
 .harmonisasi-page .btn-action-aksi:hover,
 .harmonisasi-page .data.actions .btn-action-aksi:hover,
 .harmonisasi-page .data-list .btn-action-aksi:hover {
-  background: rgba(0,0,0,0.1) !important;
+  background: rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Dark mode untuk tombol aksi di harmonisasi */
@@ -2776,7 +3678,7 @@ body.dark .harmonisasi-page .data-list .btn-action-aksi.delete i {
 body.dark .harmonisasi-page .btn-action-aksi:hover,
 body.dark .harmonisasi-page .data.actions .btn-action-aksi:hover,
 body.dark .harmonisasi-page .data-list .btn-action-aksi:hover {
-  background: rgba(255,255,255,0.1) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Styling untuk scrollbar horizontal */
@@ -2824,11 +3726,11 @@ body.dark .harmonisasi-page .activity-data::-webkit-scrollbar-thumb:hover {
   .harmonisasi-page .activity-data {
     min-width: 900px;
   }
-  
+
   .harmonisasi-page .data-title {
     font-size: 0.85rem;
   }
-  
+
   .harmonisasi-page .data-list {
     font-size: 0.85rem;
   }
@@ -2836,55 +3738,76 @@ body.dark .harmonisasi-page .activity-data::-webkit-scrollbar-thumb:hover {
 
 /* 🔹 CSS Khusus untuk Halaman Rekap Konten */
 .rekap-page {
-  overflow-x: hidden;      /* tidak ada scroll horizontal */
-  overflow-y: auto;        /* scroll vertikal jika perlu */
-  width: 100%;             /* lebar penuh */
-  max-width: 100%;         /* tidak melebihi lebar container */
+  overflow-x: hidden;
+  /* tidak ada scroll horizontal */
+  overflow-y: auto;
+  /* scroll vertikal jika perlu */
+  width: 100%;
+  /* lebar penuh */
+  max-width: 100%;
+  /* tidak melebihi lebar container */
 }
 
 .rekap-page .chart-container {
-  overflow: visible;       /* tidak ada scroll */
-  max-height: none;        /* tidak ada batasan tinggi */
-  width: 100%;             /* lebar penuh */
+  overflow: visible;
+  /* tidak ada scroll */
+  max-height: none;
+  /* tidak ada batasan tinggi */
+  width: 100%;
+  /* lebar penuh */
 }
 
 .rekap-page .chart-wrapper {
-  overflow: visible;       /* tidak ada scroll */
-  max-height: none;        /* tidak ada batasan tinggi */
-  width: 100%;             /* lebar penuh */
+  overflow: visible;
+  /* tidak ada scroll */
+  max-height: none;
+  /* tidak ada batasan tinggi */
+  width: 100%;
+  /* lebar penuh */
 }
 
 .rekap-page .table-container {
-  overflow-x: auto;        /* scroll horizontal untuk tabel */
-  overflow-y: visible;     /* tidak ada scroll vertikal */
-  max-height: none;        /* tidak ada batasan tinggi */
-  width: 100%;             /* lebar penuh */
-  max-width: 100%;         /* tidak melebihi lebar container */
+  overflow-x: auto;
+  /* scroll horizontal untuk tabel */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
+  max-height: none;
+  /* tidak ada batasan tinggi */
+  width: 100%;
+  /* lebar penuh */
+  max-width: 100%;
+  /* tidak melebihi lebar container */
 }
 
 .rekap-page #rekapTable {
   width: 100%;
   max-width: 100%;
-  table-layout: fixed;     /* tabel layout tetap */
+  table-layout: fixed;
+  /* tabel layout tetap */
 }
 
 .rekap-page .form-container {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;      /* tidak ada scroll horizontal */
+  overflow-x: hidden;
+  /* tidak ada scroll horizontal */
 }
 
 .rekap-page .filters {
   width: 100%;
   max-width: 100%;
-  overflow-x: hidden;      /* tidak ada scroll horizontal */
-  flex-wrap: wrap;         /* wrap jika tidak muat */
+  overflow-x: hidden;
+  /* tidak ada scroll horizontal */
+  flex-wrap: wrap;
+  /* wrap jika tidak muat */
 }
 
 /* Pastikan tidak ada scroll vertikal di arsip */
 .arsip-page .activity-data::-webkit-scrollbar {
-  height: 8px;            /* hanya scroll horizontal */
-  width: 0px;             /* tidak ada scroll vertikal */
+  height: 8px;
+  /* hanya scroll horizontal */
+  width: 0px;
+  /* tidak ada scroll vertikal */
 }
 
 .arsip-page .activity-data::-webkit-scrollbar-track {
@@ -2955,6 +3878,7 @@ body.dark .arsip-page .activity-data::-webkit-scrollbar-thumb:hover {
   text-align: center;
   margin: 20px 0;
 }
+
 .upload-container img {
   width: 100px;
   height: 100px;
@@ -2963,6 +3887,7 @@ body.dark .arsip-page .activity-data::-webkit-scrollbar-thumb:hover {
   border: 2px solid #ccc;
   margin-bottom: 10px;
 }
+
 .upload-container label {
   display: inline-block;
   background-color: var(--primary-color);
@@ -2972,9 +3897,11 @@ body.dark .arsip-page .activity-data::-webkit-scrollbar-thumb:hover {
   cursor: pointer;
   font-size: 14px;
 }
+
 .upload-container label:hover {
   background-color: #0077ff;
 }
+
 .upload-container input[type="file"] {
   display: none;
 }
@@ -3007,7 +3934,7 @@ body.dark .form-group select:hover {
 
 /* Option hover dalam dark mode */
 body.dark .form-group select option:hover {
-  background-color:#357abd;
+  background-color: #357abd;
   color: #fff;
 }
 
@@ -3016,7 +3943,7 @@ body.dark .form-group select option:hover {
 /* edit pengguna awal */
 
 small {
-    color: white;
+  color: white;
 }
 
 /* edit pengguna akhir */
@@ -3026,33 +3953,44 @@ small {
 /* Warna status jadwal kegiatan */
 
 .data-list.status-selesai {
-  color: #2ecc71 !important; /* hijau */
+  color: #2ecc71 !important;
+  /* hijau */
   font-weight: 600;
-  background-color: transparent !important; /* Tidak ada background */
-  border: none !important; /* Tidak ada border */
-  padding: 0 !important; /* Tidak ada padding tambahan */
+  background-color: transparent !important;
+  /* Tidak ada background */
+  border: none !important;
+  /* Tidak ada border */
+  padding: 0 !important;
+  /* Tidak ada padding tambahan */
 }
 
 .data-list.status-ditunda {
-  color: #f39c12 !important; /* oranye */
+  color: #f39c12 !important;
+  /* oranye */
   font-weight: 600;
 }
 
 .data-list.status-dibatalkan {
-  color: #e74c3c !important; /* merah */
+  color: #e74c3c !important;
+  /* merah */
   font-weight: 600;
 }
 
 .data-list.status-belum {
-  color: #3498db !important; /* biru */
+  color: #3498db !important;
+  /* biru */
   font-weight: 600;
-  background-color: transparent !important; /* Tidak ada background */
-  border: none !important; /* Tidak ada border */
-  padding: 0 !important; /* Tidak ada padding tambahan */
+  background-color: transparent !important;
+  /* Tidak ada background */
+  border: none !important;
+  /* Tidak ada border */
+  padding: 0 !important;
+  /* Tidak ada padding tambahan */
 }
 
 .data-list.status-berlangsung {
-  color: #9b59b6 !important; /* ungu */
+  color: #9b59b6 !important;
+  /* ungu */
   font-weight: 600;
   animation: pulse 2s infinite;
 }
@@ -3062,9 +4000,11 @@ small {
   0% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.7;
   }
+
   100% {
     opacity: 1;
   }
@@ -3101,24 +4041,30 @@ body.dark #modalText::-webkit-scrollbar-thumb:hover {
 
 /* CSS responsif untuk arsip */
 .arsip-page .activity-data {
-    min-width: 1000px; /* Diperbesar untuk memberi ruang lebih */
+  min-width: 1000px;
+  /* Diperbesar untuk memberi ruang lebih */
 }
 
 .arsip-page .data-title {
-    font-size: 0.9rem; /* Kembali ke ukuran yang lebih kecil */
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: visible; /* Ubah dari hidden ke visible */
-    text-overflow: unset; /* Hapus ellipsis */
+  font-size: 0.9rem;
+  /* Kembali ke ukuran yang lebih kecil */
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: visible;
+  /* Ubah dari hidden ke visible */
+  text-overflow: unset;
+  /* Hapus ellipsis */
 }
 
 /* CSS khusus untuk kolom yang membutuhkan ruang lebih */
 .arsip-page .data.dokumentasi {
-    min-width: 120px; /* Beri ruang khusus untuk dokumentasi */
+  min-width: 120px;
+  /* Beri ruang khusus untuk dokumentasi */
 }
 
 .arsip-page .data.kategori {
-    min-width: 100px; /* Beri ruang khusus untuk platform */
+  min-width: 100px;
+  /* Beri ruang khusus untuk platform */
 }
 
 /* Akhir jadwal kegiatan */
@@ -3128,124 +4074,125 @@ body.dark #modalText::-webkit-scrollbar-thumb:hover {
 
 /* Password Toggle Styles */
 .password-input-container {
-    position: relative;
-    display: flex;
-    align-items: center;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .password-input-container input {
-    width: 100%;
-    padding-right: 40px; /* Space for the eye icon */
+  width: 100%;
+  padding-right: 40px;
+  /* Space for the eye icon */
 }
 
 .password-toggle {
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    color: var(--text-color);
-    font-size: 18px;
-    transition: color 0.3s ease;
-    z-index: 10;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--text-color);
+  font-size: 18px;
+  transition: color 0.3s ease;
+  z-index: 10;
 }
 
 .password-toggle:hover {
-    color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 .password-toggle i {
-    pointer-events: none;
+  pointer-events: none;
 }
 
 /* ===== Styling untuk Pencarian Kata Kunci ===== */
 .search-section {
-    background: var(--panel-color) !important;
-    border: 1px solid var(--border-color) !important;
+  background: var(--panel-color) !important;
+  border: 1px solid var(--border-color) !important;
 }
 
 .search-section input[type="text"],
 .search-section input[type="date"] {
-    background-color: var(--panel-color);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
+  background-color: var(--panel-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
 }
 
 .search-section input[type="text"]:focus,
 .search-section input[type="date"]:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    background-color: var(--panel-color);
-    color: var(--text-color);
+  outline: none;
+  border-color: var(--primary-color);
+  background-color: var(--panel-color);
+  color: var(--text-color);
 }
 
 .search-section input[type="text"]::placeholder {
-    color: var(--text-color);
-    opacity: 0.5;
+  color: var(--text-color);
+  opacity: 0.5;
 }
 
 .search-section select.filter-select {
-    background-color: var(--panel-color);
-    color: var(--text-color);
-    border: 1px solid var(--border-color);
+  background-color: var(--panel-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
 }
 
 .search-section select.filter-select:focus {
-    outline: none;
-    border-color: var(--primary-color);
+  outline: none;
+  border-color: var(--primary-color);
 }
 
 .search-section select.filter-select option {
-    background-color: var(--panel-color);
-    color: var(--text-color);
+  background-color: var(--panel-color);
+  color: var(--text-color);
 }
 
 /* Dark mode untuk input date */
 body.dark .search-section input[type="date"] {
-    color-scheme: dark;
+  color-scheme: dark;
 }
 
 /* Styling untuk kotak hasil pencarian di REKAP-KONTEN saja - override semua inline style */
-.rekap-page #searchResults > div,
+.rekap-page #searchResults>div,
 .rekap-page #searchResults div[style*="background"],
 .rekap-page #searchResults div[style*="padding"] {
-    background: var(--panel-color) !important;
-    border: 1px solid var(--border-color) !important;
-    border-color: var(--border-color) !important;
-    color: var(--text-color) !important;
+  background: var(--panel-color) !important;
+  border: 1px solid var(--border-color) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-color) !important;
 }
 
 /* Dark mode khusus untuk searchResults di rekap-konten */
-body.dark .rekap-page #searchResults > div,
+body.dark .rekap-page #searchResults>div,
 body.dark .rekap-page #searchResults div[style*="background"],
 body.dark .rekap-page #searchResults div[style*="padding"] {
-    background: var(--panel-color) !important;
-    border-color: var(--border-color) !important;
-    color: var(--text-color) !important;
+  background: var(--panel-color) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-color) !important;
 }
 
 .rekap-page #searchResults h3,
 .rekap-page #searchResults h3[style*="color"] {
-    color: var(--text-color) !important;
+  color: var(--text-color) !important;
 }
 
 .rekap-page #searchResults p,
 .rekap-page #searchResults p[style*="color"] {
-    color: var(--text-color) !important;
+  color: var(--text-color) !important;
 }
 
 .rekap-page #searchResults strong,
 .rekap-page #searchResults strong[style*="color"] {
-    color: var(--text-color) !important;
+  color: var(--text-color) !important;
 }
 
 /* Pastikan semua elemen di dalam searchResults di rekap-konten menggunakan warna yang benar */
 .rekap-page #searchResults * {
-    color: inherit;
+  color: inherit;
 }
 
 .rekap-page #searchResults i[class*="fa-"] {
-    color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
 }
 
 /* ===== PRIORITAS TERTINGGI: Warna tombol aksi di arsip ===== */
@@ -3254,248 +4201,286 @@ body.dark .rekap-page #searchResults div[style*="padding"] {
 .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.view i,
 .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.view,
 .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.view i {
-    color: #3498db !important; /* biru */
+  color: #3498db !important;
+  /* biru */
 }
 
 .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.edit,
 .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.edit i,
 .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.edit,
 .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.edit i {
-    color: #f39c12 !important; /* oranye */
+  color: #f39c12 !important;
+  /* oranye */
 }
 
 .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.delete,
 .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.delete i,
 .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.delete,
 .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.delete i {
-    color: #e74c3c !important; /* merah */
+  color: #e74c3c !important;
+  /* merah */
 }
 
 body.dark .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.view,
 body.dark .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.view i,
 body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.view,
 body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.view i {
-    color: #3498db !important; /* biru */
+  color: #3498db !important;
+  /* biru */
 }
 
 body.dark .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.edit,
 body.dark .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.edit i,
 body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.edit,
 body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.edit i {
-    color: #f39c12 !important; /* oranye */
+  color: #f39c12 !important;
+  /* oranye */
 }
 
 body.dark .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.delete,
 body.dark .arsip-page .activity-data .data.actions .data-list .btn-action-aksi.delete i,
 body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.delete,
 body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.delete i {
-    color: #e74c3c !important; /* merah */
+  color: #e74c3c !important;
+  /* merah */
 }
 
 /* ===== RESPONSIVE UNTUK ARSIP PAGE ===== */
 @media (max-width: 1200px) {
-    .arsip-page .activity-data {
-        min-width: 1100px; /* Lebih lebar untuk layar kecil */
-    }
-    
-    .arsip-page .data-title {
-        font-size: 0.85rem;
-    }
-    
-    .arsip-page .data.dokumentasi {
-        min-width: 110px;
-    }
-    
-    .arsip-page .data.kategori {
-        min-width: 90px;
-    }
+  .arsip-page .activity-data {
+    min-width: 1100px;
+    /* Lebih lebar untuk layar kecil */
+  }
+
+  .arsip-page .data-title {
+    font-size: 0.85rem;
+  }
+
+  .arsip-page .data.dokumentasi {
+    min-width: 110px;
+  }
+
+  .arsip-page .data.kategori {
+    min-width: 90px;
+  }
 }
 
 @media (max-width: 1000px) {
-    .arsip-page .activity-data {
-        min-width: 1200px; /* Lebih lebar lagi untuk mobile */
-    }
-    
-    .arsip-page .data-title {
-        font-size: 0.8rem;
-    }
-    
-    .arsip-page .data.dokumentasi {
-        min-width: 100px;
-    }
-    
-    .arsip-page .data.kategori {
-        min-width: 80px;
-    }
+  .arsip-page .activity-data {
+    min-width: 1200px;
+    /* Lebih lebar lagi untuk mobile */
+  }
+
+  .arsip-page .data-title {
+    font-size: 0.8rem;
+  }
+
+  .arsip-page .data.dokumentasi {
+    min-width: 100px;
+  }
+
+  .arsip-page .data.kategori {
+    min-width: 80px;
+  }
 }
+
 /* ===== AKHIR RESPONSIVE ARSIP PAGE ===== */
 
 /* ===== RESPONSIVE UNTUK NAVIGASI DAN DASHBOARD ===== */
 @media (max-width: 1000px) {
-    nav{
-        width: 73px;
-    }
-    nav.close{
-        width: 250px;
-    }
-    nav .logo_name{
-        opacity: 0;
-        pointer-events: none;
-    }
-    nav.close .logo_name{
-        opacity: 1;
-        pointer-events: auto;
-    }
-    nav li a .link-name{
-        opacity: 0;
-        pointer-events: none;
-    }
-    nav.close li a .link-name{
-        opacity: 1;
-        pointer-events: auto;
-    }
-    nav ~ .dashboard{
-        left: 73px;
-        width: calc(100% - 73px);
-    }
-    nav.close ~ .dashboard{
-        left: 250px;
-        width: calc(100% - 250px);
-    }
-    nav ~ .dashboard .top{
-        left: 73px;
-        width: calc(100% - 73px);
-    }
-    nav.close ~ .dashboard .top{
-        left: 250px;
-        width: calc(100% - 250px);
-    }
-    .activity .activity-data{
-        overflow-X: scroll;
-    }
+  nav {
+    width: 73px;
+  }
+
+  nav.close {
+    width: 250px;
+  }
+
+  nav .logo_name {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  nav.close .logo_name {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  nav li a .link-name {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  nav.close li a .link-name {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  nav~.dashboard {
+    left: 73px;
+    width: calc(100% - 73px);
+  }
+
+  nav.close~.dashboard {
+    left: 250px;
+    width: calc(100% - 250px);
+  }
+
+  nav~.dashboard .top {
+    left: 73px;
+    width: calc(100% - 73px);
+  }
+
+  nav.close~.dashboard .top {
+    left: 250px;
+    width: calc(100% - 250px);
+  }
+
+  .activity .activity-data {
+    overflow-X: scroll;
+  }
 }
 
 @media (max-width: 780px) {
-    .dash-content .boxes .box{
-        width: calc(100% / 2 - 15px);
-        margin-top: 15px;
-    }
+  .dash-content .boxes .box {
+    width: calc(100% / 2 - 15px);
+    margin-top: 15px;
+  }
 }
 
 @media (max-width: 560px) {
-    .dash-content .boxes .box{
-        width: 100% ;
-    }
+  .dash-content .boxes .box {
+    width: 100%;
+  }
 }
 
 @media (max-width: 400px) {
-    nav{
-        width: 0px;
-    }
-    nav.close{
-        width: 73px;
-    }
-    nav .logo_name{
-        opacity: 0;
-        pointer-events: none;
-    }
-    nav.close .logo_name{
-        opacity: 0;
-        pointer-events: none;
-    }
-    nav li a .link-name{
-        opacity: 0;
-        pointer-events: none;
-    }
-    nav.close li a .link-name{
-        opacity: 0;
-        pointer-events: none;
-    }
-    nav ~ .dashboard{
-        left: 0;
-        width: 100%;
-    }
-    nav.close ~ .dashboard{
-        left: 73px;
-        width: calc(100% - 73px);
-    }
-    nav ~ .dashboard .top{
-        left: 0;
-        width: 100%;
-    }
-    nav.close ~ .dashboard .top{
-        left: 0;
-        width: 100%;
-    }
+  nav {
+    width: 0px;
+  }
+
+  nav.close {
+    width: 73px;
+  }
+
+  nav .logo_name {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  nav.close .logo_name {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  nav li a .link-name {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  nav.close li a .link-name {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  nav~.dashboard {
+    left: 0;
+    width: 100%;
+  }
+
+  nav.close~.dashboard {
+    left: 73px;
+    width: calc(100% - 73px);
+  }
+
+  nav~.dashboard .top {
+    left: 0;
+    width: 100%;
+  }
+
+  nav.close~.dashboard .top {
+    left: 0;
+    width: 100%;
+  }
 }
+
 /* ===== AKHIR RESPONSIVE NAVIGASI DAN DASHBOARD ===== */
 
 /* ===== STATUS BADGE UNTUK TINDAK LANJUT ===== */
 .status-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    text-align: center;
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
 }
 
 .status-selesai {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
 }
 
 .status-proses {
-    background-color: #fff3cd;
-    color: #856404;
-    border: 1px solid #ffeaa7;
+  background-color: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeaa7;
 }
 
 .status-belum {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
 }
 
 body.dark .status-selesai {
-    background-color: #1e4620;
-    color: #81c784;
-    border-color: #2e7d32;
+  background-color: #1e4620;
+  color: #81c784;
+  border-color: #2e7d32;
 }
 
 body.dark .status-proses {
-    background-color: #5d4037;
-    color: #ffb74d;
-    border-color: #8d6e63;
+  background-color: #5d4037;
+  color: #ffb74d;
+  border-color: #8d6e63;
 }
 
 body.dark .status-belum {
-    background-color: #4a1e1e;
-    color: #e57373;
-    border-color: #6d2c2c;
+  background-color: #4a1e1e;
+  color: #e57373;
+  border-color: #6d2c2c;
 }
+
 /* ===== AKHIR STATUS BADGE ===== */
 
 /* 🔹 CSS Khusus untuk Halaman Peminjaman Ruangan - sama seperti jadwal-kegiatan */
 .peminjaman-ruangan-page .activity-wrapper {
-  overflow-x: auto;        /* hanya scroll horizontal */
-  overflow-y: visible;    /* tidak ada scroll vertikal */
-  max-height: none;        /* tidak ada batasan tinggi */
+  overflow-x: auto;
+  /* hanya scroll horizontal */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
+  max-height: none;
+  /* tidak ada batasan tinggi */
 }
 
 .peminjaman-ruangan-page .activity {
-  max-height: none;        /* tidak ada batasan tinggi */
-  overflow-y: visible;    /* tidak ada scroll vertikal */
+  max-height: none;
+  /* tidak ada batasan tinggi */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
 }
 
 .peminjaman-ruangan-page .activity-data {
-  display: grid !important;  /* override CSS lain */
+  display: grid !important;
+  /* override CSS lain */
   grid-template-columns: 60px 1.5fr 2fr 2fr 1fr 1fr 120px !important;
   min-width: 1200px !important;
   gap: 0 !important;
-  overflow-x: auto;        /* scroll horizontal jika perlu */
-  overflow-y: visible;     /* tidak ada scroll vertikal */
+  overflow-x: auto;
+  /* scroll horizontal jika perlu */
+  overflow-y: visible;
+  /* tidak ada scroll vertikal */
   border: 1px solid var(--border-color);
   border-radius: 8px;
   background: var(--panel-color);
@@ -3518,7 +4503,8 @@ body.dark .status-belum {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
-  background: #0E4BF1 !important; /* Warna biru tetap, jangan pakai var(--primary-color) */
+  background: #0E4BF1 !important;
+  /* Warna biru tetap, jangan pakai var(--primary-color) */
   position: sticky !important;
   top: 0 !important;
   z-index: 999 !important;
@@ -3624,7 +4610,8 @@ body.dark .status-belum {
 .peminjaman-ruangan-page .btn-action-aksi.edit i,
 .peminjaman-ruangan-page .data.actions .btn-action-aksi.edit i,
 .peminjaman-ruangan-page .data-list .btn-action-aksi.edit i {
-  color: #f39c12 !important; /* oranye */
+  color: #f39c12 !important;
+  /* oranye */
 }
 
 .peminjaman-ruangan-page .btn-action-aksi.delete,
@@ -3633,13 +4620,14 @@ body.dark .status-belum {
 .peminjaman-ruangan-page .btn-action-aksi.delete i,
 .peminjaman-ruangan-page .data.actions .btn-action-aksi.delete i,
 .peminjaman-ruangan-page .data-list .btn-action-aksi.delete i {
-  color: #e74c3c !important; /* merah */
+  color: #e74c3c !important;
+  /* merah */
 }
 
 .peminjaman-ruangan-page .btn-action-aksi:hover,
 .peminjaman-ruangan-page .data.actions .btn-action-aksi:hover,
 .peminjaman-ruangan-page .data-list .btn-action-aksi:hover {
-  background: rgba(0,0,0,0.1) !important;
+  background: rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Dark mode untuk tombol aksi */
@@ -3664,7 +4652,7 @@ body.dark .peminjaman-ruangan-page .data-list .btn-action-aksi.delete i {
 body.dark .peminjaman-ruangan-page .btn-action-aksi:hover,
 body.dark .peminjaman-ruangan-page .data.actions .btn-action-aksi:hover,
 body.dark .peminjaman-ruangan-page .data-list .btn-action-aksi:hover {
-  background: rgba(255,255,255,0.1) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Styling untuk scrollbar horizontal */
@@ -3731,11 +4719,11 @@ body.dark .peminjaman-ruangan-page .activity-data::-webkit-scrollbar-thumb:hover
   .peminjaman-ruangan-page .activity-data {
     min-width: 1000px;
   }
-  
+
   .peminjaman-ruangan-page .data-title {
     font-size: 0.85rem;
   }
-  
+
   .peminjaman-ruangan-page .data-list {
     font-size: 0.85rem;
   }

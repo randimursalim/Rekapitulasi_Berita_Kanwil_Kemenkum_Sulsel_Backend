@@ -5,12 +5,12 @@ try {
     require_once '../../config/database.php';
 
     // ===== PARAMETER =====
-    $page   = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+    $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
     $search = trim($_GET['search'] ?? '');
-    $tahun  = $_GET['tahun'] ?? '';
-    $bulan  = $_GET['bulan'] ?? '';
+    $tahun = $_GET['tahun'] ?? '';
+    $bulan = $_GET['bulan'] ?? '';
 
-    $limit  = 10;
+    $limit = 10;
     $offset = ($page - 1) * $limit;
 
     // ===== BASE QUERY =====
@@ -48,7 +48,7 @@ try {
 
     // ===== AMBIL DATA =====
     $stmt = $conn->prepare("
-        SELECT id, tgl, jam, nama, telp, email, alamat, tujuan, ttd, foto
+        SELECT id, tgl, jam, nama, telp, email, alamat, tujuan, layanan, layanan_item, entrain, ttd, foto
         $baseSql
         ORDER BY tgl DESC, jam DESC
         LIMIT $limit OFFSET $offset

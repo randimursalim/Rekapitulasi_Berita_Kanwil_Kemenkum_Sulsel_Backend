@@ -93,6 +93,59 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+// LAYANAN ITEM DINAMIS
+document.addEventListener('DOMContentLoaded', function () {
+
+    const layanan = document.querySelector('select[name="layanan"]');
+    const layananItem = document.getElementById('layanan_item');
+
+    if (!layanan || !layananItem) return;
+
+    layanan.addEventListener('change', async function () {
+
+        const value = this.value;
+
+        layananItem.innerHTML =
+            '<option value="">Memuat data...</option>';
+
+        layananItem.disabled = true;
+
+        try {
+
+            const response = await fetch(
+                `api/get-layanan-item.php?layanan=${value}`
+            );
+
+            const result = await response.json();
+
+            layananItem.innerHTML =
+                '<option value="">-- Pilih Item Layanan --</option>';
+
+            if (result.success && result.items.length > 0) {
+
+                result.items.forEach(item => {
+
+                    layananItem.innerHTML += `
+                        <option value="${item}">
+                            ${item}
+                        </option>
+                    `;
+                });
+
+                layananItem.disabled = false;
+            }
+
+        } catch (error) {
+
+            layananItem.innerHTML =
+                '<option value="">Gagal memuat data</option>';
+
+            layananItem.disabled = true;
+        }
+    });
+
+});
+
 // Form Kamera
 document.addEventListener("DOMContentLoaded", function () {
     const video = document.getElementById("video");
@@ -135,7 +188,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// form tanda tangan
 // form tanda tangan (DESKTOP + HP)
 document.addEventListener("DOMContentLoaded", function () {
     const canvas = document.getElementById("signature-pad");

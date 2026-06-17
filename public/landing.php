@@ -100,7 +100,8 @@ $BASE = rtrim($BASE, '/');
               <li><a href="#chatbot">Lacapila</a></li>
               <li><a href="#layanan-pengaduan">Layanan Pengaduan</a></li>
               <li><a href="#data-harmonisasi">Data Harmonisasi</a></li>
-              <li><a href="https://simanis.kemenkumsulsel.id/" target="_blank">Simanis</a></li>
+              <!-- <li><a href="https://simanis.kemenkumsulsel.id/" target="_blank">Simanis</a></li> -->
+              <li><a href="<?= $BASE ?>/index.php?page=simanis">Simanis</a></li>
               <li><a href="<?= $BASE ?>/index.php?page=simtamu">Simtamu</a></li>
             </ul>
           </li>

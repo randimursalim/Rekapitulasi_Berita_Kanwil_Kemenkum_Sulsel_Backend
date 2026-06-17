@@ -29,7 +29,8 @@ if (!isset($BASE)) {
 
     <!-- Form Tambah Pengguna -->
     <div class="form-container">
-        <form id="formTambahTamu" action="index.php?page=store-tamu" method="POST" class="input-berita-form" autocomplete="off" enctype="multipart/form-data">
+        <form id="formTambahTamu" action="index.php?page=store-tamu" method="POST" class="input-berita-form"
+            autocomplete="off" enctype="multipart/form-data">
 
             <div class="form-group">
                 <label for="nama">Nama Lengkap</label>
@@ -56,9 +57,44 @@ if (!isset($BASE)) {
             </div>
 
             <div class="form-group">
+                <label>Pilih Layanan</label>
+                <select name="layanan" required>
+                    <option value="">--Pilih Layanan--</option>
+                    <option value="adm">ADMINISTRASI</option>
+                    <option value="ahu">AHU</option>
+                    <option value="ki">KI</option>
+                    <option value="p3h">P3H</option>
+                    <option value="priority">PRIORITY</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Pilih Item Layanan</label>
+
+                <select name="layanan_item" id="layanan_item" required disabled>
+                    <option value="">-- Pilih Item Layanan --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label for="tujuan">Maksud/Tujuan Bertamu</label>
                 <input type="text" id="tujuan" name="tujuan" placeholder="Maksud/Tujuan Bertamu"
                     value="<?= htmlspecialchars($_POST['tujuan'] ?? '') ?>" required>
+            </div>
+
+            <div class="form-group">
+                <div class="switch-wrapper">
+
+                    <div class="switch-text">
+                        <label class="switch-label">Ambil Antrean</label>
+                        <small>Aktifkan jika ingin mengambil nomor antrean</small>
+                    </div>
+
+                    <label class="switch">
+                        <input type="checkbox" name="entrain" value="yes">
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
 
             <div class="form-group">

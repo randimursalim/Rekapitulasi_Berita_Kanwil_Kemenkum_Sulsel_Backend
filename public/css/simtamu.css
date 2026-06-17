@@ -61,7 +61,7 @@ div[id] {
     gap: 12px;
     margin-left: 12px;
     margin-right: 12px;
-    background-color: #ffffff;   
+    background-color: #ffffff;
     position: sticky;
     top: 28px;
 }
@@ -199,18 +199,113 @@ div[id] {
     margin-bottom: 5px;
 }
 
-.form-group input {
+.form-group select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='%23374151' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 18px;
+
+    padding-right: 42px;
+}
+
+.form-group input,
+.form-group select {
     width: 100%;
     padding: 10px 12px;
     border-radius: 9px;
     border: 1px solid #dcdcdc;
     font-size: 13px;
     transition: border-color 0.2s;
+    background: #fff;
+
+    box-sizing: border-box;
 }
 
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
     outline: none;
     border-color: #6a4df4;
+}
+
+/* SWITCH ENTRAIN TOGGLE */
+.switch-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 14px 16px;
+    border: 1px solid #dcdcdc;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.switch-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.switch-label {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #374151;
+    margin-bottom: 2px !important;
+}
+
+.switch-text small {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+/* SWITCH */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 30px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* BACKGROUND */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background-color: #d1d5db;
+    transition: .3s;
+    border-radius: 999px;
+}
+
+/* BULATAN */
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    top: 4px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .15);
+}
+
+/* ACTIVE */
+.switch input:checked+.slider {
+    background-color: #22c55e;
+}
+
+.switch input:checked+.slider:before {
+    transform: translateX(22px);
 }
 
 /* CAMERA & SIGNATURE */
