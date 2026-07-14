@@ -58,7 +58,7 @@ $BASE = rtrim($BASE, '/');
   <title>Landing Page - LaMacca</title>
   <link rel="icon" type="image/png" href="<?= $BASE ?>/Images/aset_landing.webp">
   <!-- Cache busting: update version number when CSS/JS changes -->
-  <?php $version = '1.0.8'; // Update this number when you make CSS/JS changes ?>
+  <?php $version = '1.0.9'; // Update this number when you make CSS/JS changes ?>
   <link rel="stylesheet" href="<?= $BASE ?>/css/landing.css?v=<?= $version ?>">
   <link rel="stylesheet" href="<?= $BASE ?>/vendor/fontawesome/css/all.min.css">
 
@@ -103,6 +103,7 @@ $BASE = rtrim($BASE, '/');
               <!-- <li><a href="https://simanis.kemenkumsulsel.id/" target="_blank">Simanis</a></li> -->
               <li><a href="<?= $BASE ?>/index.php?page=simanis">Simanis</a></li>
               <li><a href="<?= $BASE ?>/index.php?page=simtamu">Simtamu</a></li>
+              <li><a href="<?= $BASE ?>/siapakemenkumsulsel/">SI-APA</a></li>
             </ul>
           </li>
           <li class="dropdown">
@@ -150,6 +151,7 @@ $BASE = rtrim($BASE, '/');
             <p>Selain itu, LaMacca juga menyediakan akses ke layanan pendukung lainnya seperti
               SIMANIS (Sistem Informasi Manajemen Izin Penelitian Mahasiswa),
               SIMTAMU (Sistem Informasi Buku Tamu),
+              SI-APA (Sistem Informasi Sasaran Kinerja Pegawai),
               serta chatbot informasi untuk memudahkan pegawai maupun masyarakat dalam memperoleh
               layanan dan informasi secara cepat.</p>
             <p>Dengan antarmuka yang sederhana dan sistem yang terintegrasi,

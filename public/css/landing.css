@@ -464,6 +464,7 @@ a {
 }
 
 .menu nav ul li.dropdown .dropdown-menu {
+  display: block; /* Override inherited flex layout */
   position: absolute;
   top: 100%;
   left: 0;
@@ -498,6 +499,7 @@ a {
   display: block;
   color: var(--primary-color);
   transition: background-color 0.3s ease;
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
 .menu nav ul li.dropdown .dropdown-menu a:hover {

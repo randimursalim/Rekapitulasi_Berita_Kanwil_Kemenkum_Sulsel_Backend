@@ -1,0 +1,24 @@
+[2026-06-23 11:40:19] Exception: Table 'if0_41185600_siapa.pegawai' doesn't exist in /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php on line 166
+#0 /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php(166): mysqli->prepare('SELECT DISTINCT...')
+#1 {main}
+[2026-06-24 15:34:31] Exception: Table 'if0_41185600_siapa.pegawai' doesn't exist in /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php on line 255
+#0 /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php(255): mysqli->prepare('SELECT DISTINCT...')
+#1 {main}
+[2026-06-24 15:48:07] Exception: Table 'if0_41185600_siapa.pegawai' doesn't exist in /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php on line 255
+#0 /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php(255): mysqli->prepare('SELECT DISTINCT...')
+#1 {main}
+[2026-06-24 15:48:18] Exception: Table 'if0_41185600_siapa.pegawai' doesn't exist in /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php on line 226
+#0 /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php(226): mysqli->prepare('SELECT DISTINCT...')
+#1 {main}
+[2026-06-24 15:52:49] Exception: Table 'if0_41185600_siapa.pegawai' doesn't exist in /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php on line 226
+#0 /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php(226): mysqli->prepare('SELECT DISTINCT...')
+#1 {main}
+[2026-06-24 16:23:34] Exception: Table 'if0_41185600_siapa.pegawai' doesn't exist in /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php on line 255
+#0 /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php(255): mysqli->prepare('SELECT DISTINCT...')
+#1 {main}
+[2026-06-24 16:23:56] Exception: Table 'if0_41185600_siapa.pegawai' doesn't exist in /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php on line 226
+#0 /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php(226): mysqli->prepare('SELECT DISTINCT...')
+#1 {main}
+[2026-06-25 08:42:53] Exception: Table 'if0_41185600_siapa.pegawai' doesn't exist in /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php on line 226
+#0 /home/vol1000_8/infinityfree.com/if0_41185600/siapakemenkumsulsel.page.gd/htdocs/skp_kuantitatif.php(226): mysqli->prepare('SELECT DISTINCT...')
+#1 {main}
