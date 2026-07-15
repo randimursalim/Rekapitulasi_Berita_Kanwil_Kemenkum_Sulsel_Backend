@@ -12,13 +12,13 @@
 </FilesMatch>
 
 # Allow specific file types: images only (for profile photos)
-<FilesMatch "\.(jpg|jpeg|png|gif)$">
+<FilesMatch "\.(jpg|jpeg|png|gif|webp)$">
     Order Allow,Deny
     Allow from all
 </FilesMatch>
 
 # Deny everything else
-<FilesMatch "^(?!.*\.(jpg|jpeg|png|gif)$).*$">
+<FilesMatch "^(?!.*\.(jpg|jpeg|png|gif|webp)$).*$">
     Order Allow,Deny
     Deny from all
 </FilesMatch>

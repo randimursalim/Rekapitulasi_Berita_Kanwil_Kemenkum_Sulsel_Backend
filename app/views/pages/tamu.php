@@ -20,6 +20,8 @@ if (!isset($BASE)) {
         '';
 }
 ?>
+<link rel="stylesheet" href="<?= $BASE ?>/css/tamu_list.css?v=1.0.1" />
+
 <div class="overview">
     <div class="page-header">
         <div class="page-title">
@@ -30,36 +32,22 @@ if (!isset($BASE)) {
         <!-- Filter Tamu -->
         <div class="filter-bar">
 
-            <select id="filterTahun">
-                <?php
-                $tahunSekarang = date('Y');
-                for ($t = $tahunSekarang; $t >= $tahunSekarang - 5; $t--) {
-                    echo "<option value='$t'>$t</option>";
-                }
-                ?>
+            <label for="filterStartDate" style="color: var(--text-color); font-weight: 500; margin-right: 5px;">Tanggal:</label>
+            <input type="date" id="filterStartDate" style="padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background-color: var(--panel-color); color: var(--text-color);">
+            <span style="color: var(--text-color); margin: 0 5px;">s/d</span>
+            <input type="date" id="filterEndDate" style="padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; background-color: var(--panel-color); color: var(--text-color); margin-right: 10px;">
+
+            <select id="filterLayanan">
+                <option value="">Semua Layanan</option>
+                <option value="adm">Administrasi</option>
+                <option value="ahu">AHU</option>
+                <option value="ki">KI</option>
+                <option value="p3h">P3H</option>
+                <option value="priority">Priority</option>
             </select>
 
-            <select id="filterBulan">
-                <option value="all">Semua Bulan</option>
-                <?php
-                $bulan = [
-                    1 => 'Januari',
-                    2 => 'Februari',
-                    3 => 'Maret',
-                    4 => 'April',
-                    5 => 'Mei',
-                    6 => 'Juni',
-                    7 => 'Juli',
-                    8 => 'Agustus',
-                    9 => 'September',
-                    10 => 'Oktober',
-                    11 => 'November',
-                    12 => 'Desember'
-                ];
-                foreach ($bulan as $i => $b) {
-                    echo "<option value='$i'>$b</option>";
-                }
-                ?>
+            <select id="filterLayananItem" disabled>
+                <option value="">Semua Item Layanan</option>
             </select>
 
             <button id="btnCari" class="btn-cari">Cari</button>
@@ -130,4 +118,4 @@ if (!isset($BASE)) {
     </div>
 </div>
 
-<script src="<?= $BASE ?>/js/tamu.js"></script>
+<script src="<?= $BASE ?>/js/tamu.js?v=1.1.1"></script>

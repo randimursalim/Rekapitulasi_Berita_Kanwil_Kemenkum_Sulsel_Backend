@@ -147,8 +147,8 @@ if (!isset($BASE)) {
 
                 <div class="form-group">
                     <label for="keteranganFile">Upload File Keterangan (Opsional)</label>
-                    <input type="file" id="keteranganFile" name="keteranganFile" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-                    <small style="color: #666; font-size: 0.9em; display: block; margin-top: 5px;">Format: PDF, JPG, PNG, DOC, DOCX (Maks. 10MB)</small>
+                    <input type="file" id="keteranganFile" name="keteranganFile" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx">
+                    <small style="color: #666; font-size: 0.9em; display: block; margin-top: 5px;">Format: PDF, JPG, PNG, WEBP, DOC, DOCX (Maks. 10MB)</small>
                     <div id="keteranganFilePreview" style="margin-top: 10px; display: none;">
                         <p style="color: #28a745; font-size: 0.9em;"><i class="fas fa-check-circle"></i> File dipilih: <span id="keteranganFileName"></span></p>
                     </div>

@@ -19,8 +19,15 @@ if (!isset($BASE)) {
         : '';
 }
 
+$filenameSuffix = 'semua';
+if (!empty($startDate)) {
+    $filenameSuffix = $startDate;
+    if (!empty($endDate)) {
+        $filenameSuffix .= '_s_d_' . $endDate;
+    }
+}
 header("Content-Type: application/msword");
-header("Content-Disposition: attachment; filename=rekap-pelayanan-$tahun.doc");
+header("Content-Disposition: attachment; filename=rekap-pelayanan-$filenameSuffix.doc");
 
 $bulanIndonesia = [
     1 => 'Januari',
@@ -113,7 +120,23 @@ $bulanIndonesia = [
 
         <tr>
             <td colspan="7" class="subtitle">
-                Periode Januari s/d Desember Tahun <?= $tahun ?>
+                <?php
+                if (!empty($startDate) && !empty($endDate)) {
+                    echo "Periode: " . date('d-m-Y', strtotime($startDate)) . " s/d " . date('d-m-Y', strtotime($endDate));
+                } elseif (!empty($startDate)) {
+                    echo "Periode: Mulai " . date('d-m-Y', strtotime($startDate));
+                } elseif (!empty($endDate)) {
+                    echo "Periode: s/d " . date('d-m-Y', strtotime($endDate));
+                } else {
+                    echo "Periode: Semua Tanggal";
+                }
+                ?>
+                <?php if (!empty($layanan)): ?>
+                    | Layanan: <?= strtoupper($layanan) ?>
+                    <?php if (!empty($layanan_item)): ?>
+                        - Item: <?= strtoupper($layanan_item) ?>
+                    <?php endif; ?>
+                <?php endif; ?>
             </td>
         </tr>
 

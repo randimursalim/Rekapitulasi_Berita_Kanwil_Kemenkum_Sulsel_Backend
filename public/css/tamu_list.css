@@ -1,0 +1,180 @@
+/* public/css/tamu_list.css */
+
+/* Override dashboard grid/flex layout for tamuResults */
+#tamuResults {
+    display: block !important;
+    width: 100% !important;
+}
+
+/* Table Container styling */
+.tamu-table-container {
+    width: 100%;
+    overflow-x: auto;
+    background-color: var(--panel-color, #fff);
+    border: 1px solid var(--border-color, #e6e6e6);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+body.dark .tamu-table-container {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    background-color: var(--panel-color, #1e1e2d);
+}
+
+/* Table styling */
+.tamu-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.95rem;
+    color: var(--text-color, #333);
+}
+
+.tamu-table th,
+.tamu-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color, #e6e6e6);
+    vertical-align: middle;
+}
+
+/* Headers */
+.tamu-table th {
+    background-color: var(--box1-color, #f4f6fc);
+    color: var(--text-color, #333);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+body.dark .tamu-table th {
+    background-color: #1a1a27;
+}
+
+/* Rows */
+.tamu-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.tamu-table tbody tr:hover {
+    background-color: var(--box2-color, #f8fafd);
+}
+
+body.dark .tamu-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Text helpers */
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: #888;
+}
+
+.font-weight-bold {
+    font-weight: bold;
+}
+
+.text-success {
+    color: #10b981;
+}
+
+.text-alamat {
+    max-width: 250px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+/* Badges */
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.badge-layanan {
+    min-width: 70px;
+    text-transform: uppercase;
+}
+
+.badge-adm {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+.badge-ahu {
+    background-color: rgba(139, 92, 246, 0.1);
+    color: #8b5cf6;
+}
+
+.badge-ki {
+    background-color: rgba(236, 72, 153, 0.1);
+    color: #ec4899;
+}
+
+.badge-p3h {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.badge-priority {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* Image Thumbnails */
+.img-ttd,
+.img-foto {
+    max-height: 48px;
+    width: auto;
+    border-radius: 6px;
+    border: 1px solid var(--border-color, #e6e6e6);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.img-ttd:hover,
+.img-foto:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Delete Button */
+.btn-delete {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-delete:hover {
+    background-color: #ef4444;
+    color: #fff;
+}
+
+/* Edit Button */
+.btn-edit {
+    display: inline-block;
+    background-color: rgba(14, 75, 241, 0.1);
+    color: #0E4BF1;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-edit:hover {
+    background-color: #0E4BF1;
+    color: #fff;
+}

@@ -859,6 +859,24 @@ switch ($page) {
         $controller->printTamu();
         break;
 
+    case 'edit-tamu':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/TamuController.php';
+        $controller = new TamuController();
+        $controller->editTamu();
+        break;
+
+    case 'update-tamu':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/TamuController.php';
+        $controller = new TamuController();
+        $controller->updateTamu();
+        break;
+
     // === DEFAULT ===
     default:
         echo "404 - Halaman tidak ditemukan";

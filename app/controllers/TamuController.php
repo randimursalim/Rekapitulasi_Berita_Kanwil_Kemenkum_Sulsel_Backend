@@ -204,16 +204,12 @@ class TamuController
         require_once __DIR__ . '/../models/TamuModel.php';
         $model = new TamuModel();
 
-        $tahun = $_GET['tahun'] ?? date('Y');
-        $bulan = $_GET['bulan'] ?? 'all';
+        $startDate = $_GET['startDate'] ?? '';
+        $endDate = $_GET['endDate'] ?? '';
+        $layanan = $_GET['layanan'] ?? '';
+        $layanan_item = $_GET['layanan_item'] ?? '';
 
-        if ($bulan === 'all') {
-            $data = $model->getTamuByTahun($tahun);
-            $judulBulan = 'SEMUA BULAN';
-        } else {
-            $data = $model->getTamuByBulan($tahun, $bulan);
-            $judulBulan = strtoupper(strftime('%B', mktime(0, 0, 0, $bulan, 1)));
-        }
+        $data = $model->getTamuFiltered($startDate, $endDate, $layanan, $layanan_item);
 
         require_once __DIR__ . '/../views/pages/print-tamu.php';
     }
@@ -225,9 +221,12 @@ class TamuController
 
         $model = new TamuModel();
 
-        $tahun = $_GET['tahun'] ?? date('Y');
+        $startDate = $_GET['startDate'] ?? '';
+        $endDate = $_GET['endDate'] ?? '';
+        $layanan = $_GET['layanan'] ?? '';
+        $layanan_item = $_GET['layanan_item'] ?? '';
 
-        $data = $model->getTamuExportExcel($tahun);
+        $data = $model->getTamuExportExcel($startDate, $endDate, $layanan, $layanan_item);
 
         require __DIR__ . '/../views/pages/export-tamu-excel.php';
     }
@@ -239,10 +238,156 @@ class TamuController
 
         $model = new TamuModel();
 
-        $tahun = $_GET['tahun'] ?? date('Y');
+        $startDate = $_GET['startDate'] ?? '';
+        $endDate = $_GET['endDate'] ?? '';
+        $layanan = $_GET['layanan'] ?? '';
+        $layanan_item = $_GET['layanan_item'] ?? '';
 
-        $data = $model->getTamuExportExcel($tahun);
+        $data = $model->getTamuExportExcel($startDate, $endDate, $layanan, $layanan_item);
 
         require __DIR__ . '/../views/pages/export-tamu-word.php';
+    }
+
+    // Halaman edit Tamu (edit-tamu.php)
+    public function editTamu()
+    {
+        $id = $_GET['id'] ?? null;
+        if (!$id) {
+            echo "ID tamu tidak valid";
+            exit;
+        }
+
+        $tamu = $this->model->getTamuById($id);
+        if (!$tamu) {
+            echo "Data tamu tidak ditemukan";
+            exit;
+        }
+
+        include __DIR__ . '/../views/layouts/header.php';
+        include __DIR__ . '/../views/pages/edit-tamu.php';
+        include __DIR__ . '/../views/layouts/footer.php';
+    }
+
+    // Proses update tamu
+    public function updateTamu()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            exit;
+        }
+
+        $id = $_POST['id'] ?? null;
+        if (!$id) {
+            echo json_encode(['success' => false, 'message' => 'ID tamu tidak valid']);
+            exit;
+        }
+
+        $nama = trim($_POST['nama'] ?? '');
+        $telp = trim($_POST['telp'] ?? '');
+        $email = $_POST['email'] ?? '';
+        $alamat = $_POST['alamat'] ?? '';
+        $tujuan = $_POST['tujuan'] ?? '';
+        $layanan = $_POST['layanan'] ?? '';
+        $layanan_item = $_POST['layanan_item'] ?? '';
+        $entrain = isset($_POST['entrain']) ? 'yes' : 'no';
+        $fotoBase64 = $_POST['foto'] ?? '';
+        $ttdBase64 = $_POST['ttd'] ?? '';
+
+        // VALIDASI
+        $errors = [];
+        if (!$nama)
+            $errors[] = 'Nama harus diisi';
+        if (!$telp)
+            $errors[] = 'No Telepon harus diisi';
+        if (!$email)
+            $errors[] = 'Email harus diisi';
+        if (!$alamat)
+            $errors[] = 'Alamat harus diisi';
+        if (!$tujuan)
+            $errors[] = 'Tujuan harus diisi';
+        if (!$layanan)
+            $errors[] = 'Layanan harus diisi';
+        if (!$layanan_item)
+            $errors[] = 'Item layanan harus diisi';
+
+        if ($errors) {
+            echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
+            exit;
+        }
+
+        // Ambil data tamu saat ini
+        $tamu = $this->model->getTamuById($id);
+        if (!$tamu) {
+            echo json_encode(['success' => false, 'message' => 'Data tamu tidak ditemukan']);
+            exit;
+        }
+
+        // Proses kamera jika ada foto baru
+        $fotoFilename = $tamu['foto'];
+        if (!empty($fotoBase64) && strpos($fotoBase64, 'data:image') === 0) {
+            $uploadDir = __DIR__ . '/../../public/storage/uploads/foto/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            // Hapus foto lama jika ada
+            if (!empty($tamu['foto']) && file_exists($uploadDir . $tamu['foto'])) {
+                unlink($uploadDir . $tamu['foto']);
+            }
+
+            // Hapus prefix base64
+            $fotoBase64 = preg_replace('#^data:image/\w+;base64,#i', '', $fotoBase64);
+            $fotoBinary = base64_decode($fotoBase64);
+
+            if ($fotoBinary !== false) {
+                $fotoFilename = 'B' . time() . rand(1000, 9999) . '.jpg';
+                file_put_contents($uploadDir . $fotoFilename, $fotoBinary);
+            }
+        }
+
+        // Proses TTD jika ada TTD baru
+        $ttdFilename = $tamu['ttd'];
+        if (!empty($ttdBase64) && strpos($ttdBase64, 'data:image') === 0) {
+            $uploadDir = __DIR__ . '/../../public/storage/uploads/ttd/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
+
+            // Hapus TTD lama jika ada
+            if (!empty($tamu['ttd']) && file_exists($uploadDir . $tamu['ttd'])) {
+                unlink($uploadDir . $tamu['ttd']);
+            }
+
+            // Hapus prefix base64
+            $ttdBase64 = preg_replace('#^data:image/\w+;base64,#i', '', $ttdBase64);
+            $ttdBinary = base64_decode($ttdBase64);
+
+            if ($ttdBinary !== false) {
+                $ttdFilename = 'A' . time() . rand(1000, 9999) . '.png';
+                file_put_contents($uploadDir . $ttdFilename, $ttdBinary);
+            }
+        }
+
+        // UPDATE DATABASE
+        $data = [
+            'id' => $id,
+            'nama' => $nama,
+            'telp' => $telp,
+            'email' => $email,
+            'alamat' => $alamat,
+            'tujuan' => $tujuan,
+            'layanan' => $layanan,
+            'layanan_item' => $layanan_item,
+            'entrain' => $entrain,
+            'foto' => $fotoFilename,
+            'ttd' => $ttdFilename
+        ];
+
+        if ($this->model->updateTamu($data)) {
+            echo json_encode(['success' => true, 'message' => 'Data tamu berhasil diperbarui']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Gagal memperbarui data tamu']);
+        }
+        exit;
     }
 }

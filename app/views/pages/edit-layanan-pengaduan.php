@@ -183,8 +183,8 @@ if (!isset($BASE)) {
 
                 <div class="form-group">
                     <label for="keteranganFile">Upload File Keterangan (Opsional)</label>
-                    <input type="file" id="keteranganFile" name="keteranganFile" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-                    <small style="color: #666; font-size: 0.9em; display: block; margin-top: 5px;">Format: PDF, JPG, PNG, DOC, DOCX (Maks. 10MB)</small>
+                    <input type="file" id="keteranganFile" name="keteranganFile" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx">
+                    <small style="color: #666; font-size: 0.9em; display: block; margin-top: 5px;">Format: PDF, JPG, PNG, WEBP, DOC, DOCX (Maks. 10MB)</small>
                     <?php
                         $keteranganLama = $layananPengaduan['keterangan'] ?? '';
                         $filePath = '';
@@ -193,7 +193,7 @@ if (!isset($BASE)) {
                             if (strpos($keteranganLama, 'FILE:') !== false) {
                                 $parts = explode('FILE:', $keteranganLama, 2);
                                 $filePath = trim($parts[1] ?? '');
-                            } else if (strpos($keteranganLama, 'storage/uploads/') !== false || preg_match('/\.(pdf|jpg|jpeg|png|doc|docx)$/i', $keteranganLama)) {
+                            } else if (strpos($keteranganLama, 'storage/uploads/') !== false || preg_match('/\.(pdf|jpg|jpeg|png|webp|doc|docx)$/i', $keteranganLama)) {
                                 // Format lama: hanya file
                                 $filePath = $keteranganLama;
                             }

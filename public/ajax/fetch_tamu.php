@@ -7,8 +7,23 @@ try {
     // ===== PARAMETER =====
     $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
     $search = trim($_GET['search'] ?? '');
-    $tahun = $_GET['tahun'] ?? '';
-    $bulan = $_GET['bulan'] ?? '';
+    $startDate = $_GET['startDate'] ?? '';
+    $endDate = $_GET['endDate'] ?? '';
+    $layanan = $_GET['layanan'] ?? '';
+    $layanan_item = $_GET['layanan_item'] ?? '';
+
+    // Fallback untuk parameter tahun & bulan lama
+    if (empty($startDate) && !empty($_GET['tahun'])) {
+        $tahun = $_GET['tahun'];
+        $bulan = $_GET['bulan'] ?? 'all';
+        if ($bulan === 'all' || $bulan === '') {
+            $startDate = "$tahun-01-01";
+            $endDate = "$tahun-12-31";
+        } else {
+            $startDate = "$tahun-" . str_pad($bulan, 2, '0', STR_PAD_LEFT) . "-01";
+            $endDate = date('Y-m-t', strtotime($startDate));
+        }
+    }
 
     $limit = 10;
     $offset = ($page - 1) * $limit;
@@ -21,16 +36,27 @@ try {
 
     $params = [];
 
-    // ===== FILTER TAHUN =====
-    if ($tahun !== '') {
-        $baseSql .= " AND YEAR(tgl) = ?";
-        $params[] = $tahun;
+    // ===== FILTER TANGGAL (RANGE) =====
+    if ($startDate !== '') {
+        $baseSql .= " AND tgl >= ?";
+        $params[] = $startDate;
     }
 
-    // ===== FILTER BULAN =====
-    if ($bulan !== '' && $bulan !== 'all') {
-        $baseSql .= " AND MONTH(tgl) = ?";
-        $params[] = $bulan;
+    if ($endDate !== '' && $endDate !== 'all') {
+        $baseSql .= " AND tgl <= ?";
+        $params[] = $endDate;
+    }
+
+    // ===== FILTER LAYANAN =====
+    if ($layanan !== '') {
+        $baseSql .= " AND layanan = ?";
+        $params[] = $layanan;
+    }
+
+    // ===== FILTER LAYANAN ITEM =====
+    if ($layanan_item !== '') {
+        $baseSql .= " AND layanan_item = ?";
+        $params[] = $layanan_item;
     }
 
     // ===== FILTER SEARCH =====

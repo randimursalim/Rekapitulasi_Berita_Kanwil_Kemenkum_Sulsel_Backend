@@ -725,7 +725,8 @@ class KontenModel {
                     k.dokumentasi LIKE '%.jpg' OR
                     k.dokumentasi LIKE '%.jpeg' OR
                     k.dokumentasi LIKE '%.png' OR
-                    k.dokumentasi LIKE '%.gif'
+                    k.dokumentasi LIKE '%.gif' OR
+                    k.dokumentasi LIKE '%.webp'
                 )
                 ORDER BY k.id_konten DESC
                 LIMIT :limit

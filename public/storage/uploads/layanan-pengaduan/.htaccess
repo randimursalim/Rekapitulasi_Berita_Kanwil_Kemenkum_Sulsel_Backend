@@ -12,13 +12,13 @@
 </FilesMatch>
 
 # Allow specific file types: images, PDF, and Word documents
-<FilesMatch "\.(jpg|jpeg|png|gif|pdf|doc|docx)$">
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|pdf|doc|docx)$">
     Order Allow,Deny
     Allow from all
 </FilesMatch>
 
 # Deny everything else
-<FilesMatch "^(?!.*\.(jpg|jpeg|png|gif|pdf|doc|docx)$).*$">
+<FilesMatch "^(?!.*\.(jpg|jpeg|png|gif|webp|pdf|doc|docx)$).*$">
     Order Allow,Deny
     Deny from all
 </FilesMatch>

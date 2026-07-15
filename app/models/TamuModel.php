@@ -57,41 +57,96 @@ class TamuModel
         return $stmt->execute([$id]);
     }
 
-    public function getTamuByBulan($tahun, $bulan)
+    public function getTamuByBulan($tahun, $bulan, $layanan = '', $layanan_item = '')
     {
-        $stmt = $this->db->prepare("
-        SELECT * FROM tb_tamu
-        WHERE YEAR(tgl) = ?
-        AND MONTH(tgl) = ?
-        ORDER BY tgl ASC, jam ASC
-    ");
-        $stmt->execute([$tahun, $bulan]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->getTamuFiltered($tahun, $bulan, $layanan, $layanan_item);
     }
 
-    public function getTamuByTahun($tahun)
+    public function getTamuByTahun($tahun, $layanan = '', $layanan_item = '')
     {
-        $stmt = $this->db->prepare("
-            SELECT * FROM tb_tamu
-            WHERE YEAR(tgl) = ?
-            ORDER BY tgl ASC, jam ASC
-        ");
-        $stmt->execute([$tahun]);
+        return $this->getTamuFiltered($tahun, 'all', $layanan, $layanan_item);
+    }
+
+    public function getTamuFiltered($startDate = '', $endDate = '', $layanan = '', $layanan_item = '')
+    {
+        $sql = "SELECT * FROM tb_tamu WHERE 1=1";
+        $params = [];
+        
+        if (!empty($startDate) && is_numeric($startDate) && strlen($startDate) === 4) {
+            $sql .= " AND YEAR(tgl) = :tahun";
+            $params[':tahun'] = $startDate;
+            
+            if (!empty($endDate) && $endDate !== 'all') {
+                $sql .= " AND MONTH(tgl) = :bulan";
+                $params[':bulan'] = $endDate;
+            }
+        } else {
+            if (!empty($startDate)) {
+                $sql .= " AND tgl >= :startDate";
+                $params[':startDate'] = $startDate;
+            }
+            
+            if (!empty($endDate) && $endDate !== 'all') {
+                $sql .= " AND tgl <= :endDate";
+                $params[':endDate'] = $endDate;
+            }
+        }
+        
+        if (!empty($layanan)) {
+            $sql .= " AND layanan = :layanan";
+            $params[':layanan'] = $layanan;
+        }
+        
+        if (!empty($layanan_item)) {
+            $sql .= " AND layanan_item = :layanan_item";
+            $params[':layanan_item'] = $layanan_item;
+        }
+        
+        $sql .= " ORDER BY tgl ASC, jam ASC";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // fungsi export excel
-    public function getTamuExportExcel($tahun)
+    public function getTamuExportExcel($startDate = '', $endDate = '', $layanan = '', $layanan_item = '')
     {
-        $stmt = $this->db->prepare("
-            SELECT *
-            FROM tb_tamu
-            WHERE YEAR(tgl) = ?
-
-            ORDER BY
-
+        $sql = "SELECT * FROM tb_tamu WHERE 1=1";
+        $params = [];
+        
+        if (!empty($startDate) && is_numeric($startDate) && strlen($startDate) === 4) {
+            $sql .= " AND YEAR(tgl) = :tahun";
+            $params[':tahun'] = $startDate;
+            
+            if (!empty($endDate) && $endDate !== 'all') {
+                $sql .= " AND MONTH(tgl) = :bulan";
+                $params[':bulan'] = $endDate;
+            }
+        } else {
+            if (!empty($startDate)) {
+                $sql .= " AND tgl >= :startDate";
+                $params[':startDate'] = $startDate;
+            }
+            
+            if (!empty($endDate) && $endDate !== 'all') {
+                $sql .= " AND tgl <= :endDate";
+                $params[':endDate'] = $endDate;
+            }
+        }
+        
+        if (!empty($layanan)) {
+            $sql .= " AND layanan = :layanan";
+            $params[':layanan'] = $layanan;
+        }
+        
+        if (!empty($layanan_item)) {
+            $sql .= " AND layanan_item = :layanan_item";
+            $params[':layanan_item'] = $layanan_item;
+        }
+        
+        $sql .= " ORDER BY
             MONTH(tgl) ASC,
-
             FIELD(
                 layanan,
                 'priority',
@@ -100,16 +155,49 @@ class TamuModel
                 'ki',
                 'p3h'
             ) ASC,
-
             layanan_item ASC,
-
             tgl ASC,
-
-            jam ASC
-        ");
-
-        $stmt->execute([$tahun]);
-
+            jam ASC";
+            
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Update data tamu
+    public function updateTamu(array $data)
+    {
+        try {
+            $sql = "UPDATE tb_tamu SET 
+                    nama = :nama, 
+                    telp = :telp, 
+                    email = :email, 
+                    alamat = :alamat, 
+                    tujuan = :tujuan, 
+                    layanan = :layanan, 
+                    layanan_item = :layanan_item, 
+                    entrain = :entrain, 
+                    foto = :foto, 
+                    ttd = :ttd 
+                    WHERE id = :id";
+
+            $stmt = $this->db->prepare($sql);
+
+            return $stmt->execute([
+                ':id' => $data['id'],
+                ':nama' => $data['nama'],
+                ':telp' => $data['telp'],
+                ':email' => $data['email'],
+                ':alamat' => $data['alamat'],
+                ':tujuan' => $data['tujuan'],
+                ':layanan' => $data['layanan'],
+                ':layanan_item' => $data['layanan_item'],
+                ':entrain' => $data['entrain'],
+                ':foto' => $data['foto'],
+                ':ttd' => $data['ttd']
+            ]);
+        } catch (PDOException $e) {
+            return false;
+        }
     }
 }

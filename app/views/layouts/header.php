@@ -237,8 +237,8 @@ function is_active($pageName)
           <?php endif; ?>
           <li><a href="<?= $BASE ?>/index.php?page=arsip" class="<?= is_active('arsip') ?>"><i
                 class="fas fa-archive"></i><span class="link-name">Arsip</span></a></li>
-          <li><a href="<?= $BASE ?>/index.php?page=daftar-aduan" class="<?= is_active('daftar-aduan') ?>"><i
-                class="fas fa-exclamation-triangle"></i><span class="link-name">Daftar Aduan</span></a></li>
+          <!-- <li><a href="<?= $BASE ?>/index.php?page=daftar-aduan" class="<?= is_active('daftar-aduan') ?>"><i
+                class="fas fa-exclamation-triangle"></i><span class="link-name">Daftar Aduan</span></a></li> -->
           <li><a href="<?= $BASE ?>/index.php?page=layanan-pengaduan" class="<?= is_active('layanan-pengaduan') ?>"><i
                 class="fas fa-gavel"></i><span class="link-name">Layanan Pengaduan</span></a></li>
         <?php endif; ?>

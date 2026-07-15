@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const fileIndex = fileMatch.index;
         keteranganText = decodedKeterangan.substring(0, fileIndex).trim();
         filePath = decodedKeterangan.substring(fileIndex + fileMatch[0].length).trim();
-      } else if (decodedKeterangan.includes('storage/uploads/') || decodedKeterangan.match(/\.(pdf|jpg|jpeg|png|doc|docx)$/i)) {
+      } else if (decodedKeterangan.includes('storage/uploads/') || decodedKeterangan.match(/\.(pdf|jpg|jpeg|png|webp|doc|docx)$/i)) {
         // Format lama: hanya file (tanpa prefix FILE:)
         filePath = decodedKeterangan.trim();
       } else {
@@ -409,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const fileExt = displayFileName.split('.').pop().toLowerCase();
         let fileIcon = 'fa-file';
         if (fileExt === 'pdf') fileIcon = 'fa-file-pdf';
-        else if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExt)) fileIcon = 'fa-file-image';
+        else if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(fileExt)) fileIcon = 'fa-file-image';
         else if (['doc', 'docx'].includes(fileExt)) fileIcon = 'fa-file-word';
         
         htmlContent += `<div style="margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 5px; border-left: 4px solid #0E4BF1;">`;

@@ -80,7 +80,21 @@ if (!isset($BASE)) {
 
 <div class="judul">
     BUKU TAMU<br>
-    BULAN <?= $judulBulan ?> TAHUN <?= $tahun ?>
+    <?php if (!empty($startDate) && !empty($endDate)): ?>
+        PERIODE: <?= date('d-m-Y', strtotime($startDate)) ?> s/d <?= date('d-m-Y', strtotime($endDate)) ?>
+    <?php elseif (!empty($startDate)): ?>
+        PERIODE: MULAI <?= date('d-m-Y', strtotime($startDate)) ?>
+    <?php elseif (!empty($endDate)): ?>
+        PERIODE: S/D <?= date('d-m-Y', strtotime($endDate)) ?>
+    <?php else: ?>
+        PERIODE: SEMUA TANGGAL
+    <?php endif; ?>
+    <?php if (!empty($layanan)): ?>
+        <br>LAYANAN: <?= strtoupper($layanan) ?>
+        <?php if (!empty($layanan_item)): ?>
+            - ITEM: <?= strtoupper($layanan_item) ?>
+        <?php endif; ?>
+    <?php endif; ?>
 </div>
 
 <table>
@@ -91,6 +105,8 @@ if (!isset($BASE)) {
         <th>Telp</th>
         <th>Email</th>
         <th>Alamat</th>
+        <th>Layanan</th>
+        <th>Item Layanan</th>
         <th>Maksud/Tujuan</th>
         <th>TTD</th>
         <th>Foto</th>
@@ -100,11 +116,13 @@ if (!isset($BASE)) {
     <tr>
         <td><?= $i + 1 ?></td>
         <td><?= date('d-m-Y', strtotime($t['tgl'])) ?><br><?= $t['jam'] ?></td>
-        <td><?= $t['nama'] ?></td>
-        <td><?= $t['telp'] ?></td>
-        <td><?= $t['email'] ?></td>
-        <td><?= $t['alamat'] ?></td>
-        <td><?= $t['tujuan'] ?></td>
+        <td><?= htmlspecialchars($t['nama']) ?></td>
+        <td><?= htmlspecialchars($t['telp']) ?></td>
+        <td><?= htmlspecialchars($t['email']) ?></td>
+        <td><?= htmlspecialchars($t['alamat']) ?></td>
+        <td><?= htmlspecialchars($t['layanan']) ?></td>
+        <td><?= htmlspecialchars($t['layanan_item']) ?></td>
+        <td><?= htmlspecialchars($t['tujuan']) ?></td>
         <td class="ttd">
             <?php if ($t['ttd']): ?>
                 <img src="<?= $BASE ?>/storage/uploads/ttd/<?= $t['ttd'] ?>">

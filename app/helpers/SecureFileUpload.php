@@ -9,8 +9,8 @@ class SecureFileUpload {
     private $isSecure;
     
     public function __construct($subdirectory = '') {
-        // Include variasi MIME type untuk JPEG (image/jpeg, image/jpg, image/pjpeg)
-        $this->allowedTypes = $this->getEnv('ALLOWED_FILE_TYPES', 'image/jpeg,image/jpg,image/pjpeg,image/png,image/gif,application/pdf,application/x-pdf,application/msword,application/vnd.ms-word,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/zip');
+        // Include variasi MIME type untuk JPEG (image/jpeg, image/jpg, image/pjpeg) dan WEBP
+        $this->allowedTypes = $this->getEnv('ALLOWED_FILE_TYPES', 'image/jpeg,image/jpg,image/pjpeg,image/png,image/gif,image/webp,application/pdf,application/x-pdf,application/msword,application/vnd.ms-word,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/zip');
         // Default 10MB untuk foto (10485760 bytes)
         $this->maxFileSize = $this->getEnv('MAX_FILE_SIZE', 10485760); // 10MB default
         $this->isSecure = $this->isHttps();
@@ -200,7 +200,7 @@ class SecureFileUpload {
         // Allowed MIME types - hardcode untuk memastikan PDF dan Word terdeteksi
         $allowedMimes = [
             'image/jpeg', 'image/jpg', 'image/pjpeg', 
-            'image/png', 'image/gif',
+            'image/png', 'image/gif', 'image/webp',
             'application/pdf', 'application/x-pdf',
             'application/msword', 'application/vnd.ms-word',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -213,7 +213,7 @@ class SecureFileUpload {
         $allowedMimes = array_unique(array_merge($allowedMimes, $envAllowedMimes));
         
         // Allowed extensions
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx'];
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf', 'doc', 'docx'];
         
         error_log("[VALIDATE TYPE] File extension: {$extension}");
         error_log("[VALIDATE TYPE] Detected MIME type: {$mimeType}");
@@ -222,7 +222,7 @@ class SecureFileUpload {
         // Validate MIME type
         if (!in_array($mimeType, $allowedMimes)) {
             error_log("[VALIDATE TYPE] MIME type NOT in allowed list!");
-            return ['success' => false, 'message' => "Tipe file tidak diizinkan. File Anda: {$mimeType}. Ekstensi: {$extension}. Hanya file PDF, JPG, PNG, DOC, DOCX yang diizinkan."];
+            return ['success' => false, 'message' => "Tipe file tidak diizinkan. File Anda: {$mimeType}. Ekstensi: {$extension}. Hanya file PDF, JPG, PNG, WEBP, DOC, DOCX yang diizinkan."];
         }
         
         // Validate extension
@@ -236,6 +236,7 @@ class SecureFileUpload {
             'jpeg' => ['image/jpeg', 'image/jpg', 'image/pjpeg'],
             'png' => ['image/png', 'image/x-png'],
             'gif' => ['image/gif'],
+            'webp' => ['image/webp'],
             'pdf' => ['application/pdf', 'application/x-pdf'],
             'doc' => ['application/msword', 'application/vnd.ms-word'],
             'docx' => ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/zip']
@@ -265,7 +266,7 @@ class SecureFileUpload {
         finfo_close($finfo);
         
         // Validate images
-        if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif'])) {
+        if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
             $imageInfo = getimagesize($file['tmp_name']);
             if ($imageInfo === false) {
                 return ['success' => false, 'message' => 'File bukan gambar yang valid'];
