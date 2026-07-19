@@ -203,6 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (u.role === 'Admin') roleColor = '#dc3545'; // danger
             else if (u.role === 'Operator') roleColor = '#0d6efd'; // primary
             else if (u.role === 'p3h' || u.role === 'P3H') roleColor = '#ffc107'; // warning
+            else if (u.role === 'pegawai' || u.role === 'Pegawai') roleColor = '#20c997'; // success/teal
 
             const initials = u.nama.charAt(0).toUpperCase();
 
@@ -306,10 +307,10 @@ document.addEventListener('DOMContentLoaded', function () {
         recentChart.update();
 
         // Doughnut Chart (Role)
-        roleChart.data.labels = ['Admin', 'Operator', 'P3H'];
+        roleChart.data.labels = ['Admin', 'Operator', 'P3H', 'Pegawai'];
         roleChart.data.datasets = [{
-            data: [data.roleDistribution.Admin, data.roleDistribution.Operator, data.roleDistribution.P3H],
-            backgroundColor: ['#0d6efd', '#198754', '#ffc107'],
+            data: [data.roleDistribution.Admin, data.roleDistribution.Operator, data.roleDistribution.P3H, data.roleDistribution.Pegawai || 0],
+            backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#20c997'],
             borderWidth: 0,
             hoverOffset: 4
         }];

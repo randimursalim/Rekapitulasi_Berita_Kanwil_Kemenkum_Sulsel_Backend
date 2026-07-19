@@ -20,7 +20,13 @@ class AuthController
                 $redirectPage = preg_replace('/[^a-zA-Z0-9\-_]/', '', $_GET['redirect']);
                 header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=' . $redirectPage);
             } else {
-                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=dashboard');
+                $defaultRedirect = 'dashboard';
+                if ($_SESSION['user']['role'] === 'p3h') {
+                    $defaultRedirect = 'harmonisasi';
+                } elseif ($_SESSION['user']['role'] === 'pegawai') {
+                    $defaultRedirect = 'jadwal-peminjaman-ruangan';
+                }
+                header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=' . $defaultRedirect);
             }
             exit;
         }
@@ -75,6 +81,8 @@ class AuthController
                         header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=' . $redirectPage);
                     } elseif ($user['role'] === 'p3h') {
                         header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=harmonisasi');
+                    } elseif ($user['role'] === 'pegawai') {
+                        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=jadwal-peminjaman-ruangan');
                     } else {
                         header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=dashboard');
                     }

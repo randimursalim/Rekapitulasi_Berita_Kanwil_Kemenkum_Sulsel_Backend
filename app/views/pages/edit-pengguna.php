@@ -76,6 +76,7 @@ if (!isset($BASE)) {
                     <option value="Admin" <?= ($pengguna['role'] === 'Admin') ? 'selected' : '' ?>>Admin</option>
                     <option value="Operator" <?= ($pengguna['role'] === 'Operator') ? 'selected' : '' ?>>Operator</option>
                     <option value="p3h" <?= ($pengguna['role'] === 'p3h') ? 'selected' : '' ?>>Peraturan Perundang-undangan dan Pembinaan Hukum</option>
+                    <option value="pegawai" <?= ($pengguna['role'] === 'pegawai') ? 'selected' : '' ?>>Pegawai</option>
                 </select>
             </div>
 

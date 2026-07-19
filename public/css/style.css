@@ -4486,6 +4486,10 @@ body.dark .status-belum {
   background: var(--panel-color);
 }
 
+.peminjaman-ruangan-page.is-pegawai .activity-data {
+  grid-template-columns: 60px 1.5fr 2fr 2fr 1fr 1fr !important;
+}
+
 /* Styling khusus untuk header peminjaman ruangan - background biru dengan teks putih */
 .peminjaman-ruangan-page .activity-data .data-title,
 .peminjaman-ruangan-page .activity-data .data .data-title,

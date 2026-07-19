@@ -44,7 +44,7 @@ class PenggunaController {
         if (empty($password)) $errors[] = 'Password harus diisi';
         if (strlen($password) < 6) $errors[] = 'Password minimal 6 karakter';
         if ($password !== $confirmPassword) $errors[] = 'Password dan konfirmasi password tidak sama';
-        if (!in_array($role, ['Admin', 'Operator', 'p3h'])) $errors[] = 'Role tidak valid';
+        if (!in_array($role, ['Admin', 'Operator', 'p3h', 'pegawai'])) $errors[] = 'Role tidak valid';
 
         // Cek username sudah ada
         if ($this->model->isUsernameExists($username)) {
@@ -134,7 +134,7 @@ class PenggunaController {
         $errors = [];
         if (empty($nama)) $errors[] = 'Nama harus diisi';
         if (empty($username)) $errors[] = 'Username harus diisi';
-        if (!in_array($role, ['Admin', 'Operator', 'p3h'])) $errors[] = 'Role tidak valid';
+        if (!in_array($role, ['Admin', 'Operator', 'p3h', 'pegawai'])) $errors[] = 'Role tidak valid';
         
         // Validasi password jika diisi
         if (!empty($password)) {

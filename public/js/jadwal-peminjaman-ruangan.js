@@ -120,6 +120,8 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
+    const isPegawai = document.querySelector('.peminjaman-ruangan-page')?.classList.contains('is-pegawai') || false;
+
     const html = `
       <div class="data no">
         <span class="data-title">No</span>
@@ -154,6 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ${data.map(p => `<span class="data-list">${formatTime(p.waktu_kegiatan)}</span>`).join('')}
       </div>
 
+      ${!isPegawai ? `
       <div class="data actions">
         <span class="data-title">Aksi</span>
         ${data.map((p, index) => `
@@ -167,6 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
           </span>
         `).join('')}
       </div>
+      ` : ''}
     `;
 
     container.innerHTML = html;

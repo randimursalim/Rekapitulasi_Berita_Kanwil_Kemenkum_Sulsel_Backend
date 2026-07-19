@@ -30,8 +30,12 @@ if (is_writable($sessionPath)) {
 @session_start();
 // Default halaman berdasarkan role
 $defaultPage = 'dashboard';
-if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'p3h') {
-    $defaultPage = 'harmonisasi';
+if (isset($_SESSION['user'])) {
+    if ($_SESSION['user']['role'] === 'p3h') {
+        $defaultPage = 'harmonisasi';
+    } elseif ($_SESSION['user']['role'] === 'pegawai') {
+        $defaultPage = 'jadwal-peminjaman-ruangan';
+    }
 }
 $page = $_GET['page'] ?? $defaultPage;
 
@@ -58,6 +62,24 @@ if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'p3h') {
 
     if (!in_array($page, $allowedPages)) {
         header('Location: ' . BASE_URL . '/index.php?page=harmonisasi');
+        exit;
+    }
+}
+
+// Cek akses untuk role pegawai (hanya bisa akses jadwal-peminjaman-ruangan)
+if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'pegawai') {
+    $allowedPages = [
+        'jadwal-peminjaman-ruangan',
+        'tambah-peminjaman-ruangan',
+        'store-peminjaman-ruangan',
+        'edit-profil',
+        'update-profil',
+        'logout',
+        'update-activity'
+    ];
+
+    if (!in_array($page, $allowedPages)) {
+        header('Location: ' . BASE_URL . '/index.php?page=jadwal-peminjaman-ruangan');
         exit;
     }
 }

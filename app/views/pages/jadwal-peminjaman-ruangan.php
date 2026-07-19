@@ -21,7 +21,12 @@ if (!isset($BASE)) {
 }
 ?>
 
-<div class="overview peminjaman-ruangan-page">
+<?php
+$userRole = isset($_SESSION['user']) ? $_SESSION['user']['role'] : '';
+$isPegawai = ($userRole === 'pegawai');
+?>
+
+<div class="overview peminjaman-ruangan-page <?= $isPegawai ? 'is-pegawai' : '' ?>">
     <div class="title">
         <i class="fas fa-door-open"></i>
         <span class="text">Jadwal Peminjaman Ruangan</span>

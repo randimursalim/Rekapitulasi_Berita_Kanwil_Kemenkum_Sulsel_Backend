@@ -28,6 +28,7 @@
                 <option value="Admin">Admin</option>
                 <option value="Operator">Operator</option>
                 <option value="p3h">P3H</option>
+                <option value="pegawai">Pegawai</option>
             </select>
             
             <!-- Export Buttons -->

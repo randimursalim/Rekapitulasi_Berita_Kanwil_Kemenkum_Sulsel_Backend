@@ -103,7 +103,8 @@ try {
     $roleDistribution = [
         'Admin' => 0,
         'Operator' => 0,
-        'P3H' => 0
+        'P3H' => 0,
+        'Pegawai' => 0
     ];
 
     foreach ($users as &$u) {
@@ -169,6 +170,7 @@ try {
         if (isset($roleDistribution['Admin']) && $r == 'ADMIN') $roleDistribution['Admin']++;
         elseif (isset($roleDistribution['Operator']) && $r == 'OPERATOR') $roleDistribution['Operator']++;
         elseif (isset($roleDistribution['P3H']) && $r == 'P3H') $roleDistribution['P3H']++;
+        elseif ($r == 'PEGAWAI') $roleDistribution['Pegawai']++;
     }
 
     // Sort users for top kontributor by log_aktivitas
