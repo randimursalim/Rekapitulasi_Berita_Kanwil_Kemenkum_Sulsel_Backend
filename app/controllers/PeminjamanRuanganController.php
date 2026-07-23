@@ -31,8 +31,9 @@ class PeminjamanRuanganController {
     public function storePeminjamanRuangan() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
+                $namaPeminjam = !empty($_SESSION['user']['nama']) ? $_SESSION['user']['nama'] : ($_POST['namaPeminjam'] ?? '');
                 $data = [
-                    'nama_peminjam' => $_POST['namaPeminjam'] ?? '',
+                    'nama_peminjam' => $namaPeminjam,
                     'nama_ruangan' => $_POST['namaRuangan'] ?? '',
                     'kegiatan' => $_POST['kegiatan'] ?? '',
                     'tanggal_kegiatan' => $_POST['tanggalKegiatan'] ?? '',
@@ -113,13 +114,15 @@ class PeminjamanRuanganController {
     public function storePeminjamanRuanganMasyarakat() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
+                $namaPeminjam = !empty($_SESSION['user']['nama']) ? $_SESSION['user']['nama'] : ($_POST['namaPeminjam'] ?? '');
                 $data = [
-                    'nama_peminjam' => $_POST['namaPeminjam'] ?? '',
+                    'nama_peminjam' => $namaPeminjam,
                     'nama_ruangan' => $_POST['namaRuangan'] ?? '',
                     'kegiatan' => $_POST['kegiatan'] ?? '',
                     'tanggal_kegiatan' => $_POST['tanggalKegiatan'] ?? '',
                     'waktu_kegiatan' => $_POST['waktuKegiatan'] ?? '',
-                    'durasi_kegiatan' => !empty($_POST['durasiKegiatan']) ? floatval($_POST['durasiKegiatan']) : 2
+                    'durasi_kegiatan' => !empty($_POST['durasiKegiatan']) ? floatval($_POST['durasiKegiatan']) : 2,
+                    'id_pengguna' => $_SESSION['user']['id'] ?? null
                 ];
 
                 // Validasi data

@@ -62,12 +62,17 @@ class PenggunaController {
         $foto = 'user.jpg'; // Default foto
         if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
             $uploadDir = __DIR__ . '/../../public/Images/users/';
+            $storageDir = __DIR__ . '/../../public/storage/uploads/users/';
+            if (!is_dir($uploadDir)) @mkdir($uploadDir, 0755, true);
+            if (!is_dir($storageDir)) @mkdir($storageDir, 0755, true);
+
             $fileExtension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
             $fileName = 'user_' . time() . '_' . rand(1000, 9999) . '.' . $fileExtension;
             $uploadPath = $uploadDir . $fileName;
             
             if (move_uploaded_file($_FILES['foto']['tmp_name'], $uploadPath)) {
                 $foto = $fileName;
+                @copy($uploadPath, $storageDir . $fileName);
             }
         }
 
@@ -154,21 +159,36 @@ class PenggunaController {
             exit;
         }
 
-        // Handle foto upload
-        $foto = 'user.jpg'; // Default foto
-        if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+        // Handle foto upload & reset foto
+        $penggunaLama = $this->model->getPenggunaById($id);
+        $foto = $penggunaLama['foto'] ?? 'user.jpg';
+        $resetFoto = $_POST['reset_foto'] ?? '0';
+
+        if ($resetFoto === '1') {
+            if (!empty($penggunaLama['foto']) && $penggunaLama['foto'] !== 'user.jpg') {
+                require_once __DIR__ . '/../helpers/SecureFileUpload.php';
+                $uploadHandler = new SecureFileUpload('users');
+                $uploadHandler->deleteFile($penggunaLama['foto']);
+                $oldImagesFile = __DIR__ . '/../../public/Images/users/' . $penggunaLama['foto'];
+                if (file_exists($oldImagesFile)) {
+                    @unlink($oldImagesFile);
+                }
+            }
+            $foto = 'user.jpg';
+        } elseif (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
             $uploadDir = __DIR__ . '/../../public/Images/users/';
+            $storageDir = __DIR__ . '/../../public/storage/uploads/users/';
+            if (!is_dir($uploadDir)) @mkdir($uploadDir, 0755, true);
+            if (!is_dir($storageDir)) @mkdir($storageDir, 0755, true);
+
             $fileExtension = pathinfo($_FILES['foto']['name'], PATHINFO_EXTENSION);
             $fileName = 'user_' . $id . '_' . time() . '.' . $fileExtension;
             $uploadPath = $uploadDir . $fileName;
             
             if (move_uploaded_file($_FILES['foto']['tmp_name'], $uploadPath)) {
                 $foto = $fileName;
+                @copy($uploadPath, $storageDir . $fileName);
             }
-        } else {
-            // Jika tidak ada foto baru, ambil foto lama dari database
-            $penggunaLama = $this->model->getPenggunaById($id);
-            $foto = $penggunaLama['foto'] ?? 'user.jpg';
         }
 
         // Simpan data
@@ -246,11 +266,10 @@ class PenggunaController {
 
     // Proses update profil pengguna
     public function updateProfilPengguna() {
-        // Suppress semua output sebelum JSON
-        ob_clean();
+        if (ob_get_level() > 0) @ob_clean();
         
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            ob_clean();
+            if (ob_get_level() > 0) @ob_clean();
             header('Content-Type: application/json');
             echo json_encode(['success' => false, 'message' => 'Method not allowed']);
             exit;
@@ -259,9 +278,9 @@ class PenggunaController {
         // Ambil ID user yang sedang login
         $id = $_SESSION['user']['id'] ?? null;
         if (!$id) {
-            ob_clean();
+            if (ob_get_level() > 0) @ob_clean();
             header('Content-Type: application/json');
-            echo json_encode(['success' => false, 'message' => 'User tidak valid']);
+            echo json_encode(['success' => false, 'message' => 'User tidak valid / Sesi berakhir. Silakan login ulang.']);
             exit;
         }
 
@@ -287,30 +306,71 @@ class PenggunaController {
         }
 
         if (!empty($errors)) {
-            ob_clean();
+            if (ob_get_level() > 0) @ob_clean();
             header('Content-Type: application/json');
             echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
             exit;
         }
 
-        // Handle foto upload dengan security
+        // Handle foto upload & reset foto
         $foto = $_SESSION['user']['foto'] ?? 'user.jpg'; // Default foto dari session
-        if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
+        $resetFoto = $_POST['reset_foto'] ?? '0';
+        
+        if ($resetFoto === '1') {
+            // Hapus foto lama dari disk jika bukan foto default
+            $fotoLama = $_SESSION['user']['foto'] ?? 'user.jpg';
+            if (!empty($fotoLama) && $fotoLama !== 'user.jpg') {
+                require_once __DIR__ . '/../helpers/SecureFileUpload.php';
+                $uploadHandler = new SecureFileUpload('users');
+                $uploadHandler->deleteFile($fotoLama);
+                
+                $imagesDir = __DIR__ . '/../../public/Images/users/';
+                if (file_exists($imagesDir . $fotoLama)) {
+                    @unlink($imagesDir . $fotoLama);
+                }
+            }
+            $foto = 'user.jpg';
+        } elseif (isset($_FILES['foto']) && $_FILES['foto']['error'] !== UPLOAD_ERR_NO_FILE) {
+            // Cek error khusus batas ukuran PHP
+            if ($_FILES['foto']['error'] === UPLOAD_ERR_INI_SIZE || $_FILES['foto']['error'] === UPLOAD_ERR_FORM_SIZE) {
+                if (ob_get_level() > 0) @ob_clean();
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Ukuran file foto terlalu besar. Maksimal 10MB.']);
+                exit;
+            } elseif ($_FILES['foto']['error'] !== UPLOAD_ERR_OK) {
+                if (ob_get_level() > 0) @ob_clean();
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Gagal mengunggah foto. Kode error: ' . $_FILES['foto']['error']]);
+                exit;
+            }
+
             require_once __DIR__ . '/../helpers/SecureFileUpload.php';
             $uploadHandler = new SecureFileUpload('users');
             
             $uploadResult = $uploadHandler->uploadFile('foto', 'user');
             
             if ($uploadResult['success']) {
-                // Hapus foto lama jika bukan foto default
-                $fotoLama = $_SESSION['user']['foto'] ?? 'user.jpg';
-                if ($fotoLama !== 'user.jpg') {
-                    $uploadHandler->deleteFile($fotoLama);
-                }
                 $foto = $uploadResult['filename'];
+                $srcPath = __DIR__ . '/../../public/storage/uploads/users/' . $foto;
+                $imagesDir = __DIR__ . '/../../public/Images/users/';
+                if (!is_dir($imagesDir)) {
+                    @mkdir($imagesDir, 0755, true);
+                }
+                
+                // Optimized copy & resize if needed
+                self::optimizeAndSyncUserAvatar($srcPath, $imagesDir . $foto);
+
+                // Hapus foto lama jika bukan foto default dan beda dengan foto baru
+                $fotoLama = $_SESSION['user']['foto'] ?? 'user.jpg';
+                if ($fotoLama !== 'user.jpg' && $fotoLama !== $foto) {
+                    $uploadHandler->deleteFile($fotoLama);
+                    $oldImagesFile = $imagesDir . $fotoLama;
+                    if (file_exists($oldImagesFile)) {
+                        @unlink($oldImagesFile);
+                    }
+                }
             } else {
-                // Handle upload error
-                ob_clean();
+                if (ob_get_level() > 0) @ob_clean();
                 header('Content-Type: application/json');
                 echo json_encode(['success' => false, 'message' => 'Upload foto gagal: ' . $uploadResult['message']]);
                 exit;
@@ -322,7 +382,7 @@ class PenggunaController {
             'nama' => $nama,
             'username' => $username,
             'foto' => $foto,
-            'role' => $_SESSION['user']['role'] // Pertahankan role yang sudah ada
+            'role' => $_SESSION['user']['role'] ?? 'Operator'
         ];
 
         // Jika password diisi, update password
@@ -331,23 +391,69 @@ class PenggunaController {
         }
 
         if ($this->model->updatePengguna($id, $data)) {
-            // Update session dengan data baru (pertahankan role)
+            // Update session dengan data baru
             $_SESSION['user']['nama'] = $nama;
             $_SESSION['user']['username'] = $username;
             $_SESSION['user']['foto'] = $foto;
-            // Role tidak perlu diupdate karena sudah ada di session
             
-            // Clear output buffer dan set header untuk JSON response
-            ob_clean();
+            if (ob_get_level() > 0) @ob_clean();
             header('Content-Type: application/json');
             echo json_encode(['success' => true, 'message' => 'Profil berhasil diperbarui']);
         } else {
-            // Clear output buffer dan set header untuk JSON response
-            ob_clean();
+            if (ob_get_level() > 0) @ob_clean();
             header('Content-Type: application/json');
             echo json_encode(['success' => false, 'message' => 'Gagal memperbarui profil']);
         }
         exit;
+    }
+
+    private static function optimizeAndSyncUserAvatar($srcPath, $destPath) {
+        if (!file_exists($srcPath)) return;
+        @copy($srcPath, $destPath);
+        
+        if (extension_loaded('gd') && function_exists('imagecreatefromstring')) {
+            $imgData = @file_get_contents($srcPath);
+            if (!$imgData) return;
+            
+            $srcImg = @imagecreatefromstring($imgData);
+            if (!$srcImg) return;
+            
+            $width = imagesx($srcImg);
+            $height = imagesy($srcImg);
+            
+            $maxSize = 800;
+            if ($width > $maxSize || $height > $maxSize) {
+                if ($width > $height) {
+                    $newWidth = $maxSize;
+                    $newHeight = intval($height * ($maxSize / $width));
+                } else {
+                    $newHeight = $maxSize;
+                    $newWidth = intval($width * ($maxSize / $height));
+                }
+                
+                $dstImg = imagecreatetruecolor($newWidth, $newHeight);
+                imagealphablending($dstImg, false);
+                imagesavealpha($dstImg, true);
+                $transparent = imagecolorallocatealpha($dstImg, 255, 255, 255, 127);
+                imagefilledrectangle($dstImg, 0, 0, $newWidth, $newHeight, $transparent);
+                
+                imagecopyresampled($dstImg, $srcImg, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                
+                $ext = strtolower(pathinfo($srcPath, PATHINFO_EXTENSION));
+                if (in_array($ext, ['jpg', 'jpeg'])) {
+                    imagejpeg($dstImg, $srcPath, 85);
+                    imagejpeg($dstImg, $destPath, 85);
+                } elseif ($ext === 'png') {
+                    imagepng($dstImg, $srcPath, 6);
+                    imagepng($dstImg, $destPath, 6);
+                } elseif ($ext === 'webp' && function_exists('imagewebp')) {
+                    imagewebp($dstImg, $srcPath, 85);
+                    imagewebp($dstImg, $destPath, 85);
+                }
+                imagedestroy($dstImg);
+            }
+            imagedestroy($srcImg);
+        }
     }
     // ==== HALAMAN STATISTIK PENGGUNA ====
     public function statistikPengguna() {

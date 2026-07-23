@@ -38,6 +38,8 @@ if (!isset($BASE)) {
 }
 ?>
 
+<link rel="stylesheet" href="<?= $BASE ?>/css/harmonisasi.css?v=<?= time() ?>">
+
 <div class="overview harmonisasi-page">
     <div class="title">
         <i class="fas fa-balance-scale"></i>

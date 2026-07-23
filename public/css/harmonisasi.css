@@ -1,0 +1,262 @@
+/* public/css/harmonisasi.css */
+/* CSS Khusus Halaman Data Harmonisasi (Tabel HTML Standar) */
+
+.harmonisasi-page {
+  width: 100%;
+}
+
+.harmonisasi-page .activity-wrapper {
+  width: 100%;
+  background: var(--panel-color, #ffffff);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 15px;
+  overflow: visible !important;
+  box-sizing: border-box;
+}
+
+.harmonisasi-page #harmonisasiResults {
+  display: block !important;
+  width: 100% !important;
+}
+
+/* Container Tabel dengan Scrollbar Horizontal */
+.harmonisasi-table-container {
+  width: 100%;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+  border: 1px solid var(--border-color, #e2e8f0);
+}
+
+/* Tabel Utama */
+.table-harmonisasi {
+  width: 100%;
+  min-width: 1570px !important; /* Total lebar minimal agar 9 kolom leluasa tanpa bertabrakan */
+  border-collapse: collapse;
+  margin: 0;
+  font-size: 0.88rem;
+  background: var(--panel-color, #ffffff);
+  table-layout: fixed !important;
+}
+
+.table-harmonisasi th,
+.table-harmonisasi td {
+  padding: 12px 14px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border-color, #f1f5f9);
+  color: var(--text-color, #334155);
+  box-sizing: border-box;
+  overflow: hidden; /* Mencegah teks meluap ke sel sebelahnya */
+}
+
+/* Header Styling */
+.table-harmonisasi th {
+  background: var(--border-color-subtle, #f8fafc);
+  font-weight: 700;
+  color: var(--text-color, #1e293b);
+  border-bottom: 2px solid var(--border-color, #cbd5e1);
+  font-size: 0.85rem;
+  line-height: 1.35;
+  white-space: normal; /* Biarkan header melipat secara rapi jika perlu */
+  word-wrap: break-word;
+}
+
+/* Lebar & Alignment Presisi Tiap Kolom (Total = 1570px) */
+.table-harmonisasi th.col-no,
+.table-harmonisasi td.col-no {
+  text-align: center;
+  width: 60px !important;
+}
+
+.table-harmonisasi th.col-judul,
+.table-harmonisasi td.col-judul {
+  width: 360px !important;
+  text-align: left;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
+.table-harmonisasi th.col-pemrakarsa,
+.table-harmonisasi td.col-pemrakarsa {
+  width: 220px !important;
+  text-align: left;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
+.table-harmonisasi th.col-pemda,
+.table-harmonisasi td.col-pemda {
+  width: 200px !important;
+  text-align: left;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.45;
+}
+
+.table-harmonisasi th.col-tanggal-surat,
+.table-harmonisasi td.col-tanggal-surat {
+  text-align: center;
+  width: 170px !important; /* Cukup lebar untuk teks 'Tanggal Surat Diterima' */
+}
+
+.table-harmonisasi th.col-tanggal-rapat,
+.table-harmonisasi td.col-tanggal-rapat {
+  text-align: center;
+  width: 140px !important;
+}
+
+.table-harmonisasi th.col-pemegang,
+.table-harmonisasi td.col-pemegang {
+  text-align: center;
+  width: 150px !important;
+}
+
+.table-harmonisasi th.col-status,
+.table-harmonisasi td.col-status {
+  text-align: center;
+  width: 140px !important;
+}
+
+.table-harmonisasi th.col-aksi,
+.table-harmonisasi td.col-aksi {
+  text-align: center;
+  width: 130px !important;
+}
+
+/* Hover Row Effect */
+.table-harmonisasi tbody tr:hover {
+  background-color: rgba(59, 130, 246, 0.03);
+}
+
+/* Badges & Action Buttons */
+.harmonisasi-page .status-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 20px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.harmonisasi-page .status-badge.status-selesai {
+  background-color: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.harmonisasi-page .status-badge.status-proses {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.harmonisasi-page .btn-action-aksi {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.harmonisasi-page .btn-action-aksi.view {
+  color: #2563eb;
+}
+.harmonisasi-page .btn-action-aksi.view:hover {
+  background-color: #dbeafe;
+}
+
+.harmonisasi-page .btn-action-aksi.edit {
+  color: #d97706;
+}
+.harmonisasi-page .btn-action-aksi.edit:hover {
+  background-color: #fef3c7;
+}
+
+.harmonisasi-page .btn-action-aksi.delete {
+  color: #dc2626;
+}
+.harmonisasi-page .btn-action-aksi.delete:hover {
+  background-color: #fee2e2;
+}
+
+/* Custom Scrollbar Horizontal untuk Tabel */
+.harmonisasi-table-container::-webkit-scrollbar {
+  height: 10px;
+}
+
+.harmonisasi-table-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 6px;
+}
+
+.harmonisasi-table-container::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 6px;
+}
+
+.harmonisasi-table-container::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Dark mode */
+body.dark .harmonisasi-page .activity-wrapper,
+body.dark .table-harmonisasi {
+  background: var(--panel-color, #1e293b);
+}
+
+body.dark .table-harmonisasi th {
+  background: #0f172a;
+  color: #f8fafc;
+  border-bottom-color: #334155;
+}
+
+body.dark .table-harmonisasi td {
+  color: #cbd5e1;
+  border-bottom-color: #334155;
+}
+
+body.dark .table-harmonisasi tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+body.dark .harmonisasi-table-container::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+body.dark .harmonisasi-table-container::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+body.dark .harmonisasi-table-container::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+body.dark .harmonisasi-page .status-badge.status-selesai {
+  background-color: rgba(22, 101, 52, 0.3);
+  color: #86efac;
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+body.dark .harmonisasi-page .status-badge.status-proses {
+  background-color: rgba(153, 27, 27, 0.3);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.4);
+}

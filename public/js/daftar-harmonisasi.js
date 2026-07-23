@@ -127,86 +127,66 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Render data table
+  // Render data table
   function renderData(data) {
     if (!container) return;
     
     if (data.length === 0) {
-      container.innerHTML = '<div class="data no-data" style="grid-column: 1 / -1; text-align: center; padding: 40px;"><span style="color: var(--text-color); font-size: 1.1rem;"><i class="fas fa-balance-scale" style="font-size: 3rem; margin-bottom: 10px; display: block; opacity: 0.5;"></i>Belum ada data harmonisasi</span></div>';
+      container.innerHTML = '<div class="no-data" style="text-align: center; padding: 40px;"><span style="color: var(--text-color); font-size: 1.1rem;"><i class="fas fa-balance-scale" style="font-size: 3rem; margin-bottom: 10px; display: block; opacity: 0.5;"></i>Belum ada data harmonisasi</span></div>';
       return;
     }
 
+    const startNumber = (currentPage - 1) * itemsPerPage + 1;
+
     const html = `
-      <div class="data no">
-        <span class="data-title">No</span>
-        ${data.map((_, i) => {
-          const startNumber = (currentPage - 1) * itemsPerPage + 1;
-          return `<span class="data-list">${startNumber + i}</span>`;
-        }).join('')}
-      </div>
-
-      <div class="data judul">
-        <span class="data-title">Judul Rancangan</span>
-        ${data.map(h => {
-          const judul = h.judul_rancangan || '-';
-          const judulDisplay = judul.length > 35 ? judul.substring(0, 35) + '...' : judul;
-          return `<span class="data-list" title="${escapeHtml(judul)}"><span class="text-content">${escapeHtml(judulDisplay)}</span></span>`;
-        }).join('')}
-      </div>
-
-      <div class="data pemrakarsa">
-        <span class="data-title">Pemrakarsa</span>
-        ${data.map(h => {
-          const pemrakarsa = h.pemrakarsa || '-';
-          const pemrakarsaDisplay = pemrakarsa.length > 20 ? pemrakarsa.substring(0, 20) + '...' : pemrakarsa;
-          return `<span class="data-list" title="${escapeHtml(pemrakarsa)}"><span class="text-content">${escapeHtml(pemrakarsaDisplay)}</span></span>`;
-        }).join('')}
-      </div>
-
-      <div class="data pemerintah">
-        <span class="data-title">Pemerintah Daerah</span>
-        ${data.map(h => `<span class="data-list">${escapeHtml(h.pemerintah_daerah || '-')}</span>`).join('')}
-      </div>
-
-      <div class="data tanggal-surat">
-        <span class="data-title">Tanggal Surat Diterima</span>
-        ${data.map(h => `<span class="data-list">${formatDate(h.tanggal_surat_diterima)}</span>`).join('')}
-      </div>
-
-      <div class="data tanggal">
-        <span class="data-title">Tanggal Rapat</span>
-        ${data.map(h => `<span class="data-list">${formatDate(h.tanggal_rapat)}</span>`).join('')}
-      </div>
-
-      <div class="data pemegang">
-        <span class="data-title">Pemegang Draf</span>
-        ${data.map(h => `<span class="data-list">${escapeHtml(h.pemegang_draf || '-')}</span>`).join('')}
-      </div>
-
-      <div class="data status">
-        <span class="data-title">Status</span>
-        ${data.map(h => {
-          const status = h.status || 'Diterima';
-          const statusClass = status === 'Diterima' ? 'status-selesai' : 'status-proses';
-          const statusText = status === 'Diterima' ? 'Diterima' : 'Dikembalikan';
-          return `<span class="data-list"><span class="status-badge ${statusClass}">${statusText}</span></span>`;
-        }).join('')}
-      </div>
-
-      <div class="data actions">
-        <span class="data-title">Aksi</span>
-        ${data.map((h, index) => `
-          <span class="data-list">
-            <button class="btn-action-aksi view" onclick="showDetailHarmonisasi(${h.id}, '${escapeHtml(h.judul_rancangan || '')}', '${escapeHtml(h.pemrakarsa || '')}', '${escapeHtml(h.pemerintah_daerah || '')}', '${formatDate(h.tanggal_surat_diterima)}', '${formatDate(h.tanggal_rapat)}', '${escapeHtml(h.pemegang_draf || '')}', '${h.status || 'Diterima'}', '${escapeHtml(h.alasan_pengembalian_draf || '')}')">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button class="btn-action-aksi edit" onclick="window.location.href='index.php?page=edit-harmonisasi&id=${h.id}'">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn-action-aksi delete" onclick="hapusHarmonisasi(${h.id}, '${escapeHtml(h.judul_rancangan || '')}')">
-              <i class="fas fa-trash-alt"></i>
-            </button>
-          </span>
-        `).join('')}
+      <div class="harmonisasi-table-container">
+        <table class="table-harmonisasi">
+          <thead>
+            <tr>
+              <th class="col-no">No</th>
+              <th class="col-judul">Judul Rancangan</th>
+              <th class="col-pemrakarsa">Pemrakarsa</th>
+              <th class="col-pemda">Pemerintah Daerah</th>
+              <th class="col-tanggal-surat">Tanggal Surat Diterima</th>
+              <th class="col-tanggal-rapat">Tanggal Rapat</th>
+              <th class="col-pemegang">Pemegang Draf</th>
+              <th class="col-status">Status</th>
+              <th class="col-aksi">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${data.map((h, i) => {
+              const status = h.status || 'Diterima';
+              const statusClass = status === 'Diterima' ? 'status-selesai' : 'status-proses';
+              const statusText = status === 'Diterima' ? 'Diterima' : 'Dikembalikan';
+              return `
+                <tr>
+                  <td class="col-no">${startNumber + i}</td>
+                  <td class="col-judul">${escapeHtmlText(h.judul_rancangan || '-')}</td>
+                  <td class="col-pemrakarsa">${escapeHtmlText(h.pemrakarsa || '-')}</td>
+                  <td class="col-pemda">${escapeHtmlText(h.pemerintah_daerah || '-')}</td>
+                  <td class="col-tanggal-surat">${formatDate(h.tanggal_surat_diterima)}</td>
+                  <td class="col-tanggal-rapat">${formatDate(h.tanggal_rapat)}</td>
+                  <td class="col-pemegang">${escapeHtmlText(h.pemegang_draf || '-')}</td>
+                  <td class="col-status"><span class="status-badge ${statusClass}">${statusText}</span></td>
+                  <td class="col-aksi">
+                    <div class="action-buttons">
+                      <button class="btn-action-aksi view" title="Detail" onclick="showDetailHarmonisasi(${h.id}, '${escapeJsParam(h.judul_rancangan || '')}', '${escapeJsParam(h.pemrakarsa || '')}', '${escapeJsParam(h.pemerintah_daerah || '')}', '${formatDate(h.tanggal_surat_diterima)}', '${formatDate(h.tanggal_rapat)}', '${escapeJsParam(h.pemegang_draf || '')}', '${h.status || 'Diterima'}', '${escapeJsParam(h.alasan_pengembalian_draf || '')}')">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                      <button class="btn-action-aksi edit" title="Edit" onclick="window.location.href='index.php?page=edit-harmonisasi&id=${h.id}'">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="btn-action-aksi delete" title="Hapus" onclick="hapusHarmonisasi(${h.id}, '${escapeJsParam(h.judul_rancangan || '')}')">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
       </div>
     `;
 
@@ -220,11 +200,16 @@ document.addEventListener('DOMContentLoaded', function() {
     return date.toLocaleDateString('id-ID');
   }
 
-  function escapeHtml(text) {
+  function escapeHtmlText(text) {
     if (!text) return '';
     const div = document.createElement('div');
     div.textContent = text;
-    return div.innerHTML.replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r');
+    return div.innerHTML;
+  }
+
+  function escapeJsParam(text) {
+    if (!text) return '';
+    return text.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ').replace(/\r/g, ' ');
   }
 
   // Render pagination

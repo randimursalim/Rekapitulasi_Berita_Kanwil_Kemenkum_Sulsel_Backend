@@ -39,7 +39,8 @@ if (!isset($BASE)) {
             <label for="namaPeminjam">Nama Peminjam</label>
             <input type="text" id="namaPeminjam" name="namaPeminjam" 
                    value="<?= htmlspecialchars($peminjaman['nama_peminjam']) ?>" 
-                   placeholder="Masukkan nama peminjam" required>
+                   readonly style="background-color: #f0f0f0; cursor: not-allowed;" required>
+            <small style="color: var(--text-color); opacity: 0.7;">Nama peminjam tidak dapat diubah</small>
         </div>
 
         <div class="form-group">

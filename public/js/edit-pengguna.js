@@ -4,16 +4,41 @@ document.addEventListener('DOMContentLoaded', function() {
     const fotoInput = document.getElementById('foto');
     const preview = document.getElementById('previewImage');
     
+    const btnResetFoto = document.getElementById('btnResetFoto');
+    const resetFotoInput = document.getElementById('reset_foto');
+
     // Preview foto
     if (fotoInput) {
         fotoInput.addEventListener('change', function() {
             const file = this.files[0];
             if (file) {
+                if (resetFotoInput) resetFotoInput.value = '0';
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     preview.setAttribute('src', e.target.result);
                 }
                 reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    if (btnResetFoto) {
+        btnResetFoto.addEventListener('click', function() {
+            if (resetFotoInput) resetFotoInput.value = '1';
+            if (fotoInput) fotoInput.value = '';
+            if (preview) {
+                const defaultSrc = preview.getAttribute('data-default-src');
+                if (defaultSrc) preview.src = defaultSrc;
+            }
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'info',
+                    title: 'Foto di-reset ke default. Klik "Simpan" untuk mengonfirmasi.',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
             }
         });
     }

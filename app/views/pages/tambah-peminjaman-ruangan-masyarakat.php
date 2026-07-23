@@ -155,7 +155,8 @@ if (!isset($BASE)) {
         <form id="formPeminjamanRuangan" action="index.php?page=store-peminjaman-ruangan-masyarakat" method="POST" autocomplete="off">
             <div class="form-group">
                 <label for="namaPeminjam">Nama Peminjam <span style="color: red;">*</span></label>
-                <input type="text" id="namaPeminjam" name="namaPeminjam" placeholder="Masukkan nama peminjam" required>
+                <input type="text" id="namaPeminjam" name="namaPeminjam" value="<?= htmlspecialchars($_SESSION['user']['nama'] ?? '') ?>" readonly style="background-color: #f0f0f0; cursor: not-allowed;" required>
+                <small>Terisi otomatis sesuai nama akun pengguna yang sedang login</small>
             </div>
 
             <div class="form-group">

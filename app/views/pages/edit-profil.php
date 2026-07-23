@@ -31,12 +31,32 @@ if (!isset($BASE)) {
     <div class="form-container">
         <form action="index.php?page=update-profil" method="POST" class="input-berita-form" autocomplete="off" enctype="multipart/form-data" id="formEditProfil">
             
+            <?php
+            $userFoto = $_SESSION['user']['foto'] ?? 'user.jpg';
+            $previewSrc = $BASE . '/Images/user.jpg';
+            if (!empty($userFoto) && $userFoto !== 'user.jpg') {
+                $publicDir = dirname(dirname(dirname(__DIR__))) . '/public';
+                $storagePath = $publicDir . '/storage/uploads/users/' . $userFoto;
+                $imagesPath  = $publicDir . '/Images/users/' . $userFoto;
+                if (file_exists($storagePath)) {
+                    $previewSrc = $BASE . '/storage/uploads/users/' . $userFoto;
+                } elseif (file_exists($imagesPath)) {
+                    $previewSrc = $BASE . '/Images/users/' . $userFoto;
+                }
+            }
+            ?>
             <!-- Upload Foto -->
             <div class="upload-container">
-                <img id="previewImage" src="<?= $BASE ?>/Images/<?= !empty($_SESSION['user']['foto']) && $_SESSION['user']['foto'] !== 'user.jpg' ? 'users/' . $_SESSION['user']['foto'] : 'user.jpg' ?>" alt="Preview Foto">
+                <img id="previewImage" src="<?= $previewSrc ?>" data-default-src="<?= $BASE ?>/Images/user.jpg" alt="Preview Foto">
                 <br>
-                <label for="foto"><i class="fas fa-image"></i> Ganti Foto</label>
-                <input type="file" id="foto" name="foto" accept="image/*">
+                <div style="display: flex; gap: 10px; justify-content: center; align-items: center; margin-top: 12px; flex-wrap: wrap;">
+                    <label for="foto" style="margin: 0; cursor: pointer;"><i class="fas fa-image"></i> Ganti Foto</label>
+                    <input type="file" id="foto" name="foto" accept="image/*">
+                    <button type="button" id="btnResetFoto" class="btn-reset-foto" style="background-color: #dc2626; color: white; border: none; padding: 8px 14px; border-radius: 6px; font-size: 0.88rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s;" title="Hapus foto & kembali ke foto default">
+                        <i class="fas fa-undo"></i> Reset Foto Default
+                    </button>
+                </div>
+                <input type="hidden" name="reset_foto" id="reset_foto" value="0">
             </div>
 
             <div class="form-group">

@@ -297,6 +297,20 @@ function is_active($pageName)
         </div>
       <?php endif; ?>
 
+      <?php
+      $userFoto = $_SESSION['user']['foto'] ?? 'user.jpg';
+      $avatarSrc = $BASE . '/Images/user.jpg';
+      if (!empty($userFoto) && $userFoto !== 'user.jpg') {
+          $publicDir = dirname(dirname(dirname(__DIR__))) . '/public';
+          $storagePath = $publicDir . '/storage/uploads/users/' . $userFoto;
+          $imagesPath  = $publicDir . '/Images/users/' . $userFoto;
+          if (file_exists($storagePath)) {
+              $avatarSrc = $BASE . '/storage/uploads/users/' . $userFoto;
+          } elseif (file_exists($imagesPath)) {
+              $avatarSrc = $BASE . '/Images/users/' . $userFoto;
+          }
+      }
+      ?>
       <div class="profile-info">
         <span class="user-info">
           <?= isset($_SESSION['user']) ? htmlspecialchars($_SESSION['user']['nama']) : 'User' ?>
@@ -304,7 +318,7 @@ function is_active($pageName)
         </span>
         <a href="<?= $BASE ?>/index.php?page=edit-profil">
           <img
-            src="<?= $BASE ?>/Images/<?= !empty($_SESSION['user']['foto']) && $_SESSION['user']['foto'] !== 'user.jpg' ? 'users/' . $_SESSION['user']['foto'] : 'user.jpg' ?>"
+            src="<?= $avatarSrc ?>"
             alt="Profile" class="profile-link" />
         </a>
       </div>

@@ -2,20 +2,45 @@
 document.addEventListener('DOMContentLoaded', function() {
     const fotoInput = document.getElementById('foto');
     const previewImage = document.getElementById('previewImage');
+    const btnResetFoto = document.getElementById('btnResetFoto');
+    const resetFotoInput = document.getElementById('reset_foto');
     const form = document.getElementById('formEditProfil');
 
     if (fotoInput) {
         fotoInput.addEventListener('change', function() {
             const file = this.files[0];
             if (file) {
+                if (resetFotoInput) resetFotoInput.value = '0';
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     previewImage.src = e.target.result;
                 }
                 reader.readAsDataURL(file);
             } else {
-                // Reset ke foto default jika tidak ada file
-                previewImage.src = previewImage.getAttribute('data-default-src') || previewImage.src;
+                if (resetFotoInput && resetFotoInput.value !== '1') {
+                    previewImage.src = previewImage.getAttribute('data-default-src') || previewImage.src;
+                }
+            }
+        });
+    }
+
+    if (btnResetFoto) {
+        btnResetFoto.addEventListener('click', function() {
+            if (resetFotoInput) resetFotoInput.value = '1';
+            if (fotoInput) fotoInput.value = '';
+            if (previewImage) {
+                const defaultSrc = previewImage.getAttribute('data-default-src');
+                if (defaultSrc) previewImage.src = defaultSrc;
+            }
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'info',
+                    title: 'Foto di-reset ke default. Klik "Simpan" untuk mengonfirmasi.',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
             }
         });
     }
