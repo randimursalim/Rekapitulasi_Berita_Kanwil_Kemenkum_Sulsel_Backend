@@ -456,7 +456,7 @@ if (!isset($BASE)) {
         // Set BASE_URL untuk JavaScript
         window.BASE_URL = '<?= $BASE ?>';
     </script>
-    <script src="<?= $BASE ?>/js/data-harmonisasi-public.js"></script>
+    <script src="<?= $BASE ?>/js/data-harmonisasi-public.js?v=<?= time() ?>"></script>
 </body>
 </html>
 

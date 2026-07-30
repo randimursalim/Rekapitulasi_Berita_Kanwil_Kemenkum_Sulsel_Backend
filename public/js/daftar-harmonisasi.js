@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let totalPages = 1;
   let totalData = 0;
   let itemsPerPage = 10;
+  let currentHarmonisasiData = [];
   let currentFilters = {
     search: '',
     startDate: '',
@@ -109,6 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       const data = result.data;
+      currentHarmonisasiData = data || [];
       totalPages = result.pagination.totalPages;
       totalData = result.pagination.totalData;
       currentPage = result.pagination.currentPage;
@@ -171,13 +173,13 @@ document.addEventListener('DOMContentLoaded', function() {
                   <td class="col-status"><span class="status-badge ${statusClass}">${statusText}</span></td>
                   <td class="col-aksi">
                     <div class="action-buttons">
-                      <button class="btn-action-aksi view" title="Detail" onclick="showDetailHarmonisasi(${h.id}, '${escapeJsParam(h.judul_rancangan || '')}', '${escapeJsParam(h.pemrakarsa || '')}', '${escapeJsParam(h.pemerintah_daerah || '')}', '${formatDate(h.tanggal_surat_diterima)}', '${formatDate(h.tanggal_rapat)}', '${escapeJsParam(h.pemegang_draf || '')}', '${h.status || 'Diterima'}', '${escapeJsParam(h.alasan_pengembalian_draf || '')}')">
+                      <button class="btn-action-aksi view" title="Detail" onclick="showDetailHarmonisasi(${h.id})">
                         <i class="fas fa-eye"></i>
                       </button>
                       <button class="btn-action-aksi edit" title="Edit" onclick="window.location.href='index.php?page=edit-harmonisasi&id=${h.id}'">
                         <i class="fas fa-edit"></i>
                       </button>
-                      <button class="btn-action-aksi delete" title="Hapus" onclick="hapusHarmonisasi(${h.id}, '${escapeJsParam(h.judul_rancangan || '')}')">
+                      <button class="btn-action-aksi delete" title="Hapus" onclick="hapusHarmonisasi(${h.id})">
                         <i class="fas fa-trash-alt"></i>
                       </button>
                     </div>
@@ -271,10 +273,37 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // Helper escapeHtml
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
   // Fungsi tampilkan modal detail
   function showDetailHarmonisasi(id, judulRancangan, pemrakarsa, pemerintahDaerah, tanggalSuratDiterima, tanggalRapat, pemegangDraf, status, alasanPengembalianDraf) {
+    let item = null;
+    if (typeof id === 'object' && id !== null) {
+      item = id;
+    } else if (Array.isArray(currentHarmonisasiData)) {
+      item = currentHarmonisasiData.find(h => h.id == id);
+    }
+
+    if (item) {
+      judulRancangan = item.judul_rancangan;
+      pemrakarsa = item.pemrakarsa;
+      pemerintahDaerah = item.pemerintah_daerah;
+      tanggalSuratDiterima = formatDate(item.tanggal_surat_diterima);
+      tanggalRapat = formatDate(item.tanggal_rapat);
+      pemegangDraf = item.pemegang_draf;
+      status = item.status || 'Diterima';
+      alasanPengembalianDraf = item.alasan_pengembalian_draf;
+    }
+
     const modalContent = document.getElementById('modalContent');
-    if (!modalContent) return;
+    const modal = document.getElementById('detailModal');
+    if (!modalContent || !modal) return;
 
     let htmlContent = '';
     
@@ -283,7 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlContent += `<strong>Pemrakarsa:</strong> ${escapeHtml(pemrakarsa || '-')}<br>`;
     htmlContent += `<strong>Pemerintah Daerah:</strong> ${escapeHtml(pemerintahDaerah || '-')}<br>`;
     htmlContent += `<strong>Tanggal Surat Diterima:</strong> ${tanggalSuratDiterima || '-'}<br>`;
-    htmlContent += `<strong>Tanggal Rapat:</strong> ${tanggalRapat}<br>`;
+    htmlContent += `<strong>Tanggal Rapat:</strong> ${tanggalRapat || '-'}<br>`;
     htmlContent += `<strong>Pemegang Draf:</strong> ${escapeHtml(pemegangDraf || '-')}<br><br>`;
     
     htmlContent += `<strong>Status:</strong> `;
@@ -293,11 +322,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (status === 'Dikembalikan' && alasanPengembalianDraf) {
       htmlContent += `<br><strong>Alasan Pengembalian Draf:</strong><br>`;
-      htmlContent += `<div style="margin: 10px 0; padding: 10px; background: var(--panel-color); border: 1px solid var(--border-color); border-radius: 5px; white-space: pre-wrap; color: var(--text-color); word-wrap: break-word; word-break: break-word;">${escapeHtml(alasanPengembalianDraf).replace(/\n/g, '<br>')}</div>`;
+      htmlContent += `<div style="margin: 10px 0; padding: 10px; background: var(--panel-color); border: 1px solid var(--border-color); border-radius: 5px; white-space: pre-wrap; color: var(--text-color); word-wrap: break-word; word-break: break-word;">${escapeHtml(alasanPengembalianDraf)}</div>`;
     }
     
     modalContent.innerHTML = htmlContent;
-    document.getElementById('detailModal').style.display = 'block';
+    modal.style.display = 'block';
   }
 
   // Fungsi tutup modal
@@ -319,6 +348,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Fungsi hapus harmonisasi
   function hapusHarmonisasi(id, judulRancangan) {
+    if (!judulRancangan && Array.isArray(currentHarmonisasiData)) {
+      const item = currentHarmonisasiData.find(h => h.id == id);
+      if (item) {
+        judulRancangan = item.judul_rancangan;
+      }
+    }
+    judulRancangan = judulRancangan || '';
+
     Swal.fire({
       title: 'Apakah kamu yakin?',
       text: `Kamu akan menghapus data harmonisasi "${judulRancangan}"`,

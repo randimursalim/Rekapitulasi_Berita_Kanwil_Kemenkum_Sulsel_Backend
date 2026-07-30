@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let totalPages = 1;
   let totalData = 0;
   let itemsPerPage = 10;
+  let currentHarmonisasiData = [];
   let currentFilters = {
     search: '',
     startDate: '',
@@ -118,6 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       const data = result.data || [];
+      currentHarmonisasiData = data;
 
       if (data.length === 0) {
         container.innerHTML = '<div style="text-align: center; padding: 40px; grid-column: 1 / -1;"><span style="color: #333; font-size: 1.1rem;"><i class="fas fa-balance-scale" style="font-size: 3rem; margin-bottom: 10px; display: block; opacity: 0.5;"></i>Belum ada data harmonisasi</span></div>';
@@ -191,7 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
                   <td data-label="Tanggal Rapat">${formatDate(h.tanggal_rapat)}</td>
                   <td data-label="Status"><span class="status-badge ${statusClass}">${statusText}</span></td>
                   <td data-label="Aksi">
-                    <button class="btn-view-detail" onclick="showDetailHarmonisasi(${h.id}, '${escapeHtml(judul).replace(/'/g, "\\'")}', '${escapeHtml(pemrakarsa).replace(/'/g, "\\'")}', '${escapeHtml(h.pemerintah_daerah || '').replace(/'/g, "\\'")}', '${formatDate(h.tanggal_surat_diterima)}', '${formatDate(h.tanggal_rapat)}', '${escapeHtml(h.pemegang_draf || '').replace(/'/g, "\\'")}', '${h.status || 'Diterima'}', '${escapeHtml(h.alasan_pengembalian_draf || '').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r')}')">
+                    <button class="btn-view-detail" onclick="showDetailHarmonisasi(${h.id})">
                       <i class="fas fa-eye"></i> Detail
                     </button>
                   </td>
@@ -267,6 +269,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Fungsi tampilkan modal detail
   window.showDetailHarmonisasi = function(id, judulRancangan, pemrakarsa, pemerintahDaerah, tanggalSuratDiterima, tanggalRapat, pemegangDraf, status, alasanPengembalianDraf) {
+    let item = null;
+    if (typeof id === 'object' && id !== null) {
+      item = id;
+    } else if (Array.isArray(currentHarmonisasiData)) {
+      item = currentHarmonisasiData.find(h => h.id == id);
+    }
+
+    function formatDateLocal(dateStr) {
+      if (!dateStr) return '-';
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('id-ID');
+    }
+
+    if (item) {
+      judulRancangan = item.judul_rancangan;
+      pemrakarsa = item.pemrakarsa;
+      pemerintahDaerah = item.pemerintah_daerah;
+      tanggalSuratDiterima = formatDateLocal(item.tanggal_surat_diterima);
+      tanggalRapat = formatDateLocal(item.tanggal_rapat);
+      pemegangDraf = item.pemegang_draf;
+      status = item.status || 'Diterima';
+      alasanPengembalianDraf = item.alasan_pengembalian_draf;
+    }
+
     const modalContent = document.getElementById('modalContent');
     const modal = document.getElementById('detailModal');
     if (!modalContent || !modal) return;
@@ -284,16 +310,21 @@ document.addEventListener('DOMContentLoaded', function() {
     htmlContent += `<div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; white-space: pre-wrap; color: #333; word-wrap: break-word; word-break: break-word;">${escapeHtml(judulRancangan || '-')}</div><br>`;
     htmlContent += `<strong>Pemrakarsa:</strong> ${escapeHtml(pemrakarsa) || '-'}<br>`;
     htmlContent += `<strong>Pemerintah Daerah:</strong> ${escapeHtml(pemerintahDaerah) || '-'}<br>`;
-    htmlContent += `<strong>Tanggal Rapat:</strong> ${tanggalRapat}<br><br>`;
-    
-    htmlContent += `<strong>Status:</strong> `;
+    if (tanggalSuratDiterima && tanggalSuratDiterima !== '-') {
+      htmlContent += `<strong>Tanggal Surat Diterima:</strong> ${tanggalSuratDiterima}<br>`;
+    }
+    htmlContent += `<strong>Tanggal Rapat:</strong> ${tanggalRapat || '-'}<br>`;
+    if (pemegangDraf && pemegangDraf !== '-') {
+      htmlContent += `<strong>Pemegang Draf:</strong> ${escapeHtml(pemegangDraf)}<br>`;
+    }
+    htmlContent += `<br><strong>Status:</strong> `;
     const statusText = status === 'Diterima' ? 'Diterima' : 'Dikembalikan';
     const statusClass = status === 'Diterima' ? 'status-selesai' : 'status-proses';
     htmlContent += `<span class="status-badge ${statusClass}">${statusText}</span><br>`;
     
     if (status === 'Dikembalikan' && alasanPengembalianDraf) {
       htmlContent += `<br><strong>Alasan Pengembalian Draf:</strong><br>`;
-      htmlContent += `<div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; white-space: pre-wrap; color: #333; word-wrap: break-word; word-break: break-word;">${escapeHtml(alasanPengembalianDraf).replace(/\n/g, '<br>')}</div>`;
+      htmlContent += `<div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; white-space: pre-wrap; color: #333; word-wrap: break-word; word-break: break-word;">${escapeHtml(alasanPengembalianDraf)}</div>`;
     }
     
     modalContent.innerHTML = htmlContent;
