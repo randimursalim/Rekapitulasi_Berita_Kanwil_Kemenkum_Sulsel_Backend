@@ -155,6 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 function previewPdf(file) {
-    const url = window.APP_BASE + "/pdf-viewer.php?file=" + encodeURIComponent(file);
+    const baseUrl = (typeof window.APP_BASE !== 'undefined') ? window.APP_BASE : '';
+    const url = baseUrl + "/pdf-viewer.php?file=" + encodeURIComponent(file);
     window.open(url, "_blank");
 }

@@ -65,7 +65,7 @@ RewriteRule ^(.*)$ public/$1 [L]
     Header always set X-Content-Type-Options nosniff
     
     # Prevent clickjacking
-    Header always set X-Frame-Options DENY
+    Header always set X-Frame-Options SAMEORIGIN
     
     # XSS Protection
     Header always set X-XSS-Protection "1; mode=block"

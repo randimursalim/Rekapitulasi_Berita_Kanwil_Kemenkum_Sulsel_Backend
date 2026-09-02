@@ -8,7 +8,7 @@ class SecurityHeaders {
         header('X-Content-Type-Options: nosniff');
         
         // Prevent clickjacking
-        header('X-Frame-Options: DENY');
+        header('X-Frame-Options: SAMEORIGIN');
         
         // XSS Protection
         header('X-XSS-Protection: 1; mode=block');

@@ -20,7 +20,8 @@ if (!isset($BASE)) {
         '';
 }
 ?>
-<div class="overview">
+<link rel="stylesheet" href="<?= $BASE ?>/css/izin.css?v=<?= time() ?>">
+<div class="overview izin-overview">
     <div class="page-header">
         <div class="page-title">
             <i class="fas fa-file"></i>
@@ -65,6 +66,26 @@ if (!isset($BASE)) {
             <button id="btnCari" class="btn-cari">Cari</button>
         </div>
 
+    </div>
+
+    <!-- Status Control Bar SIMANIS -->
+    <?php $statusSimanis = $statusSimanis ?? '1'; ?>
+    <div class="simanis-status-control" id="simanisStatusControl" style="border-left-color: <?= $statusSimanis === '1' ? '#10B981' : '#EF4444' ?>;">
+        <div class="simanis-status-info">
+            <i class="fas fa-shield-alt status-icon" style="color: <?= $statusSimanis === '1' ? '#10B981' : '#EF4444' ?>;" id="statusShieldIcon"></i>
+            <div>
+                <strong class="status-title">Status Pengajuan SIMANIS (Magang & Penelitian)</strong>
+                <div class="status-desc" id="statusDescText">
+                    <?= $statusSimanis === '1' 
+                        ? 'Status: <span style="color:#10B981; font-weight:700;">OPEN (Menerima Pengajuan)</span>' 
+                        : 'Status: <span style="color:#EF4444; font-weight:700;">CLOSED (Kuota Full - Tidak Menerima Perizinan)</span>' ?>
+                </div>
+            </div>
+        </div>
+        <button id="btnToggleSimanis" onclick="handleToggleSimanis(this)" data-status="<?= $statusSimanis ?>" class="btn-toggle-simanis" style="background-color: <?= $statusSimanis === '1' ? '#EF4444' : '#10B981' ?>;">
+            <i class="fas <?= $statusSimanis === '1' ? 'fa-ban' : 'fa-check-circle' ?>" id="btnToggleSimanisIcon"></i>
+            <span id="btnToggleSimanisLabel"><?= $statusSimanis === '1' ? 'Tutup Pendaftaran (Kuota Full)' : 'Buka Pendaftaran' ?></span>
+        </button>
     </div>
 
     <!-- Tombol Switch -->
@@ -153,4 +174,4 @@ if (!isset($BASE)) {
 <script>
     window.APP_BASE = "<?= $BASE ?>";
 </script>
-<script src="<?= $BASE ?>/js/izin.js"></script>
+<script src="<?= $BASE ?>/js/izin.js?v=<?= time() ?>"></script>

@@ -37,6 +37,84 @@ document.addEventListener('DOMContentLoaded', function () {
     // Expose functions globally
     window.loadIzinArsip = loadIzin;
 
+    // FUNGSI TOGGLE STATUS PERIZINAN SIMANIS (Buka / Kuota Full)
+    window.handleToggleSimanis = function (btn) {
+        const currentStatus = btn.getAttribute('data-status');
+        const isBuka = currentStatus === '1';
+
+        const confirmTitle = isBuka ? 'Tutup Pendaftaran (Kuota Full)?' : 'Buka Pendaftaran Perizinan?';
+        const confirmText = isBuka
+            ? 'Pengunjung tidak akan dapat mengisi form perizinan dan akan melihat pesan bahwa kuota perizinan telah full.'
+            : 'Form perizinan di SIMANIS akan dibuka kembali untuk publik.';
+        const confirmBtnText = isBuka ? 'Ya, Tutup (Kuota Full)' : 'Ya, Buka Pendaftaran';
+        const confirmColor = isBuka ? '#d33' : '#10B981';
+
+        Swal.fire({
+            title: confirmTitle,
+            text: confirmText,
+            icon: isBuka ? 'warning' : 'question',
+            showCancelButton: true,
+            confirmButtonColor: confirmColor,
+            cancelButtonColor: '#6B7280',
+            confirmButtonText: confirmBtnText,
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (!result.isConfirmed) return;
+
+            btn.disabled = true;
+
+            fetch('index.php?page=toggle-status-simanis', {
+                method: 'POST'
+            })
+                .then(res => res.json())
+                .then(data => {
+                    btn.disabled = false;
+                    if (!data.success) {
+                        Swal.fire('Gagal', data.message || 'Gagal mengubah status', 'error');
+                        return;
+                    }
+
+                    const newStatus = data.status;
+                    btn.setAttribute('data-status', newStatus);
+
+                    const controlBox = document.getElementById('simanisStatusControl');
+                    const shieldIcon = document.getElementById('statusShieldIcon');
+                    const descText = document.getElementById('statusDescText');
+                    const btnIcon = document.getElementById('btnToggleSimanisIcon');
+                    const btnLabel = document.getElementById('btnToggleSimanisLabel');
+
+                    if (newStatus === '1') {
+                        if (controlBox) controlBox.style.borderLeft = '5px solid #10B981';
+                        if (shieldIcon) shieldIcon.style.color = '#10B981';
+                        if (descText) descText.innerHTML = 'Status: <span style="color:#10B981; font-weight:700;">OPEN (Menerima Pengajuan)</span>';
+                        btn.style.backgroundColor = '#EF4444';
+                        if (btnIcon) btnIcon.className = 'fas fa-ban';
+                        if (btnLabel) btnLabel.innerText = 'Tutup Pendaftaran (Kuota Full)';
+                    } else {
+                        if (controlBox) controlBox.style.borderLeft = '5px solid #EF4444';
+                        if (shieldIcon) shieldIcon.style.color = '#EF4444';
+                        if (descText) descText.innerHTML = 'Status: <span style="color:#EF4444; font-weight:700;">CLOSED (Kuota Full - Tidak Menerima Perizinan)</span>';
+                        btn.style.backgroundColor = '#10B981';
+                        if (btnIcon) btnIcon.className = 'fas fa-check-circle';
+                        if (btnLabel) btnLabel.innerText = 'Buka Pendaftaran';
+                    }
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Status Diperbarui!',
+                        text: data.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                })
+                .catch(err => {
+                    btn.disabled = false;
+                    console.error(err);
+                    Swal.fire('Error', 'Terjadi kesalahan sistem', 'error');
+                });
+        });
+    };
+
     // FUNGSI SWITCH TAB (Dipanggil dari tombol di izin.php)
     window.switchTab = function (tabName) {
         if (isUploading) {
@@ -162,50 +240,51 @@ document.addEventListener('DOMContentLoaded', function () {
         const status = data.status || [];
 
         container.innerHTML = `
-            <div style="display:flex; flex-direction:column; gap:24px; width:100%;">
+            <div class="dashboard-wrapper">
 
-                <!-- BARIS 1 -->
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
-                    <div class="chart-card" style="background:#fff; border-radius:12px; padding:20px;">
-                        <h3>Surat Masuk (Status 1,3,5)</h3>
+                <!-- BARIS 1: CHARTS -->
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <h3><i class="fas fa-chart-line" style="color: var(--izin-primary);"></i> Surat Masuk (Status 1, 3, 5)</h3>
                         <div style="height:300px;">
                             <canvas id="chartMasuk"></canvas>
                         </div>
                     </div>
 
-                    <div class="chart-card" style="background:#fff; border-radius:12px; padding:20px;">
-                        <h3>Surat Balasan (Status 2,4,6)</h3>
+                    <div class="chart-card">
+                        <h3><i class="fas fa-chart-bar" style="color: var(--izin-danger);"></i> Surat Balasan (Status 2, 4, 6)</h3>
                         <div style="height:300px;">
                             <canvas id="chartKeluar"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <!-- BARIS 2 -->
-                <div>
-                    <h4>Ringkasan Surat</h4>
-                    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:16px; max-width:600px; margin:auto;">
-                        ${createCard('📥 Surat Masuk', summary.masuk, '#4facfe')}
-                        ${createCard('📤 Surat Balasan', summary.keluar, '#ff6a6a')}
+                <!-- BARIS 2: RINGKASAN & WA STATUS -->
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
+                    <div>
+                        <h4 style="font-weight:700; color:var(--izin-text); margin-bottom:12px;"><i class="fas fa-envelope"></i> Ringkasan Surat</h4>
+                        <div class="summary-grid">
+                            ${createStatWidget('📥 Surat Masuk', summary.masuk, '#3B82F6', 'fas fa-inbox')}
+                            ${createStatWidget('📤 Surat Balasan', summary.keluar, '#10B981', 'fas fa-paper-plane')}
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 style="font-weight:700; color:var(--izin-text); margin-bottom:12px;"><i class="fab fa-whatsapp"></i> Status WhatsApp</h4>
+                        <div class="summary-grid" style="grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));">
+                            ${createStatWidget('WA Terkirim', wa.sent, '#10B981', 'fas fa-check-double')}
+                            ${createStatWidget('Belum Kirim', wa.pending, '#F59E0B', 'fas fa-clock')}
+                            ${createStatWidget('Gagal Kirim', wa.failed, '#EF4444', 'fas fa-times-circle')}
+                        </div>
                     </div>
                 </div>
 
-                <!-- BARIS 3 -->
+                <!-- BARIS 3: DISTRIBUSI STATUS SURAT -->
                 <div>
-                    <h4>Status WhatsApp</h4>
-                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px;">
-                        ${createCard('✅ WA Terkirim', wa.sent, '#00c853')}
-                        ${createCard('⏳ Belum Kirim', wa.pending, '#ffb300')}
-                        ${createCard('❌ Gagal Kirim', wa.failed, '#d50000')}
-                    </div>
-                </div>
-
-                <!-- BARIS 4 -->
-                <div>
-                    <h4>Distribusi Status Surat</h4>
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:16px;">
+                    <h4 style="font-weight:700; color:var(--izin-text); margin-bottom:12px;"><i class="fas fa-list-ol"></i> Distribusi Status Surat</h4>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px;">
                         ${[1, 2, 3, 4, 5, 6].map(i =>
-            createCard(`Status ${i}`, status[i] || 0, '#6c63ff')
+            createStatWidget(`Status ${i}`, status[i] || 0, '#6366F1', 'fas fa-tag')
         ).join('')}
                     </div>
                 </div>
@@ -231,6 +310,20 @@ document.addEventListener('DOMContentLoaded', function () {
             keluarData,
             'rgba(255, 99, 132, 0.7)'
         );
+    }
+
+    function createStatWidget(title, value, color, iconClass) {
+        return `
+            <div class="stat-widget">
+                <div class="stat-info">
+                    <div class="stat-label">${title}</div>
+                    <div class="stat-value">${value ?? 0}</div>
+                </div>
+                <div class="stat-icon" style="background-color: ${color}15; color: ${color};">
+                    <i class="${iconClass}"></i>
+                </div>
+            </div>
+        `;
     }
 
     function createCombinedChart(canvasId, labels, masukData, keluarData) {
@@ -325,6 +418,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }]
         };
 
+        const isDark = document.body.classList.contains('dark');
+        const textColor = isDark ? '#E4E6EB' : '#333';
+        const gridColor = isDark ? '#3A3B3C' : 'rgba(0, 0, 0, 0.08)';
+
         const chartOptions = {
             responsive: true,
             maintainAspectRatio: false,
@@ -334,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     position: 'top',
                     align: 'center',
                     labels: {
-                        color: '#333'
+                        color: textColor
                     }
                 }
             },
@@ -343,11 +440,13 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             scales: {
                 x: {
-                    ticks: { color: '#333' }
+                    ticks: { color: textColor },
+                    grid: { color: gridColor }
                 },
                 y: {
                     beginAtZero: true,
-                    ticks: { color: '#333' }
+                    ticks: { color: textColor },
+                    grid: { color: gridColor }
                 }
             }
         };
@@ -376,23 +475,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function createCard(title, value, color) {
-        return `
-            <div style="
-                background: linear-gradient(135deg, ${color}, #ffffff);
-                border-radius:16px;
-                padding:20px;
-                box-shadow:0 10px 25px rgba(0,0,0,0.08);
-                transition:0.3s;
-            "
-            onmouseover="this.style.transform='translateY(-5px)'"
-            onmouseout="this.style.transform='none'">
-
-                <div style="font-size:0.9rem; color:#555;">${title}</div>
-                <div style="font-size:1.8rem; font-weight:bold; margin-top:8px;">
-                    ${value ?? 0}
-                </div>
-            </div>
-        `;
+        return createStatWidget(title, value, color, 'fas fa-chart-line');
     }
 
     // STATUS MAPPING
@@ -413,43 +496,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // fungsi render file balasan
     function renderFileBalasan(t) {
-        const isPenolakan = t.keterangan && t.keterangan.trim() !== '';
-
-        // kondisi: penolakan + sudah kirim WA
-        if (isPenolakan && t.wa_terkirim == 1) {
+        if (t.file_balasan) {
             return `
-                <div style="display:flex; flex-direction:column; gap:6px;">
-                    
-                    <button type="button" 
-                        class="btn-preview"
-                        onclick="previewPdf('${t.file_balasan}')">
-                        <i class="fas fa-eye"></i> Lihat Surat Balasan
-                    </button>
-    
-                    <label for="file-${t.id}" 
-                        class="btn-action-aksi"
-                        style="background:#ffc107; color:#000; font-size:11px; cursor:pointer;">
-                        <i class="fas fa-edit"></i> Perbarui Balasan
-                    </label>
-    
-                    <input type="file" 
-                        id="file-${t.id}" 
-                        class="input-file-balasan"
-                        accept="application/pdf"
-                        style="display:none;"
-                        onchange="uploadBalasan(this, '${t.id}')">
-                </div>
+                <button type="button" class="btn-preview" onclick="previewPdf('${t.file_balasan}')" title="Preview PDF Balasan">
+                    <i class="fas fa-eye"></i> Lihat Surat Balasan
+                </button>
             `;
         }
-
-        // default
-        return `
-            <button type="button" 
-                class="btn-preview"
-                onclick="previewPdf('${t.file_balasan}')">
-                <i class="fas fa-eye"></i> Surat Balasan
-            </button>
-        `;
+        return `<span style="color:#9CA3AF; font-size:0.85rem;"><i class="fas fa-minus-circle"></i> Belum Ada File</span>`;
     }
 
     // Render Data Table
@@ -458,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // 1. Cek Data Kosong
         if (data.length === 0) {
-            container.innerHTML = '<div class="data no-data" style="width: 100%; text-align: center; padding: 40px;"><span style="color: var(--text-color); font-size: 1.1rem;">Belum ada data pada kategori ini</span></div>';
+            container.innerHTML = '<div class="data no-data" style="width: 100%; text-align: center; padding: 40px;"><span style="color: var(--izin-muted); font-size: 1.05rem;">Belum ada data pada kategori ini</span></div>';
             return;
         }
 
@@ -490,7 +544,8 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             html += `<div class="new-cell"><span class="data-title">Jenis</span></div>`;
             html += `<div class="new-cell"><span class="data-title">File Balasan</span></div>`;
-            html += `<div class="new-cell"><span class="data-title">Status</span></div>`;
+            html += `<div class="new-cell"><span class="data-title">Status WA</span></div>`;
+            html += `<div class="new-cell"><span class="data-title">Aksi</span></div>`;
         }
         html += `</div>`; // Tutup Header
 
@@ -504,114 +559,99 @@ document.addEventListener('DOMContentLoaded', function () {
             // 1. Kolom No (DENGAN TOMBOL EXPAND)
             html += `
             <div class="new-cell" style="display:flex; align-items:center; gap:8px;">
-                 <button class="btn-toggle-detail" onclick="toggleDetail('detail-${t.id}', this)">
+                 <button class="btn-toggle-detail" onclick="toggleDetail('detail-${t.id}', this)" title="Lihat Rincian">
                     <i class="fas fa-plus-circle"></i>
                  </button>
                  <span class="data-list">${startNumber + i}</span>
             </div>`;
 
             // 2. Kolom ID
-            html += `<div class="new-cell"><span class="data-list">${t.id}</span></div>`;
+            html += `<div class="new-cell"><span class="data-list" style="font-weight:600;">${t.id}</span></div>`;
 
             // 3. Kolom Nama
-            html += `<div class="new-cell"><span class="data-list">${t.nama} (${t.nik ?? '-'})</span></div>`;
+            html += `<div class="new-cell"><span class="data-list"><b>${t.nama}</b><br><small style="color:var(--izin-muted);">${t.nik ?? '-'}</small></span></div>`;
 
             // 4. Kolom Status
-            html += `<div class="new-cell"><span class="data-list">
+            html += `<div class="new-cell ${!isMasuk ? 'cell-status-pengajuan' : ''}"><span class="data-list">
                     <div onclick="openStatusModal('${t.id}', '${t.nama.replace(/'/g, "\\'")}', '${t.nik ?? '-'}', '${t.jenis_surat.replace(/'/g, "\\'")}', '${t.status}')" 
-                         style="cursor: pointer; transition: transform 0.2s; display:inline-block;" 
-                         onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                        ${renderStatusBadge(t.status)} <i class="fas fa-pen" style="font-size:10px; margin-left:5px; opacity:0.6;"></i>
+                         style="cursor: pointer; display:inline-block;" title="Klik untuk ubah status">
+                        ${renderStatusBadge(t.status)} <i class="fas fa-pen" style="font-size:10px; margin-left:4px; opacity:0.6;"></i>
                     </div>
                 </span></div>`;
 
-            // Kolom Kondisional (Sama seperti sebelumnya)
+            // Kolom Kondisional
             if (isMasuk) {
                 html += `<div class="new-cell"><span class="data-list">
-                    ${t.file ? `<button type="button" class="btn-preview" onclick="previewPdf('${t.file}')"><i class="fas fa-eye"></i></button>` : '-'}
+                    ${t.file ? `<button type="button" class="btn-preview" onclick="previewPdf('${t.file}')" title="Preview PDF Pengajuan"><i class="fas fa-eye"></i> Lihat File</button>` : '-'}
                 </span></div>`;
 
                 html += `
                     <div class="new-cell">
                     <span class="data-list">
                         <button class="btn-action-aksi delete"
-                            onclick="hapusIzin('${t.id}', '${t.nama.replace(/'/g, "\\'")}')">
-                            <i class="fas fa-trash-alt"></i>
+                            onclick="hapusIzin('${t.id}', '${t.nama.replace(/'/g, "\\'")}')"
+                            title="Hapus Data Pengajuan">
+                            <i class="fas fa-trash-alt"></i> Hapus
                         </button>
                     </span>
                 </div>`;
 
             } else {
-                html += `<div class="new-cell"><span class="data-list" style="text-transform:capitalize;">${t.jenis_surat}</span></div>`;
+                // TAB SURAT BALASAN
+                html += `<div class="new-cell cell-jenis-surat"><span class="data-list" style="text-transform:capitalize; font-weight:600;">${t.jenis_surat}</span></div>`;
 
-                html += `<div class="new-cell"><span class="data-list">
-                   ${t.file_balasan
-                        ? renderFileBalasan(t)
-                        : `<div class="upload-wrapper">
-                            <input type="file" id="file-${t.id}" 
-                                class="input-file-balasan"
-                                accept="application/pdf"
-                                style="display:none;"
-                                onchange="uploadBalasan(this, '${t.id}')">
-                            <label for="file-${t.id}" 
-                                class="btn-upload-action"
-                                style="cursor:pointer; color:blue; font-size:12px;">
-                                <i class="fas fa-upload"></i> Upload Balasan
-                            </label>
-                            <span id="loading-${t.id}" 
-                                style="display:none; font-size:11px; color:grey;">
-                                Mengupload...
-                            </span>
-                        </div>`
-                    }
-                </span></div>`;
+                // File Balasan
+                html += `<div class="new-cell cell-file-balasan"><span class="data-list">${renderFileBalasan(t)}</span></div>`;
 
-                // Logika Status Balasan
-                let statusHtml = '';
+                // Status WA (Badge Murni)
+                let statusWaHtml = '';
                 if (!t.file_balasan) {
-                    statusHtml = `
-                        <span class="badge badge-warning">
-                            <i class="fas fa-clock"></i> Surat Balasan akan dikirim melalui WhatsApp
-                        </span>
-                    `;
-                } else if (t.file_balasan && t.wa_status === 'pending') {
-                    // const phone = t.tlp ? t.tlp : '';
-                    statusHtml = `
-                        <button 
-                            class="btn-tambah" style="background:#28a745; color:white; font-size:12px; padding:6px 12px;" 
-                            onclick="kirimBalasan('${t.id}')">
-                                <i class="fab fa-whatsapp"></i> Kirim Surat Balasan
+                    statusWaHtml = `<span class="badge badge-warning"><i class="fas fa-clock"></i> Belum Ada File</span>`;
+                } else if (t.wa_status === 'sent') {
+                    statusWaHtml = `<span class="badge badge-success"><i class="fas fa-check-double"></i> Terkirim</span>`;
+                } else if (t.wa_status === 'failed') {
+                    statusWaHtml = `<span class="badge badge-danger"><i class="fas fa-times-circle"></i> Gagal</span>`;
+                } else {
+                    statusWaHtml = `<span class="badge badge-warning"><i class="fas fa-paper-plane"></i> Siap Kirim</span>`;
+                }
+                html += `<div class="new-cell cell-status-wa"><span class="data-list">${statusWaHtml}</span></div>`;
+
+                // Kolom AKSI SURAT BALASAN (LENGKAP: Edit/Upload + Kirim WA + Hapus)
+                let aksiHtml = `<div class="cell-aksi-balasan">`;
+                
+                // 1. Upload / Perbarui Balasan
+                aksiHtml += `
+                    <div class="upload-wrapper" style="display:inline-block;">
+                        <input type="file" id="file-${t.id}" class="input-file-balasan" accept="application/pdf" style="display:none;" onchange="uploadBalasan(this, '${t.id}')">
+                        <label for="file-${t.id}" class="btn-action-aksi edit" style="cursor:pointer;" title="${t.file_balasan ? 'Perbarui/Ganti File Balasan' : 'Upload File Balasan'}">
+                            <i class="fas fa-upload"></i> ${t.file_balasan ? 'Edit File' : 'Upload'}
+                        </label>
+                        <span id="loading-${t.id}" style="display:none; font-size:11px; color:grey;">Uploading...</span>
+                    </div>
+                `;
+
+                // 2. Kirim / Kirim Ulang WA (Hanya muncul jika file balasan sudah ada)
+                if (t.file_balasan) {
+                    aksiHtml += `
+                        <button type="button" class="btn-wa-send" onclick="kirimBalasan('${t.id}')" title="Kirim Surat Balasan via WhatsApp">
+                            <i class="fab fa-whatsapp"></i> ${t.wa_status === 'sent' ? 'Kirim Ulang' : 'Kirim WA'}
                         </button>
                     `;
-                } else if (t.wa_status === 'sent') {
-                    // const phone = t.tlp ? t.tlp : '';
-                    statusHtml = `
-                        <div style="display:flex; flex-direction:column; gap:5px; align-items:flex-start;">
-                            <span class="badge badge-success"><i class="fas fa-check-double"></i> Terkirim</span>
-                            <button 
-                                type="button" 
-                                class="btn-action-aksi" style="background:#ffc107; color:#000; font-size:11px;" 
-                                onclick="kirimBalasan('${t.id}')"><i class="fas fa-redo"></i> Kirim Ulang
-                            </button>
-                        </div>
-                    `;
-                } else if (t.wa_status === 'failed') {
-                    // const phone = t.tlp ? t.tlp : '';
-                    statusHtml = `
-                        <div style="display:flex;flex-direction:column;gap:5px;">
-                            <span class="badge badge-danger">Gagal</span>
-                            <button class="btn-action-aksi" onclick="kirimBalasan('${t.id}')">
-                                Coba Lagi
-                            </button>
-                        </div>
-                    `;
                 }
-                html += `<div class="new-cell"><span class="data-list">${statusHtml}</span></div>`;
+
+                // 3. Hapus Data
+                aksiHtml += `
+                    <button type="button" class="btn-action-aksi delete" onclick="hapusIzin('${t.id}', '${t.nama.replace(/'/g, "\\'")}')" title="Hapus Data Pengajuan">
+                        <i class="fas fa-trash-alt"></i> Hapus
+                    </button>
+                `;
+
+                aksiHtml += `</div>`;
+                html += `<div class="new-cell"><span class="data-list">${aksiHtml}</span></div>`;
             }
             html += `</div>`; // Tutup Baris Utama
 
             // --- BARIS DETAIL (HIDDEN BY DEFAULT) ---
-            // Kita buat row baru yang tersembunyi
             html += `
             <div id="detail-${t.id}" class="detail-row" style="display: none;">
                 <div class="detail-container">
@@ -628,10 +668,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     `
                        <div class="detail-item"><strong>No Hp:</strong> ${t.tlp ?? '-'}</div>
                        <div class="detail-item"><strong>Tanggal Pengajuan:</strong> ${t.tgl ?? '-'}</div>
-                       <div class="detail-item"><strong>Tanggal Balasan:</strong> ${t.tgl_balasan ?? '-'}</div>
+                       <div class="detail-item"><strong>Tanggal Balasan:</strong> ${t.tgl_balasan ? t.tgl_balasan.split(' ')[0] : '-'}</div>
                        <div class="detail-item">
                             <strong>File Pengajuan Awal:</strong> 
-                            ${t.file ? `<a href="#" onclick="previewPdf('${t.file}')" style="color:blue;"><i class="fas fa-eye"></i> Lihat File</a>` : '-'}
+                            ${t.file ? `<button type="button" class="btn-preview" onclick="previewPdf('${t.file}')"><i class="fas fa-eye"></i> Lihat File Masuk</button>` : '-'}
                        </div>
                        <div class="detail-item full-width"><strong>Keterangan:</strong> ${t.keterangan ?? '-'}</div>
                        `

@@ -16,6 +16,7 @@ class IzinController
     // Halaman simanis user (simanis.php)
     public function formPublic()
     {
+        $statusSimanis = $this->model->getStatusSimanis();
         include __DIR__ . '/../../public/simanis.php';
     }
 
@@ -28,6 +29,7 @@ class IzinController
     // Halaman daftar perizinan (izin.php)
     public function daftarIzin()
     {
+        $statusSimanis = $this->model->getStatusSimanis();
         include __DIR__ . '/../views/layouts/header.php';
         include __DIR__ . '/../views/pages/izin.php';
         include __DIR__ . '/../views/layouts/footer.php';
@@ -51,9 +53,28 @@ class IzinController
             exit;
         }
 
+        // Cek status pendaftaran (jika 0 / Tutup / Kuota Full)
+        $statusSimanis = $this->model->getStatusSimanis();
+        if ($statusSimanis === '0') {
+            echo json_encode([
+                'success' => false,
+                'message' => 'mohon maaf KANTOR WILAYAH KEMENTERIAN HUKUM SULAWESI SELATAN saat ini belum bisa menerima pengajuan perizinan karena kuota sudah full, tetap pantau situs kami secara berkala'
+            ]);
+            exit;
+        }
+
         $nik = trim($_POST['nik'] ?? '');
         $nama = trim($_POST['nama'] ?? '');
         $tlp = trim($_POST['tlp'] ?? '');
+
+        // Format otomatis nomor HP ke format 628xxx (Indonesia)
+        $tlp = preg_replace('/\D/', '', $tlp);
+        if (substr($tlp, 0, 1) === '0') {
+            $tlp = '62' . substr($tlp, 1);
+        } elseif (substr($tlp, 0, 1) === '8') {
+            $tlp = '62' . $tlp;
+        }
+
         $jenis_surat = trim($_POST['jenis_surat'] ?? '');
 
         // ===== VALIDASI =====
@@ -339,12 +360,14 @@ class IzinController
             exit;
         }
 
-        // 🔹 3. Generate link file
+        // 🔹 3. Generate link file (menggunakan ID agar aman dan tidak membocorkan path folder)
         $baseUrl = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'];
-        $fileLink = $baseUrl . BASE_URL . '/pdf-viewer.php?file=' . urlencode(ltrim($izin['file_balasan'], '/'));
+        $fileLink = $baseUrl . BASE_URL . '/pdf-viewer.php?id=' . urlencode($izin['id']);
 
-        // 🔹 4. Generate pesan
-        $message = buildWaMessage($izin['nama'], $fileLink);
+        // 🔹 4. Generate jenis pesan & isi pesan WA
+        $isPenolakan = in_array((int)$izin['status'], [2, 4]) || (!empty($izin['keterangan']) && trim($izin['keterangan']) !== '');
+        $jenisPesan = $isPenolakan ? 'penolakan' : 'default';
+        $message = buildWaMessage($izin['nama'], $fileLink, $jenisPesan, $izin['keterangan'] ?? null);
 
         // 🔥 5. KIRIM VIA FONNTE
         $result = sendFonnteMessage($phone, $message);
@@ -393,6 +416,21 @@ class IzinController
 
         // Hapus dari database
         if ($this->model->hapusIzin($id)) {
+            // Hapus file fisik (surat masuk & surat balasan) dari server jika ada
+            if (!empty($izin['file'])) {
+                $fileMasukPath = __DIR__ . '/../../public/' . ltrim($izin['file'], '/');
+                if (file_exists($fileMasukPath)) {
+                    @unlink($fileMasukPath);
+                }
+            }
+
+            if (!empty($izin['file_balasan'])) {
+                $fileBalasanPath = __DIR__ . '/../../public/' . ltrim($izin['file_balasan'], '/');
+                if (file_exists($fileBalasanPath)) {
+                    @unlink($fileBalasanPath);
+                }
+            }
+
             echo json_encode(['success' => true, 'message' => 'Data perizinan berhasil dihapus']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Gagal menghapus data perizinan']);
@@ -400,4 +438,44 @@ class IzinController
 
         exit;
     }
-}
+
+    // API Get status pendaftaran SIMANIS
+    public function getStatusSimanis()
+    {
+        header('Content-Type: application/json; charset=utf-8');
+        $status = $this->model->getStatusSimanis();
+        echo json_encode(['success' => true, 'status' => $status]);
+        exit;
+    }
+
+    // Toggle status pendaftaran SIMANIS (Admin only)
+    public function toggleStatusSimanis()
+    {
+        header('Content-Type: application/json; charset=utf-8');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+            exit;
+        }
+
+        $currentStatus = $this->model->getStatusSimanis();
+        // Jika ada status spesifik dari request POST, pakai itu; jika tidak, toggle sebaliknya
+        if (isset($_POST['status'])) {
+            $newStatus = $_POST['status'] == '1' ? '1' : '0';
+        } else {
+            $newStatus = ($currentStatus === '1') ? '0' : '1';
+        }
+
+        if ($this->model->setStatusSimanis($newStatus)) {
+            $label = ($newStatus === '1') ? 'Buka (Menerima Pengajuan)' : 'Tutup (Kuota Full)';
+            echo json_encode([
+                'success' => true,
+                'status' => $newStatus,
+                'message' => 'Status pendaftaran SIMANIS berhasil diubah menjadi: ' . $label
+            ]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Gagal mengubah status pendaftaran']);
+        }
+        exit;
+    }
+}

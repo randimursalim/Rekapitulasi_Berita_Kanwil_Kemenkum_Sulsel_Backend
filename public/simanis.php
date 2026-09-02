@@ -49,6 +49,9 @@ $BASE = rtrim($BASE, '/');
     <link rel="stylesheet" href="<?= $BASE ?>/css/simanis.css?v=<?= $version ?>">
     <link rel="stylesheet" href="<?= $BASE ?>/vendor/fontawesome/css/all.min.css">
 
+    <script>
+        window.SIMANIS_STATUS = "<?= $statusSimanis ?? '1' ?>";
+    </script>
 </head>
 
 <body>
@@ -70,29 +73,46 @@ $BASE = rtrim($BASE, '/');
             <div class="simanis-container">
 
                 <!-- FORM -->
+                <?php $isClosed = (isset($statusSimanis) && $statusSimanis === '0'); ?>
                 <div class="simanis-form">
                     <h2 class="simanis-title">🗂️Pengajuan Perizinan</h2>
                     <p class="simanis-desc">Surat Izin Penelitian/Magang/External lainnya</p>
 
+                    <?php if ($isClosed): ?>
+                        <div
+                            style="background-color: #FEF2F2; border: 1px solid #FCA5A5; color: #991B1B; padding: 14px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; line-height: 1.5; display: flex; align-items: flex-start; gap: 10px;">
+                            <i class="fas fa-exclamation-triangle"
+                                style="font-size: 1.3rem; color: #DC2626; margin-top: 2px;"></i>
+                            <div>
+                                <strong>PEMBERITAHUAN:</strong><br>
+                                mohon maaf Kantor Wilayah Kementerian Hukum Sulawesi Selatan saat ini belum bisa menerima
+                                pengajuan perizinan karena kuota sudah full, tetap pantau situs kami secara berkala.
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
                     <form method="POST" id="FormTambah" enctype="multipart/form-data">
                         <div class="form-group">
                             <label>NIK</label>
-                            <input type="text" name="nik" placeholder="7301000000000001" required>
+                            <input type="text" name="nik" placeholder="7301000000000001" required <?= $isClosed ? 'disabled' : '' ?>>
                         </div>
 
                         <div class="form-group">
                             <label>Nama Lengkap</label>
-                            <input type="text" name="nama" placeholder="Nama Lengkap" required>
+                            <input type="text" name="nama" placeholder="Nama Lengkap" required <?= $isClosed ? 'disabled' : '' ?>>
                         </div>
 
                         <div class="form-group">
-                            <label>Telepon/WA</label>
-                            <input type="number" name="tlp" placeholder="628123456789" required>
+                            <label>Telepon/WA <span
+                                    style="font-size:0.8rem; color:#6B7280; font-weight:normal;">(Format:
+                                    628xxx)</span></label>
+                            <input type="tel" name="tlp" id="inputTlp"
+                                placeholder="Contoh: 08123456789 atau 628123456789" required <?= $isClosed ? 'disabled' : '' ?>>
                         </div>
 
                         <div class="form-group">
                             <label for="jenis_surat">Pilih Jenis Surat <span>*</span></label>
-                            <select name="jenis_surat" id="jenis_surat" required>
+                            <select name="jenis_surat" id="jenis_surat" required <?= $isClosed ? 'disabled' : '' ?>>
                                 <option value="">Pilih</option>
                                 <optgroup label="Surat Pengantar">
                                     <option value="magang">Magang</option>
@@ -107,10 +127,10 @@ $BASE = rtrim($BASE, '/');
                                 File Berkas/Lampiran
                                 <span style="color:red;">*Only PDF | Max 2MB</span>
                             </label>
-                            <input type="file" name="lampiran" accept="application/pdf" required>
+                            <input type="file" name="lampiran" accept="application/pdf" required <?= $isClosed ? 'disabled' : '' ?>>
                         </div>
 
-                        <button type="button" id="BSimpan" class="btn-submit">
+                        <button type="button" id="BSimpan" class="btn-submit" <?= $isClosed ? 'disabled style="opacity: 0.6; cursor: not-allowed; background-color: #9CA3AF;"' : '' ?>>
                             Simpan Data
                         </button>
 

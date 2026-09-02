@@ -203,4 +203,51 @@ class IzinModel
         $stmt->execute([$tahun]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Ambil status pendaftaran SIMANIS (1 = Buka, 0 = Tutup/Kuota Full)
+    public function getStatusSimanis()
+    {
+        try {
+            // Auto create table jika belum ada di DB
+            $this->db->exec("CREATE TABLE IF NOT EXISTS tb_setting (
+                setting_key VARCHAR(50) NOT NULL PRIMARY KEY,
+                setting_value TEXT NULL,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+            $stmt = $this->db->prepare("SELECT setting_value FROM tb_setting WHERE setting_key = 'status_izin_simanis'");
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($row && isset($row['setting_value'])) {
+                return (string) $row['setting_value'];
+            }
+
+            // Jika belum ada record, insert default '1' (Buka)
+            $stmtInsert = $this->db->prepare("INSERT INTO tb_setting (setting_key, setting_value) VALUES ('status_izin_simanis', '1') ON DUPLICATE KEY UPDATE setting_key=setting_key");
+            $stmtInsert->execute();
+            return '1';
+        } catch (PDOException $e) {
+            return '1'; // Fallback default Buka
+        }
+    }
+
+    // Update status pendaftaran SIMANIS ('1' / '0')
+    public function setStatusSimanis($status)
+    {
+        try {
+            $this->db->exec("CREATE TABLE IF NOT EXISTS tb_setting (
+                setting_key VARCHAR(50) NOT NULL PRIMARY KEY,
+                setting_value TEXT NULL,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
+
+            $val = ($status == '1' || $status === 1 || $status === 'open') ? '1' : '0';
+            $stmt = $this->db->prepare("INSERT INTO tb_setting (setting_key, setting_value) VALUES ('status_izin_simanis', :val) ON DUPLICATE KEY UPDATE setting_value = :val2");
+            return $stmt->execute([':val' => $val, ':val2' => $val]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
 }
+

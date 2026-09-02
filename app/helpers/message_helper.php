@@ -1,18 +1,29 @@
 <?php
 
 if (!function_exists('buildWaMessage')) {
-    function buildWaMessage(string $nama, string $link, string $jenis = 'default'): string
+    function buildWaMessage(string $nama, string $link, string $jenis = 'default', ?string $keterangan = null): string
     {
         switch ($jenis) {
             case 'penolakan':
-                return "Halo Sdr/i *{$nama}*,\n\n"
-                    . "Mohon maaf, pengajuan Anda ditolak.\n\n"
-                    . "Detail: {$link}";
+                $msg = "Yth. Sdr/i *{$nama}*,\n\n"
+                    . "Mohon maaf, pengajuan perizinan Anda di Kanwil Kemenkum Sulsel belum dapat diproses / ditolak.\n\n";
+
+                if (!empty($keterangan)) {
+                    $msg .= "*Alasan:* " . trim($keterangan) . "\n\n";
+                }
+
+                if (!empty($link)) {
+                    $msg .= "📄 Dokumen: {$link}\n\n";
+                }
+
+                $msg .= "Terima kasih.\n_Kanwil Kemenkum Sulsel_";
+                return $msg;
 
             default:
-                return "Halo Sdr/i *{$nama}*,\n\n"
-                    . "Surat balasan Anda sudah tersedia.\n\n"
-                    . "📄 {$link}";
+                return "Yth. Sdr/i *{$nama}*,\n\n"
+                    . "Surat balasan perizinan Anda dari Kanwil Kemenkum Sulsel sudah tersedia.\n\n"
+                    . "📄 Dokumen: {$link}\n\n"
+                    . "Terima kasih.\n_Kanwil Kemenkum Sulsel_";
         }
     }
 }

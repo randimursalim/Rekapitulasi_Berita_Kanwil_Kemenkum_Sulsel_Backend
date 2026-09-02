@@ -209,7 +209,7 @@ try {
 
     // ===== AMBIL DATA =====
     $stmt = $conn->prepare("
-        SELECT id, nik, nama, tlp, jenis_surat, tgl, file, keterangan, status, file_balasan, tgl_balasan, wa_terkirim, wa_status, wa_response, wa_sent_at
+        SELECT id, nik, nama, tlp, jenis_surat, tgl, file, keterangan, status, file_balasan, DATE_FORMAT(tgl_balasan, '%Y-%m-%d') AS tgl_balasan, wa_terkirim, wa_status, wa_response, wa_sent_at
         $baseSql
         ORDER BY tgl DESC
         LIMIT $limit OFFSET $offset

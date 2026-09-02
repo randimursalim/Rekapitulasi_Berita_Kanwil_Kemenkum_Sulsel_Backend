@@ -2,7 +2,7 @@
 
 // GLOBAL HELPERS
 require_once __DIR__ . '/../app/helpers/status_helper.php';
-require_once __DIR__ . '/../app/helpers/path_helper.php';
+require_once __DIR__ . '/../app/helpers/message_helper.php';
 require_once __DIR__ . '/../app/helpers/text_helper.php';
 require_once __DIR__ . '/../config/app.php';
 
@@ -246,6 +246,20 @@ switch ($page) {
         require_once __DIR__ . '/../app/controllers/IzinController.php';
         $controller = new IzinController();
         $controller->trackingSurat();
+        break;
+
+    case 'get-status-simanis':
+        require_once __DIR__ . '/../app/controllers/IzinController.php';
+        $controller = new IzinController();
+        $controller->getStatusSimanis();
+        break;
+
+    case 'toggle-status-simanis':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+        require_once __DIR__ . '/../app/controllers/IzinController.php';
+        $controller = new IzinController();
+        $controller->toggleStatusSimanis();
         break;
 
     /* API TRACKING */
