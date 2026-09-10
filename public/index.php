@@ -4,6 +4,7 @@
 require_once __DIR__ . '/../app/helpers/status_helper.php';
 require_once __DIR__ . '/../app/helpers/message_helper.php';
 require_once __DIR__ . '/../app/helpers/text_helper.php';
+require_once __DIR__ . '/../app/helpers/maintenance_helper.php';
 require_once __DIR__ . '/../config/app.php';
 
 // Redirect ke landing page jika tidak ada parameter page
@@ -28,64 +29,55 @@ if (is_writable($sessionPath)) {
 
 // Start session dengan error suppression
 @session_start();
-// Default halaman berdasarkan role
+
+// Cek Maintenance Mode
+$requestedPage = $_GET['page'] ?? '';
+if (MaintenanceHelper::isMaintenanceMode()) {
+    $isAdmin = MaintenanceHelper::isAdmin();
+    $allowedPages = ['login', 'proses-login', 'logout', 'maintenance'];
+    if (!$isAdmin && !in_array($requestedPage, $allowedPages)) {
+        include __DIR__ . '/../app/views/pages/maintenance.php';
+        exit();
+    }
+}
+// Default halaman berdasarkan permission role
 $defaultPage = 'dashboard';
 if (isset($_SESSION['user'])) {
-    if ($_SESSION['user']['role'] === 'p3h') {
-        $defaultPage = 'harmonisasi';
-    } elseif ($_SESSION['user']['role'] === 'pegawai') {
-        $defaultPage = 'jadwal-peminjaman-ruangan';
+    require_once __DIR__ . '/../app/controllers/AuthController.php';
+    if (!isset($_SESSION['user']['permissions'])) {
+        require_once __DIR__ . '/../app/models/RoleModel.php';
+        $roleModel = new RoleModel();
+        $_SESSION['user']['permissions'] = $roleModel->getPermissionsByRoleName($_SESSION['user']['role'] ?? '');
     }
-}
-$page = $_GET['page'] ?? $defaultPage;
 
-// Cek akses untuk role p3h (hanya bisa akses harmonisasi dan rekap-harmonisasi)
-if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'p3h') {
-    $allowedPages = [
-        'harmonisasi',
-        'rekap-harmonisasi',
-        'tambah-harmonisasi',
-        'edit-harmonisasi',
-        'store-harmonisasi',
-        'update-harmonisasi',
-        'hapus-harmonisasi',
-        'get-rekap-data-harmonisasi',
-        'get-rekap-tabel-harmonisasi',
-        'get-available-periods-harmonisasi',
-        'edit-profil',
-        'update-profil',
-        'logout',
-        'update-activity',
-        'jadwal-kegiatan',
-        'jadwal-peminjaman-ruangan'
+    $permissions = $_SESSION['user']['permissions'] ?? [];
+    if (($_SESSION['user']['role'] ?? '') !== 'Admin' && !in_array('dashboard', $permissions) && !empty($permissions)) {
+        $defaultPage = $permissions[0];
+    }
+
+    $page = $_GET['page'] ?? $defaultPage;
+
+    // Proteksi halaman utama berdasarkan hak akses role
+    $mainPages = [
+        'dashboard', 'input-konten', 'rekap-konten', 'tamu', 'izin', 'arsip',
+        'layanan-pengaduan', 'jadwal-kegiatan', 'rekap-jadwal-kegiatan',
+        'jadwal-peminjaman-ruangan', 'harmonisasi', 'rekap-harmonisasi',
+        'pengguna', 'statistik-pengguna', 'role'
     ];
-
-    if (!in_array($page, $allowedPages)) {
-        header('Location: ' . BASE_URL . '/index.php?page=harmonisasi');
+    if (in_array($page, $mainPages) && !AuthController::hasPermission($page)) {
+        header('Location: ' . BASE_URL . '/index.php?page=' . $defaultPage);
         exit;
     }
-}
-
-// Cek akses untuk role pegawai (hanya bisa akses jadwal-peminjaman-ruangan)
-if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'pegawai') {
-    $allowedPages = [
-        'jadwal-peminjaman-ruangan',
-        'tambah-peminjaman-ruangan',
-        'store-peminjaman-ruangan',
-        'edit-profil',
-        'update-profil',
-        'logout',
-        'update-activity'
-    ];
-
-    if (!in_array($page, $allowedPages)) {
-        header('Location: ' . BASE_URL . '/index.php?page=jadwal-peminjaman-ruangan');
-        exit;
-    }
+} else {
+    $page = $_GET['page'] ?? $defaultPage;
 }
 
 switch ($page) {
     // === AUTHENTICATION ===
+    case 'maintenance':
+        include __DIR__ . '/../app/views/pages/maintenance.php';
+        break;
+
     case 'login':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
         $controller = new AuthController();
@@ -911,6 +903,61 @@ switch ($page) {
         require_once __DIR__ . '/../app/controllers/TamuController.php';
         $controller = new TamuController();
         $controller->updateTamu();
+        break;
+
+    // === MANAJEMEN ROLE & HAK AKSES (Admin Only) ===
+    case 'role':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/RoleController.php';
+        $controller = new RoleController();
+        $controller->daftarRole();
+        break;
+
+    case 'tambah-role':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/RoleController.php';
+        $controller = new RoleController();
+        $controller->tambahRole();
+        break;
+
+    case 'store-role':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/RoleController.php';
+        $controller = new RoleController();
+        $controller->storeRole();
+        break;
+
+    case 'edit-role':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/RoleController.php';
+        $controller = new RoleController();
+        $controller->editRole();
+        break;
+
+    case 'update-role':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/RoleController.php';
+        $controller = new RoleController();
+        $controller->updateRole();
+        break;
+
+    case 'hapus-role':
+        require_once __DIR__ . '/../app/controllers/AuthController.php';
+        AuthController::requireAdmin();
+
+        require_once __DIR__ . '/../app/controllers/RoleController.php';
+        $controller = new RoleController();
+        $controller->hapusRole();
         break;
 
     // === DEFAULT ===

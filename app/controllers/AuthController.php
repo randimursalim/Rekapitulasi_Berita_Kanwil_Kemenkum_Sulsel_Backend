@@ -14,7 +14,24 @@ class AuthController
     // === Halaman login ===
     public function login()
     {
-        // Jika user sudah login, arahkan ke redirect parameter jika ada, sebaliknya ke dashboard
+        require_once __DIR__ . '/../helpers/maintenance_helper.php';
+
+        // Jika diminta logout_first atau (mode maintenance aktif & user yang login BUKAN Admin),
+        // hapus session non-admin agar form login muncul dan Admin bisa login
+        if (isset($_GET['logout_first']) || (MaintenanceHelper::isMaintenanceMode() && !MaintenanceHelper::isAdmin())) {
+            $_SESSION = array();
+            if (ini_get("session.use_cookies")) {
+                $params = session_get_cookie_params();
+                setcookie(session_name(), '', time() - 42000,
+                    $params["path"], $params["domain"],
+                    $params["secure"], $params["httponly"]
+                );
+            }
+            @session_destroy();
+            @session_start();
+        }
+
+        // Jika user sudah login (dan user adalah Admin), arahkan ke dashboard
         if (isset($_SESSION['user'])) {
             if (!empty($_GET['redirect'])) {
                 $redirectPage = preg_replace('/[^a-zA-Z0-9\-_]/', '', $_GET['redirect']);
@@ -52,18 +69,24 @@ class AuthController
             // Ambil user dari database
             $user = $this->model->getUserByUsername($username);
 
-                if ($user && $this->model->verifyPassword($password, $user['password'])) {
-                    // Regenerate session ID untuk security
-                    session_regenerate_id(true);
-                    
-                    // Login berhasil
-                    $_SESSION['user'] = [
-                        'id' => $user['id_pengguna'],
-                        'username' => $user['username'],
-                        'nama' => $user['nama'],
-                        'role' => $user['role'],
-                        'foto' => $user['foto']
-                    ];
+            if ($user && $this->model->verifyPassword($password, $user['password'])) {
+                // Regenerate session ID untuk security
+                session_regenerate_id(true);
+                
+                // Load permissions untuk role user
+                require_once __DIR__ . '/../models/RoleModel.php';
+                $roleModel = new RoleModel();
+                $permissions = $roleModel->getPermissionsByRoleName($user['role']);
+
+                // Login berhasil
+                $_SESSION['user'] = [
+                    'id' => $user['id_pengguna'],
+                    'username' => $user['username'],
+                    'nama' => $user['nama'],
+                    'role' => $user['role'],
+                    'foto' => $user['foto'],
+                    'permissions' => $permissions
+                ];
                     
                     // Set waktu aktivitas awal
                     $_SESSION['last_activity'] = time();
@@ -79,12 +102,12 @@ class AuthController
                         // sanitize to allow only alphanumeric, dashes
                         $redirectPage = preg_replace('/[^a-zA-Z0-9\-_]/', '', $_POST['redirect']);
                         header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=' . $redirectPage);
-                    } elseif ($user['role'] === 'p3h') {
-                        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=harmonisasi');
-                    } elseif ($user['role'] === 'pegawai') {
-                        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=jadwal-peminjaman-ruangan');
                     } else {
-                        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=dashboard');
+                        $targetPage = 'dashboard';
+                        if (($_SESSION['user']['role'] ?? '') !== 'Admin' && !in_array('dashboard', $permissions) && !empty($permissions)) {
+                            $targetPage = $permissions[0];
+                        }
+                        header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=' . $targetPage);
                     }
                     exit;
             } else {
@@ -134,6 +157,26 @@ class AuthController
         
         // Cek session timeout (15 menit)
         self::checkSessionTimeout();
+
+        // Ensure permissions array is loaded in session
+        if (!isset($_SESSION['user']['permissions'])) {
+            require_once __DIR__ . '/../models/RoleModel.php';
+            $roleModel = new RoleModel();
+            $_SESSION['user']['permissions'] = $roleModel->getPermissionsByRoleName($_SESSION['user']['role']);
+        }
+    }
+
+    // === Helper untuk cek apakah user memiliki permission ke menu_key tertentu ===
+    public static function hasPermission($menuKey)
+    {
+        if (!isset($_SESSION['user'])) return false;
+        
+        // Admin selalu punya akses penuh ke semua menu
+        if (($_SESSION['user']['role'] ?? '') === 'Admin') return true;
+
+        // Cek apakah menu_key ada di array permissions
+        $permissions = $_SESSION['user']['permissions'] ?? [];
+        return in_array($menuKey, $permissions);
     }
     
     // === Validasi session security ===

@@ -1,0 +1,264 @@
+/* public/css/role.css */
+
+/* General Container & Cards */
+.role-container {
+    max-width: 950px;
+    margin: 0 auto;
+    background: var(--panel-color, #ffffff);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    color: var(--text-color, #333);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Form Controls */
+.role-form-group {
+    margin-bottom: 20px;
+}
+
+.role-form-group label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color, #1e293b);
+}
+
+.role-form-control {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color, #ccc);
+    border-radius: 6px;
+    background-color: var(--panel-color, #fff);
+    color: var(--text-color, #333);
+    box-sizing: border-box;
+    transition: border-color 0.2s, background-color 0.3s, color 0.3s;
+}
+
+.role-form-control:focus {
+    outline: none;
+    border-color: #0E4BF1;
+    box-shadow: 0 0 0 3px rgba(14, 75, 241, 0.15);
+}
+
+.role-form-control[readonly] {
+    background-color: rgba(0, 0, 0, 0.04);
+    cursor: not-allowed;
+}
+
+/* Table styling for role.php */
+.role-table-wrapper {
+    background: var(--panel-color, #ffffff);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.role-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.role-table th {
+    background-color: var(--primary-color, #0E4BF1);
+    color: #ffffff;
+    text-align: left;
+    padding: 14px 16px;
+    border-bottom: 2px solid var(--border-color, #ddd);
+    font-weight: 600;
+}
+
+.role-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color, #eee);
+    color: var(--text-color, #333);
+}
+
+.role-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.role-table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Badges */
+.badge-role-tag {
+    background: rgba(14, 75, 241, 0.08);
+    color: #0E4BF1;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.badge-user-count {
+    background: rgba(22, 101, 52, 0.1);
+    color: #166534;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* Permissions Grid & Cards */
+.permissions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.permissions-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-color, #1e293b);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.permissions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.permission-card {
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 8px;
+    padding: 16px;
+    background: #f8fafc;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.permission-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0E4BF1;
+    margin-top: 0;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #cbd5e1;
+    padding-bottom: 6px;
+}
+
+.permission-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--text-color, #334155);
+}
+
+.permission-item span {
+    color: var(--text-color, #334155);
+}
+
+.perm-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: #0E4BF1;
+    cursor: pointer;
+}
+
+/* Utility buttons */
+.btn-perm-toggle {
+    background: #e2e8f0;
+    color: #1e293b;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: opacity 0.2s, background-color 0.3s, color 0.3s;
+}
+
+.btn-perm-toggle:hover {
+    opacity: 0.85;
+}
+
+/* ===== DARK MODE OVERRIDES ===== */
+body.dark .role-container {
+    background: var(--panel-color, #242526);
+    color: #E4E6EB;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+body.dark .role-form-group label {
+    color: #E4E6EB;
+}
+
+body.dark .role-form-control {
+    background-color: #3A3B3C;
+    border-color: #4E4F50;
+    color: #E4E6EB;
+}
+
+body.dark .role-form-control::placeholder {
+    color: #999;
+}
+
+body.dark .role-form-control[readonly] {
+    background-color: #2D2E2F;
+    color: #AAA;
+}
+
+body.dark .role-table-wrapper {
+    background: var(--panel-color, #242526);
+}
+
+body.dark .role-table th {
+    background-color: #3A3B3C;
+    color: #E4E6EB;
+    border-bottom-color: #4E4F50;
+}
+
+body.dark .role-table td {
+    border-bottom-color: #3A3B3C;
+    color: #E4E6EB;
+}
+
+body.dark .role-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+body.dark .badge-role-tag {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60A5FA;
+}
+
+body.dark .badge-user-count {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ADE80;
+}
+
+body.dark .permissions-title {
+    color: #E4E6EB;
+}
+
+body.dark .permission-card {
+    border-color: #3A3B3C;
+    background: #2D2E2F;
+}
+
+body.dark .permission-card h4 {
+    color: #60A5FA;
+    border-bottom-color: #3A3B3C;
+}
+
+body.dark .permission-item,
+body.dark .permission-item span {
+    color: #E4E6EB;
+}
+
+body.dark .btn-perm-toggle {
+    background: #3A3B3C;
+    color: #E4E6EB;
+}

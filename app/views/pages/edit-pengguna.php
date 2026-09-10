@@ -93,10 +93,14 @@ if (!isset($BASE)) {
             <div class="form-group">
                 <label for="role">Role</label>
                 <select id="role" name="role" required>
-                    <option value="Admin" <?= ($pengguna['role'] === 'Admin') ? 'selected' : '' ?>>Admin</option>
-                    <option value="Operator" <?= ($pengguna['role'] === 'Operator') ? 'selected' : '' ?>>Operator</option>
-                    <option value="p3h" <?= ($pengguna['role'] === 'p3h') ? 'selected' : '' ?>>Peraturan Perundang-undangan dan Pembinaan Hukum</option>
-                    <option value="pegawai" <?= ($pengguna['role'] === 'pegawai') ? 'selected' : '' ?>>Pegawai</option>
+                    <option value="">-- Pilih Role --</option>
+                    <?php if (!empty($roles)): ?>
+                        <?php foreach ($roles as $r): ?>
+                            <option value="<?= htmlspecialchars($r) ?>" <?= ($pengguna['role'] === $r) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($r) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </select>
             </div>
 

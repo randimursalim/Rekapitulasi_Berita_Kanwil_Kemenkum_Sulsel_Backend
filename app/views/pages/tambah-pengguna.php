@@ -76,10 +76,13 @@ if (!isset($BASE)) {
                 <label for="role">Role</label>
                 <select id="role" name="role" required>
                     <option value="">-- Pilih Role --</option>
-                    <option value="Admin" <?= (($_POST['role'] ?? '') === 'Admin') ? 'selected' : '' ?>>Admin</option>
-                    <option value="Operator" <?= (($_POST['role'] ?? '') === 'Operator') ? 'selected' : '' ?>>Operator</option>
-                    <option value="p3h" <?= (($_POST['role'] ?? '') === 'p3h') ? 'selected' : '' ?>>Peraturan Perundang-undangan dan Pembinaan Hukum</option>
-                    <option value="pegawai" <?= (($_POST['role'] ?? '') === 'pegawai') ? 'selected' : '' ?>>Pegawai</option>
+                    <?php if (!empty($roles)): ?>
+                        <?php foreach ($roles as $r): ?>
+                            <option value="<?= htmlspecialchars($r) ?>" <?= (($_POST['role'] ?? '') === $r) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($r) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </select>
             </div>
 

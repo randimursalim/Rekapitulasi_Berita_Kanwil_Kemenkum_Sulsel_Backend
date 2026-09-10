@@ -111,8 +111,19 @@ class PenggunaModel {
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'] > 0;
     }
 
-    // Ambil semua role yang tersedia
+    // Ambil semua role yang tersedia dari database
     public function getAvailableRoles() {
+        try {
+            $query = "SELECT nama_role FROM roles ORDER BY id_role ASC";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            $roles = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            if (!empty($roles)) {
+                return $roles;
+            }
+        } catch (Exception $e) {
+            error_log("Error getAvailableRoles: " . $e->getMessage());
+        }
         return ['Admin', 'Operator', 'p3h', 'pegawai'];
     }
 }

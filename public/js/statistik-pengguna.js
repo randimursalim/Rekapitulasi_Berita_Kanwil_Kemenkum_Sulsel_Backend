@@ -7,6 +7,34 @@ document.addEventListener('DOMContentLoaded', function () {
     // Global data untuk export
     window.statistikData = [];
 
+    const defaultRoleColors = {
+        'admin': '#0d6efd',
+        'operator': '#198754',
+        'p3h': '#ffc107',
+        'pegawai': '#20c997',
+        'sekretaris/protokol': '#6f42c1',
+        'protokol': '#6f42c1',
+        'sekretaris': '#d63384'
+    };
+
+    const paletteColors = [
+        '#6f42c1', '#d63384', '#fd7e14', '#0dcaf0', '#6610f2',
+        '#198754', '#0d6efd', '#ffc107', '#20c997', '#dc3545'
+    ];
+
+    function getRoleColor(role, index = 0) {
+        if (!role) return '#0dcaf0';
+        const key = role.toString().toLowerCase().trim();
+        if (defaultRoleColors[key]) {
+            return defaultRoleColors[key];
+        }
+        let hash = 0;
+        for (let i = 0; i < key.length; i++) {
+            hash = key.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        return paletteColors[Math.abs(hash + index) % paletteColors.length];
+    }
+
     // Inisialisasi Flatpickr
     const fp = flatpickr("#dateRangeFilter", {
         mode: "range",
@@ -188,6 +216,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (document.getElementById('valJenisTamu')) document.getElementById('valJenisTamu').textContent = data.summary.total_tamu.toLocaleString('id-ID');
         if (document.getElementById('valJenisPengaduan')) document.getElementById('valJenisPengaduan').textContent = data.summary.total_pengaduan.toLocaleString('id-ID');
         if (document.getElementById('valJenisHarmonisasi')) document.getElementById('valJenisHarmonisasi').textContent = data.summary.total_harmonisasi.toLocaleString('id-ID');
+        if (document.getElementById('valJenisIzin')) document.getElementById('valJenisIzin').textContent = (data.summary.total_izin || 0).toLocaleString('id-ID');
 
         // 2. Update DataTables
         if ($.fn.DataTable.isDataTable('#statistikTable')) {
@@ -199,12 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
         data.tableData.forEach((u, i) => {
             const tr = document.createElement('tr');
 
-            let roleColor = '#0dcaf0'; // info
-            if (u.role === 'Admin') roleColor = '#dc3545'; // danger
-            else if (u.role === 'Operator') roleColor = '#0d6efd'; // primary
-            else if (u.role === 'p3h' || u.role === 'P3H') roleColor = '#ffc107'; // warning
-            else if (u.role === 'pegawai' || u.role === 'Pegawai') roleColor = '#20c997'; // success/teal
-
+            const roleColor = getRoleColor(u.role);
             const initials = u.nama.charAt(0).toUpperCase();
 
             tr.innerHTML = `
@@ -228,6 +252,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td style="text-align: center;">${u.total_tamu || 0}</td>
                 <td style="text-align: center;">${u.total_pengaduan || 0}</td>
                 <td style="text-align: center;">${u.total_harmonisasi || 0}</td>
+                <td style="text-align: center;">${u.total_izin || 0}</td>
                 <td style="text-align: center; font-weight: bold;">${u.total_log_aktivitas}</td>
                 <td>
                     <div style="display: flex; align-items: center; gap: 10px;">
@@ -287,7 +312,8 @@ document.addEventListener('DOMContentLoaded', function () {
             { label: 'Peminjaman', data: data.topUsersBar.map(u => u.total_ruangan), backgroundColor: '#fd7e14', barPercentage: 0.5 },
             { label: 'Tamu', data: data.topUsersBar.map(u => u.total_tamu || 0), backgroundColor: '#0dcaf0', barPercentage: 0.5 },
             { label: 'Aduan', data: data.topUsersBar.map(u => u.total_pengaduan || 0), backgroundColor: '#dc3545', barPercentage: 0.5 },
-            { label: 'Harmonisasi', data: data.topUsersBar.map(u => u.total_harmonisasi || 0), backgroundColor: '#d63384', barPercentage: 0.5 }
+            { label: 'Harmonisasi', data: data.topUsersBar.map(u => u.total_harmonisasi || 0), backgroundColor: '#d63384', barPercentage: 0.5 },
+            { label: 'Izin/Penelitian', data: data.topUsersBar.map(u => u.total_izin || 0), backgroundColor: '#20c997', barPercentage: 0.5 }
         ];
         userChart.update();
 
@@ -307,10 +333,14 @@ document.addEventListener('DOMContentLoaded', function () {
         recentChart.update();
 
         // Doughnut Chart (Role)
-        roleChart.data.labels = ['Admin', 'Operator', 'P3H', 'Pegawai'];
+        const roleLabels = Object.keys(data.roleDistribution || {});
+        const roleCounts = Object.values(data.roleDistribution || {});
+        const roleColors = roleLabels.map((r, i) => getRoleColor(r, i));
+
+        roleChart.data.labels = roleLabels;
         roleChart.data.datasets = [{
-            data: [data.roleDistribution.Admin, data.roleDistribution.Operator, data.roleDistribution.P3H, data.roleDistribution.Pegawai || 0],
-            backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#20c997'],
+            data: roleCounts,
+            backgroundColor: roleColors,
             borderWidth: 0,
             hoverOffset: 4
         }];
@@ -338,14 +368,15 @@ document.addEventListener('DOMContentLoaded', function () {
             ['Tamu', summary.total_tamu || 0],
             ['Aduan', summary.total_pengaduan || 0],
             ['Harmonisasi', summary.total_harmonisasi || 0],
+            ['Perizinan (Izin)', summary.total_izin || 0],
             ['', ''],
-            ['RINCIAN STATISTIK PER PENGGUNA', '', '', '', '', '', '', '', '', '', ''],
-            ['No', 'Nama Pengguna', 'Username', 'Role', 'Log Aktivitas', 'Konten', 'Kegiatan', 'Peminjaman', 'Tamu', 'Aduan', 'Harmonisasi']
+            ['RINCIAN STATISTIK PER PENGGUNA', '', '', '', '', '', '', '', '', '', '', ''],
+            ['No', 'Nama Pengguna', 'Username', 'Role', 'Log Aktivitas', 'Konten', 'Kegiatan', 'Peminjaman', 'Tamu', 'Aduan', 'Harmonisasi', 'Izin']
         ];
 
         window.statistikData.forEach((u, i) => {
             exportData.push([
-                i + 1, u.nama, u.username, u.role, u.total_log_aktivitas, u.total_konten, u.total_kegiatan, u.total_ruangan, u.total_tamu, u.total_pengaduan, u.total_harmonisasi
+                i + 1, u.nama, u.username, u.role, u.total_log_aktivitas, u.total_konten, u.total_kegiatan, u.total_ruangan, u.total_tamu, u.total_pengaduan, u.total_harmonisasi, u.total_izin || 0
             ]);
         });
 
@@ -370,7 +401,8 @@ document.addEventListener('DOMContentLoaded', function () {
             ['Konten', summary.total_konten || 0],
             ['Tamu', summary.total_tamu || 0],
             ['Aduan', summary.total_pengaduan || 0],
-            ['Harmonisasi', summary.total_harmonisasi || 0]
+            ['Harmonisasi', summary.total_harmonisasi || 0],
+            ['Izin/Penelitian', summary.total_izin || 0]
         ];
 
         doc.setFontSize(12);
@@ -396,12 +428,12 @@ document.addEventListener('DOMContentLoaded', function () {
         let bodyData = [];
         window.statistikData.forEach((u, i) => {
             bodyData.push([
-                i + 1, u.nama, u.role, u.total_log_aktivitas, u.total_konten, u.total_kegiatan, u.total_ruangan, u.total_tamu, u.total_pengaduan, u.total_harmonisasi
+                i + 1, u.nama, u.role, u.total_log_aktivitas, u.total_konten, u.total_kegiatan, u.total_ruangan, u.total_tamu, u.total_pengaduan, u.total_harmonisasi, u.total_izin || 0
             ]);
         });
 
         doc.autoTable({
-            head: [['No', 'Nama Pengguna', 'Role', 'Total Log', 'Konten', 'Kegiatan', 'Ruangan', 'Tamu', 'Aduan', 'Harmonisasi']],
+            head: [['No', 'Nama Pengguna', 'Role', 'Total Log', 'Konten', 'Kegiatan', 'Ruangan', 'Tamu', 'Aduan', 'Harmonisasi', 'Izin/Penelitian']],
             body: bodyData,
             startY: finalY + 40,
             theme: 'grid',
@@ -417,21 +449,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (window.statistikData.length === 0) return alert('Tidak ada data');
 
         const summary = window.statistikSummary || {};
-        
+
         let userRows = '';
         window.statistikData.forEach((u, i) => {
-            let roleBg = '#0dcaf020';
-            let roleColor = '#0dcaf0';
-            if (u.role === 'Admin') {
-                roleBg = '#dc354520';
-                roleColor = '#dc3545';
-            } else if (u.role === 'Operator') {
-                roleBg = '#0d6efd20';
-                roleColor = '#0d6efd';
-            } else if (u.role === 'p3h' || u.role === 'P3H') {
-                roleBg = '#ffc10720';
-                roleColor = '#ffc107';
-            }
+            const roleColor = getRoleColor(u.role);
+            const roleBg = roleColor + '20';
 
             userRows += `
                 <tr>
@@ -452,6 +474,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <td style="text-align: center; border: 1px solid #dddddd; padding: 8px; font-size: 10pt;">${u.total_tamu || 0}</td>
                     <td style="text-align: center; border: 1px solid #dddddd; padding: 8px; font-size: 10pt;">${u.total_pengaduan || 0}</td>
                     <td style="text-align: center; border: 1px solid #dddddd; padding: 8px; font-size: 10pt;">${u.total_harmonisasi || 0}</td>
+                    <td style="text-align: center; border: 1px solid #dddddd; padding: 8px; font-size: 10pt;">${u.total_izin || 0}</td>
                 </tr>
             `;
         });
@@ -511,6 +534,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         <tr><td style="border: 1px solid #dddddd; padding: 8px; font-size: 10pt;">Tamu</td><td style="border: 1px solid #dddddd; padding: 8px; font-size: 10pt; text-align: center;">${summary.total_tamu || 0}</td></tr>
                         <tr><td style="border: 1px solid #dddddd; padding: 8px; font-size: 10pt;">Aduan</td><td style="border: 1px solid #dddddd; padding: 8px; font-size: 10pt; text-align: center;">${summary.total_pengaduan || 0}</td></tr>
                         <tr><td style="border: 1px solid #dddddd; padding: 8px; font-size: 10pt;">Harmonisasi</td><td style="border: 1px solid #dddddd; padding: 8px; font-size: 10pt; text-align: center;">${summary.total_harmonisasi || 0}</td></tr>
+                        <tr><td style="border: 1px solid #dddddd; padding: 8px; font-size: 10pt;">Izin</td><td style="border: 1px solid #dddddd; padding: 8px; font-size: 10pt; text-align: center;">${summary.total_izin || 0}</td></tr>
                     </tbody>
                 </table>
 
@@ -528,6 +552,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <th style="background-color: #198754; color: white; border: 1px solid #dddddd; padding: 8px; font-size: 10pt; text-align: center; width: 50px;">Tamu</th>
                             <th style="background-color: #198754; color: white; border: 1px solid #dddddd; padding: 8px; font-size: 10pt; text-align: center; width: 50px;">Aduan</th>
                             <th style="background-color: #198754; color: white; border: 1px solid #dddddd; padding: 8px; font-size: 10pt; text-align: center; width: 75px;">Harmonisasi</th>
+                            <th style="background-color: #198754; color: white; border: 1px solid #dddddd; padding: 8px; font-size: 10pt; text-align: center; width: 50px;">Izin</th>
                         </tr>
                     </thead>
                     <tbody>

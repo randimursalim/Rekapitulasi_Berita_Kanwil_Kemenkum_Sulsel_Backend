@@ -3998,7 +3998,7 @@ body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.d
 /* ===== AKHIR RESPONSIVE ARSIP PAGE ===== */
 
 /* ===== RESPONSIVE UNTUK NAVIGASI DAN DASHBOARD ===== */
-@media (max-width: 1000px) {
+@media (max-width: 1000px) and (min-width: 769px) {
   nav {
     width: 73px;
   }
@@ -4048,73 +4048,159 @@ body.dark .arsip-page #searchResults .data.actions .data-list .btn-action-aksi.d
   }
 
   .activity .activity-data {
-    overflow-X: scroll;
+    overflow-x: auto;
   }
 }
 
-@media (max-width: 780px) {
-  .dash-content .boxes .box {
-    width: calc(100% / 2 - 15px);
-    margin-top: 15px;
-  }
+/* ===== MOBILE FLOATING DRAWER SIDEBAR & OVERLAY (SMARTPHONE <= 768px) ===== */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-@media (max-width: 560px) {
-  .dash-content .boxes .box {
-    width: 100%;
+@media (max-width: 768px) {
+  .sidebar-overlay {
+    display: block;
   }
-}
 
-@media (max-width: 400px) {
+  body.sidebar-open .sidebar-overlay {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Sidebar Drawer Mobile */
   nav {
-    width: 0px;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    width: 260px !important;
+    z-index: 1001 !important;
+    box-shadow: 4px 0 25px rgba(0, 0, 0, 0.25) !important;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    transform: translateX(0) !important; /* Opened state */
   }
 
   nav.close {
-    width: 73px;
+    width: 260px !important;
+    transform: translateX(-100%) !important; /* Closed/hidden off-screen */
   }
 
-  nav .logo_name {
-    opacity: 0;
-    pointer-events: none;
+  /* Text & Links in drawer on mobile when open */
+  nav .logo_name,
+  nav li a .link-name,
+  nav .logout-mode li a .link-name {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    display: inline-block !important;
+    visibility: visible !important;
   }
 
-  nav.close .logo_name {
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  nav li a .link-name {
-    opacity: 0;
-    pointer-events: none;
-  }
-
+  nav.close .logo_name,
   nav.close li a .link-name {
-    opacity: 0;
-    pointer-events: none;
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
 
-  nav~.dashboard {
-    left: 0;
-    width: 100%;
-  }
-
+  /* Main Dashboard - Always 100% width on Mobile */
+  nav~.dashboard,
   nav.close~.dashboard {
-    left: 73px;
-    width: calc(100% - 73px);
+    left: 0 !important;
+    width: 100% !important;
+    padding: 70px 12px 25px 12px !important;
   }
 
-  nav~.dashboard .top {
-    left: 0;
-    width: 100%;
-  }
-
+  /* Topbar Header - Always 100% width on Mobile */
+  nav~.dashboard .top,
   nav.close~.dashboard .top {
-    left: 0;
-    width: 100%;
+    left: 0 !important;
+    width: 100% !important;
+    padding: 10px 12px !important;
+  }
+
+  .top .search-box {
+    max-width: 180px;
+    margin: 0 8px;
+  }
+
+  .top .profile-info .user-info {
+    display: none !important; /* Hide long username text on mobile topbar */
+  }
+
+  .dash-content .boxes .box {
+    width: 100% !important;
+    margin-top: 12px;
+  }
+
+  /* Global Mobile Table Responsiveness */
+  .activity-wrapper,
+  .table-responsive,
+  .table-container,
+  .harmonisasi-table-container,
+  .dataTables_wrapper {
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    display: block !important;
+  }
+
+  .activity-data {
+    min-width: 800px !important;
+  }
+
+  /* Global Mobile Action Bars & Headers */
+  .action-bar,
+  .stat-header,
+  .page-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  .action-left,
+  .action-right,
+  .stat-actions,
+  .filter-bar {
+    width: 100% !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  .action-bar button,
+  .stat-actions button,
+  .filter-bar select,
+  .filter-bar input,
+  .custom-btn,
+  .btn-cari {
+    width: 100% !important;
+    justify-content: center !important;
   }
 }
 
+@media (max-width: 480px) {
+  .top .search-box {
+    max-width: 130px;
+  }
+
+  .top .search-box input {
+    font-size: 12px;
+    padding: 6px 8px 6px 30px;
+  }
+
+  .dash-content {
+    padding-top: 10px !important;
+  }
+}
 /* ===== AKHIR RESPONSIVE NAVIGASI DAN DASHBOARD ===== */
 
 /* ===== STATUS BADGE UNTUK TINDAK LANJUT ===== */

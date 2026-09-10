@@ -19,6 +19,7 @@ class StatistikPenggunaModel {
                    (SELECT COUNT(*) FROM layanan_pengaduan WHERE id_pengguna = p.id_pengguna) as total_layanan_pengaduan,
                    (SELECT COUNT(*) FROM harmonisasi WHERE id_pengguna = p.id_pengguna) as total_harmonisasi,
                    (SELECT COUNT(*) FROM tb_tamu WHERE id_pengguna = p.id_pengguna) as total_tamu,
+                   (SELECT COUNT(*) FROM tb_izin) as total_izin,
                    (SELECT COUNT(*) FROM log_aktivitas WHERE id_pengguna = p.id_pengguna) as total_log_aktivitas
             FROM pengguna p
             ORDER BY p.role ASC, p.nama ASC

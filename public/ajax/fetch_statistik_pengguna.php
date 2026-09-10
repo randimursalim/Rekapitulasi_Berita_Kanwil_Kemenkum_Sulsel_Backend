@@ -91,6 +91,15 @@ try {
         $totalSemuaHarmonisasi = (int)$stmtHarmonisasi->fetchColumn();
     } catch (Exception $e) {}
 
+    // Total Izin
+    $totalSemuaIzin = 0;
+    try {
+        $qIzinTotal = "SELECT COUNT(*) FROM tb_izin WHERE 1=1" . getDateCond('tgl', $startDate, $endDate);
+        $stmtIzin = $conn->prepare($qIzinTotal);
+        $stmtIzin->execute($dateParams);
+        $totalSemuaIzin = (int)$stmtIzin->fetchColumn();
+    } catch (Exception $e) {}
+
     // Total Log Aktivitas
     $qLogTotal = "SELECT COUNT(*) FROM log_aktivitas WHERE 1=1" . getDateCond('tanggal', $startDate, $endDate);
     $stmtLog = $conn->prepare($qLogTotal);
@@ -100,12 +109,13 @@ try {
     $topUser = null;
     $maxLog = -1;
 
-    $roleDistribution = [
-        'Admin' => 0,
-        'Operator' => 0,
-        'P3H' => 0,
-        'Pegawai' => 0
-    ];
+    $roleDistribution = [];
+    try {
+        $stmtAllRoles = $conn->query("SELECT nama_role FROM roles ORDER BY id_role ASC");
+        while ($rRow = $stmtAllRoles->fetch(PDO::FETCH_ASSOC)) {
+            $roleDistribution[$rRow['nama_role']] = 0;
+        }
+    } catch (Exception $e) {}
 
     foreach ($users as &$u) {
         $id = $u['id_pengguna'];
@@ -156,6 +166,17 @@ try {
             $u['total_harmonisasi'] = (int)$s->fetchColumn();
         } catch (Exception $e) {}
 
+        // Izin
+        $u['total_izin'] = 0;
+        try {
+            $stmtCol = $conn->query("SHOW COLUMNS FROM tb_izin LIKE 'id_pengguna'");
+            if ($stmtCol && $stmtCol->rowCount() > 0) {
+                $q = "SELECT COUNT(*) FROM tb_izin WHERE id_pengguna = :id" . getDateCond('tgl', $startDate, $endDate);
+                $s = $conn->prepare($q); $s->execute($params);
+                $u['total_izin'] = (int)$s->fetchColumn();
+            }
+        } catch (Exception $e) {}
+
         // Log Aktivitas (Total Aktivitas)
         $q = "SELECT COUNT(*) FROM log_aktivitas WHERE id_pengguna = :id" . getDateCond('tanggal', $startDate, $endDate);
         $s = $conn->prepare($q); $s->execute($params);
@@ -166,11 +187,11 @@ try {
             $topUser = $u;
         }
 
-        $r = strtoupper($u['role']);
-        if (isset($roleDistribution['Admin']) && $r == 'ADMIN') $roleDistribution['Admin']++;
-        elseif (isset($roleDistribution['Operator']) && $r == 'OPERATOR') $roleDistribution['Operator']++;
-        elseif (isset($roleDistribution['P3H']) && $r == 'P3H') $roleDistribution['P3H']++;
-        elseif ($r == 'PEGAWAI') $roleDistribution['Pegawai']++;
+        $userRole = !empty($u['role']) ? $u['role'] : 'Unassigned';
+        if (!isset($roleDistribution[$userRole])) {
+            $roleDistribution[$userRole] = 0;
+        }
+        $roleDistribution[$userRole]++;
     }
 
     // Sort users for top kontributor by log_aktivitas
@@ -250,7 +271,8 @@ try {
             'total_peminjaman' => $totalSemuaPeminjaman,
             'total_tamu' => $totalSemuaTamu ?? 0,
             'total_pengaduan' => $totalSemuaPengaduan ?? 0,
-            'total_harmonisasi' => $totalSemuaHarmonisasi ?? 0
+            'total_harmonisasi' => $totalSemuaHarmonisasi ?? 0,
+            'total_izin' => $totalSemuaIzin ?? 0
         ],
         'chart7Hari' => $chart7Hari,
         'topKontributor' => $topKontributor,

@@ -8,29 +8,33 @@
     <!-- Header Area -->
     <div class="stat-header">
         <div class="title-container">
-            <div class="title" style="display: flex; align-items: center; font-size: 1.5rem; font-weight: bold; color: var(--text-color); margin-bottom: 5px;">
+            <div class="title"
+                style="display: flex; align-items: center; font-size: 1.5rem; font-weight: bold; color: var(--text-color); margin-bottom: 5px;">
                 <i class="fas fa-users-cog" style="margin-right: 10px;"></i>
                 <span class="text">Statistik Produktivitas Pengguna</span>
             </div>
-            <div class="text-muted" style="font-size: 14px;">Pantau aktivitas, kontribusi, dan performa seluruh pengguna secara realtime.</div>
+            <div class="text-muted" style="font-size: 14px;">Pantau aktivitas, kontribusi, dan performa seluruh pengguna
+                secara realtime.</div>
         </div>
-        
+
         <div class="stat-actions">
             <!-- Date Filter -->
             <div class="filter-group" style="width: 250px;">
                 <div class="filter-icon"><i class="fas fa-calendar-alt"></i></div>
-                <input type="text" id="dateRangeFilter" class="custom-input" style="width: 100%;" placeholder="Pilih Rentang Tanggal">
+                <input type="text" id="dateRangeFilter" class="custom-input" style="width: 100%;"
+                    placeholder="Pilih Rentang Tanggal">
             </div>
-            
+
             <!-- Role Filter -->
-            <select id="roleFilter" class="custom-input" style="width: 150px;">
+            <select id="roleFilter" class="custom-input" style="width: 160px;">
                 <option value="all">Semua Role</option>
-                <option value="Admin">Admin</option>
-                <option value="Operator">Operator</option>
-                <option value="p3h">P3H</option>
-                <option value="pegawai">Pegawai</option>
+                <?php if (!empty($availableRoles)): ?>
+                    <?php foreach ($availableRoles as $r): ?>
+                        <option value="<?= htmlspecialchars($r) ?>"><?= htmlspecialchars($r) ?></option>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </select>
-            
+
             <!-- Export Buttons -->
             <button id="btnExportExcel" class="custom-btn custom-btn-excel">
                 <i class="fas fa-file-excel"></i> Export Excel
@@ -86,7 +90,8 @@
                 </div>
                 <div class="stat-content">
                     <div class="stat-label">User Terproduktif</div>
-                    <div class="stat-value font-bold" id="valTopUser" style="font-size: 18px; margin-bottom: 2px;">-</div>
+                    <div class="stat-value font-bold" id="valTopUser" style="font-size: 18px; margin-bottom: 2px;">-
+                    </div>
                     <div class="stat-label"><span id="valTopUserAktivitas">0</span> aktivitas</div>
                 </div>
             </div>
@@ -106,7 +111,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Aktivitas 7 Hari Terakhir (Line Chart) -->
         <div class="modern-card">
             <div class="stat-card-title">Aktivitas Periode Berjalan</div>
@@ -130,7 +135,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Distribusi Role -->
         <div class="modern-card">
             <div class="stat-card-title">Distribusi Role</div>
@@ -144,46 +149,60 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Aktivitas per Jenis -->
         <div class="modern-card" style="grid-column: span 1;">
             <div class="stat-card-title">Aktivitas per Jenis</div>
-            <div class="stat-card-body" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+            <div class="stat-card-body"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 15px;">
                 <!-- Kegiatan -->
-                <div style="text-align: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+                <div
+                    style="text-align: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
                     <i class="fas fa-calendar-check text-info" style="font-size: 20px; margin-bottom: 8px;"></i>
                     <div class="font-bold text-info" id="valJenisKegiatan" style="font-size: 18px;">0</div>
                     <div class="text-muted" style="font-size: 11px;">Kegiatan</div>
                 </div>
                 <!-- Peminjaman -->
-                <div style="text-align: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+                <div
+                    style="text-align: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
                     <i class="fas fa-door-open text-warning" style="font-size: 20px; margin-bottom: 8px;"></i>
                     <div class="font-bold text-warning" id="valJenisPeminjaman" style="font-size: 18px;">0</div>
                     <div class="text-muted" style="font-size: 11px;">Peminjaman</div>
                 </div>
                 <!-- Konten -->
-                <div style="text-align: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+                <div
+                    style="text-align: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
                     <i class="fas fa-file-alt text-success" style="font-size: 20px; margin-bottom: 8px;"></i>
                     <div class="font-bold text-success" id="valJenisKonten" style="font-size: 18px;">0</div>
                     <div class="text-muted" style="font-size: 11px;">Konten</div>
                 </div>
                 <!-- Tamu -->
-                <div style="text-align: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+                <div
+                    style="text-align: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
                     <i class="fas fa-address-book text-primary" style="font-size: 20px; margin-bottom: 8px;"></i>
                     <div class="font-bold text-primary" id="valJenisTamu" style="font-size: 18px;">0</div>
                     <div class="text-muted" style="font-size: 11px;">Tamu</div>
                 </div>
                 <!-- Pengaduan -->
-                <div style="text-align: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+                <div
+                    style="text-align: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
                     <i class="fas fa-headset text-danger" style="font-size: 20px; margin-bottom: 8px;"></i>
                     <div class="font-bold text-danger" id="valJenisPengaduan" style="font-size: 18px;">0</div>
                     <div class="text-muted" style="font-size: 11px;">Aduan</div>
                 </div>
                 <!-- Harmonisasi -->
-                <div style="text-align: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+                <div
+                    style="text-align: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
                     <i class="fas fa-balance-scale text-purple" style="font-size: 20px; margin-bottom: 8px;"></i>
                     <div class="font-bold text-purple" id="valJenisHarmonisasi" style="font-size: 18px;">0</div>
                     <div class="text-muted" style="font-size: 11px;">Harmonisasi</div>
+                </div>
+                <!-- Izin -->
+                <div
+                    style="text-align: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+                    <i class="fas fa-file-signature" style="font-size: 20px; color: #20c997; margin-bottom: 8px;"></i>
+                    <div class="font-bold" id="valJenisIzin" style="font-size: 18px; color: #20c997;">0</div>
+                    <div class="text-muted" style="font-size: 11px;">Izin/Penelitian</div>
                 </div>
             </div>
         </div>
@@ -207,6 +226,7 @@
                             <th style="text-align: center; min-width: 90px;">Tamu</th>
                             <th style="text-align: center; min-width: 90px;">Aduan</th>
                             <th style="text-align: center; min-width: 110px;">Harmonisasi</th>
+                            <th style="text-align: center; min-width: 90px;">Izin</th>
                             <th style="text-align: center; min-width: 130px;">Total Aktivitas</th>
                             <th style="min-width: 130px;">Produktivitas</th>
                         </tr>

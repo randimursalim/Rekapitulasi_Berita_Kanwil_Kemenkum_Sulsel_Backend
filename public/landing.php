@@ -13,6 +13,15 @@ if (session_status() === PHP_SESSION_NONE) {
   @session_start();
 }
 
+require_once __DIR__ . '/../app/helpers/maintenance_helper.php';
+if (MaintenanceHelper::isMaintenanceMode()) {
+    $isAdmin = MaintenanceHelper::isAdmin();
+    if (!$isAdmin) {
+        include __DIR__ . '/../app/views/pages/maintenance.php';
+        exit();
+    }
+}
+
 // Auto-detect BASE_URL untuk localhost vs hosting
 $requestUri = $_SERVER['REQUEST_URI'] ?? '';
 $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';

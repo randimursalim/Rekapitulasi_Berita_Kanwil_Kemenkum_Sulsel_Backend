@@ -216,56 +216,89 @@ function is_active($pageName)
     <div class="menu-items">
       <ul class="nav-links">
         <?php
-        $userRole = isset($_SESSION['user']) ? $_SESSION['user']['role'] : '';
-        $isP3H = ($userRole === 'p3h');
-        $isPegawai = ($userRole === 'pegawai');
+        require_once __DIR__ . '/../../controllers/AuthController.php';
+        if (!function_exists('check_menu_permission')) {
+            function check_menu_permission($menuKey) {
+                return AuthController::hasPermission($menuKey);
+            }
+        }
         ?>
 
-        <?php if (!$isP3H && !$isPegawai): ?>
+        <?php if (check_menu_permission('dashboard')): ?>
           <li><a href="<?= $BASE ?>/index.php?page=dashboard" class="<?= is_active('dashboard') ?>"><i
                 class="fas fa-home"></i><span class="link-name">Dashboard</span></a></li>
+        <?php endif; ?>
+
+        <?php if (check_menu_permission('input-konten')): ?>
           <li><a href="<?= $BASE ?>/index.php?page=input-konten" class="<?= is_active('input-konten') ?>"><i
                 class="fas fa-plus-circle"></i><span class="link-name">Input Konten</span></a></li>
+        <?php endif; ?>
+
+        <?php if (check_menu_permission('rekap-konten')): ?>
           <li><a href="<?= $BASE ?>/index.php?page=rekap-konten" class="<?= is_active('rekap-konten') ?>"><i
                 class="fas fa-database"></i><span class="link-name">Rekap Konten</span></a></li>
-          <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'Admin'): ?>
-            <li><a href="<?= $BASE ?>/index.php?page=tamu" class="<?= is_active('tamu') ?>"><i class="fas fa-book"></i><span
-                  class="link-name">Buku Tamu</span></a></li>
-          <?php endif; ?>
-          <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'Admin'): ?>
-            <li><a href="<?= $BASE ?>/index.php?page=izin" class="<?= is_active('izin') ?>"><i class="fas fa-file"></i><span
-                  class="link-name">Perizinan</span></a></li>
-          <?php endif; ?>
+        <?php endif; ?>
+
+        <?php if (check_menu_permission('tamu')): ?>
+          <li><a href="<?= $BASE ?>/index.php?page=tamu" class="<?= is_active('tamu') ?>"><i class="fas fa-book"></i><span
+                class="link-name">Buku Tamu</span></a></li>
+        <?php endif; ?>
+
+        <?php if (check_menu_permission('izin')): ?>
+          <li><a href="<?= $BASE ?>/index.php?page=izin" class="<?= is_active('izin') ?>"><i class="fas fa-file"></i><span
+                class="link-name">Perizinan</span></a></li>
+        <?php endif; ?>
+
+        <?php if (check_menu_permission('arsip')): ?>
           <li><a href="<?= $BASE ?>/index.php?page=arsip" class="<?= is_active('arsip') ?>"><i
                 class="fas fa-archive"></i><span class="link-name">Arsip</span></a></li>
-          <!-- <li><a href="<?= $BASE ?>/index.php?page=daftar-aduan" class="<?= is_active('daftar-aduan') ?>"><i
-                class="fas fa-exclamation-triangle"></i><span class="link-name">Daftar Aduan</span></a></li> -->
+        <?php endif; ?>
+
+        <?php if (check_menu_permission('layanan-pengaduan')): ?>
           <li><a href="<?= $BASE ?>/index.php?page=layanan-pengaduan" class="<?= is_active('layanan-pengaduan') ?>"><i
                 class="fas fa-gavel"></i><span class="link-name">Layanan Pengaduan</span></a></li>
         <?php endif; ?>
 
-        <?php if (!$isPegawai): ?>
+        <?php if (check_menu_permission('jadwal-kegiatan')): ?>
           <li><a href="<?= $BASE ?>/index.php?page=jadwal-kegiatan" class="<?= is_active('jadwal-kegiatan') ?>"><i
                 class="fas fa-calendar-alt"></i><span class="link-name">Jadwal Kegiatan</span></a></li>
+        <?php endif; ?>
+
+        <?php if (check_menu_permission('rekap-jadwal-kegiatan')): ?>
           <li><a href="<?= $BASE ?>/index.php?page=rekap-jadwal-kegiatan"
               class="<?= is_active('rekap-jadwal-kegiatan') ?>"><i class="fas fa-chart-pie"></i><span
                 class="link-name">Rekap Jadwal</span></a></li>
         <?php endif; ?>
-        <li><a href="<?= $BASE ?>/index.php?page=jadwal-peminjaman-ruangan"
-            class="<?= is_active('jadwal-peminjaman-ruangan') ?>"><i class="fas fa-door-open"></i><span
-              class="link-name">Peminjaman Ruangan</span></a></li>
-        <?php if (!$isPegawai): ?>
+
+        <?php if (check_menu_permission('jadwal-peminjaman-ruangan')): ?>
+          <li><a href="<?= $BASE ?>/index.php?page=jadwal-peminjaman-ruangan"
+              class="<?= is_active('jadwal-peminjaman-ruangan') ?>"><i class="fas fa-door-open"></i><span
+                class="link-name">Peminjaman Ruangan</span></a></li>
+        <?php endif; ?>
+
+        <?php if (check_menu_permission('harmonisasi')): ?>
           <li><a href="<?= $BASE ?>/index.php?page=harmonisasi" class="<?= is_active('harmonisasi') ?>"><i
                 class="fas fa-balance-scale"></i><span class="link-name">Data Harmonisasi</span></a></li>
+        <?php endif; ?>
+
+        <?php if (check_menu_permission('rekap-harmonisasi')): ?>
           <li><a href="<?= $BASE ?>/index.php?page=rekap-harmonisasi" class="<?= is_active('rekap-harmonisasi') ?>"><i
                 class="fas fa-chart-line"></i><span class="link-name">Rekap Harmonisasi</span></a></li>
         <?php endif; ?>
 
-        <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'Admin'): ?>
+        <?php if (check_menu_permission('pengguna')): ?>
           <li><a href="<?= $BASE ?>/index.php?page=pengguna" class="<?= is_active('pengguna') ?>"><i
                 class="fas fa-users"></i><span class="link-name">Pengguna</span></a></li>
+        <?php endif; ?>
+
+        <?php if (check_menu_permission('statistik-pengguna')): ?>
           <li><a href="<?= $BASE ?>/index.php?page=statistik-pengguna" class="<?= is_active('statistik-pengguna') ?>"><i
                 class="fas fa-users-cog"></i><span class="link-name">Statistik Pengguna</span></a></li>
+        <?php endif; ?>
+
+        <?php if (check_menu_permission('role')): ?>
+          <li><a href="<?= $BASE ?>/index.php?page=role" class="<?= is_active('role') ?>"><i
+                class="fas fa-user-shield"></i><span class="link-name">Manajemen Role</span></a></li>
         <?php endif; ?>
       </ul>
 
@@ -282,6 +315,12 @@ function is_active($pageName)
 
   <!-- Konten utama -->
   <section class="dashboard">
+    <?php
+    require_once __DIR__ . '/../../helpers/maintenance_helper.php';
+    $isMaintenanceActive = MaintenanceHelper::isMaintenanceMode();
+    $isAdminUser = MaintenanceHelper::isAdmin();
+    ?>
+
     <div class="top">
       <i class="fas fa-bars sidebar-toggle"></i>
 
@@ -297,31 +336,113 @@ function is_active($pageName)
         </div>
       <?php endif; ?>
 
-      <?php
-      $userFoto = $_SESSION['user']['foto'] ?? 'user.jpg';
-      $avatarSrc = $BASE . '/Images/user.jpg';
-      if (!empty($userFoto) && $userFoto !== 'user.jpg') {
-          $publicDir = dirname(dirname(dirname(__DIR__))) . '/public';
-          $storagePath = $publicDir . '/storage/uploads/users/' . $userFoto;
-          $imagesPath  = $publicDir . '/Images/users/' . $userFoto;
-          if (file_exists($storagePath)) {
-              $avatarSrc = $BASE . '/storage/uploads/users/' . $userFoto;
-          } elseif (file_exists($imagesPath)) {
-              $avatarSrc = $BASE . '/Images/users/' . $userFoto;
-          }
-      }
-      ?>
-      <div class="profile-info">
-        <span class="user-info">
-          <?= isset($_SESSION['user']) ? htmlspecialchars($_SESSION['user']['nama']) : 'User' ?>
-          <small>(<?= isset($_SESSION['user']) ? $_SESSION['user']['role'] : 'Guest' ?>)</small>
-        </span>
-        <a href="<?= $BASE ?>/index.php?page=edit-profil">
-          <img
-            src="<?= $avatarSrc ?>"
-            alt="Profile" class="profile-link" />
-        </a>
+      <div style="display: flex; align-items: center; gap: 12px; margin-left: auto;">
+        <?php if ($isAdminUser): ?>
+          <button type="button" onclick="toggleMaintenanceMode()" 
+                  class="btn-maint-topbar <?= $isMaintenanceActive ? 'active' : '' ?>" 
+                  title="<?= $isMaintenanceActive ? 'Mode Maintenance AKTIF (Klik untuk Matikan)' : 'Aktifkan Mode Maintenance' ?>"
+                  style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid <?= $isMaintenanceActive ? '#f59e0b' : 'var(--border-color)' ?>; background: <?= $isMaintenanceActive ? 'rgba(245, 158, 11, 0.15)' : 'var(--panel-color)' ?>; color: <?= $isMaintenanceActive ? '#d97706' : 'var(--text-color)' ?>; transition: all 0.2s;">
+            <i class="fas fa-tools" style="<?= $isMaintenanceActive ? 'color: #d97706;' : '' ?>"></i>
+            <span><?= $isMaintenanceActive ? 'Maintenance ON' : 'Maintenance' ?></span>
+          </button>
+        <?php endif; ?>
+
+        <?php
+        $userFoto = $_SESSION['user']['foto'] ?? 'user.jpg';
+        $avatarSrc = $BASE . '/Images/user.jpg';
+        if (!empty($userFoto) && $userFoto !== 'user.jpg') {
+            $publicDir = dirname(dirname(dirname(__DIR__))) . '/public';
+            $storagePath = $publicDir . '/storage/uploads/users/' . $userFoto;
+            $imagesPath  = $publicDir . '/Images/users/' . $userFoto;
+            if (file_exists($storagePath)) {
+                $avatarSrc = $BASE . '/storage/uploads/users/' . $userFoto;
+            } elseif (file_exists($imagesPath)) {
+                $avatarSrc = $BASE . '/Images/users/' . $userFoto;
+            }
+        }
+        ?>
+        <div class="profile-info">
+          <span class="user-info">
+            <?= isset($_SESSION['user']) ? htmlspecialchars($_SESSION['user']['nama']) : 'User' ?>
+            <small>(<?= isset($_SESSION['user']) ? $_SESSION['user']['role'] : 'Guest' ?>)</small>
+          </span>
+          <a href="<?= $BASE ?>/index.php?page=edit-profil">
+            <img
+              src="<?= $avatarSrc ?>"
+              alt="Profile" class="profile-link" />
+          </a>
+        </div>
       </div>
     </div>
+
+    <?php if ($isMaintenanceActive && $isAdminUser): ?>
+      <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; text-align: center; padding: 10px 15px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); margin-top: 60px;">
+          <i class="fas fa-exclamation-triangle"></i>
+          <span>MODE MAINTENANCE AKTIF &mdash; Akses publik/non-admin ditutup. Hanya Admin yang dapat mengakses sistem.</span>
+          <button onclick="toggleMaintenanceMode()" style="background: #fff; color: #d97706; border: none; padding: 4px 12px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; margin-left: 10px;">
+              Matikan Mode Maintenance
+          </button>
+      </div>
+    <?php endif; ?>
+
+    <script>
+      function toggleMaintenanceMode() {
+        const isCurrentlyActive = <?= $isMaintenanceActive ? 'true' : 'false' ?>;
+        const actionTitle = isCurrentlyActive ? 'Matikan Mode Maintenance?' : 'Aktifkan Mode Maintenance?';
+        const actionText = isCurrentlyActive 
+          ? 'Akses sistem akan dibuka kembali untuk seluruh pengguna.' 
+          : 'Akses sistem akan ditutup untuk pengguna umum dengan pesan: "Website ini sedang maintenance, mohon maaf atas ketidaknyamanan anda, tetap pantau situs kami secara berkala". Admin tetap dapat mengakses sistem.';
+        const confirmBtnText = isCurrentlyActive ? 'Ya, Matikan' : 'Ya, Aktifkan Mode Maintenance';
+        const confirmBtnColor = isCurrentlyActive ? '#10b981' : '#f59e0b';
+
+        if (typeof Swal !== 'undefined') {
+          Swal.fire({
+            title: actionTitle,
+            text: actionText,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: confirmBtnColor,
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: confirmBtnText,
+            cancelButtonText: 'Batal'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              executeMaintenanceToggle();
+            }
+          });
+        } else {
+          if (confirm(actionTitle + '\n' + actionText)) {
+            executeMaintenanceToggle();
+          }
+        }
+      }
+
+      function executeMaintenanceToggle() {
+        fetch('<?= $BASE ?>/ajax/toggle_maintenance.php?action=toggle', { method: 'POST' })
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                  title: 'Berhasil!',
+                  text: data.message,
+                  icon: 'success',
+                  timer: 1500,
+                  showConfirmButton: false
+                }).then(() => window.location.reload());
+              } else {
+                alert(data.message);
+                window.location.reload();
+              }
+            } else {
+              alert(data.message || 'Gagal mengubah mode maintenance');
+            }
+          })
+          .catch(err => {
+            console.error('Error toggling maintenance:', err);
+            alert('Terjadi kesalahan jaringan.');
+          });
+      }
+    </script>
 
     <div class="dash-content">
