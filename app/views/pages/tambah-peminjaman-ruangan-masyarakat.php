@@ -168,6 +168,7 @@ if (!isset($BASE)) {
                     <option value="Ruang Rapat Hamid Awaluddin (Lantai 2)">Ruang Rapat Hamid Awaluddin (Lantai 2)</option>
                     <option value="Ruang Rapat Bhinneka Tunggal Ika (Lantai 3)">Ruang Rapat Bhinneka Tunggal Ika (Lantai 3)</option>
                     <option value="Aula Pancasila (Lantai 3)">Aula Pancasila (Lantai 3)</option>
+                    <option value="Ruang Pengayoman (Ex Musala Lantai 3)">Ruang Pengayoman (Ex Musala Lantai 3)</option>
                 </select>
             </div>
 

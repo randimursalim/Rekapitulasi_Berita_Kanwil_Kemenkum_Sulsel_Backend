@@ -52,6 +52,7 @@ if (!isset($BASE)) {
                 <option value="Ruang Rapat Hamid Awaluddin (Lantai 2)" <?= $peminjaman['nama_ruangan'] == 'Ruang Rapat Hamid Awaluddin (Lantai 2)' ? 'selected' : '' ?>>Ruang Rapat Hamid Awaluddin (Lantai 2)</option>
                 <option value="Ruang Rapat Bhinneka Tunggal Ika (Lantai 3)" <?= $peminjaman['nama_ruangan'] == 'Ruang Rapat Bhinneka Tunggal Ika (Lantai 3)' ? 'selected' : '' ?>>Ruang Rapat Bhinneka Tunggal Ika (Lantai 3)</option>
                 <option value="Aula Pancasila (Lantai 3)" <?= $peminjaman['nama_ruangan'] == 'Aula Pancasila (Lantai 3)' ? 'selected' : '' ?>>Aula Pancasila (Lantai 3)</option>
+                <option value="Ruang Pengayoman (Ex Musala Lantai 3)" <?= $peminjaman['nama_ruangan'] == 'Ruang Pengayoman (Ex Musala Lantai 3)' ? 'selected' : '' ?>>Ruang Pengayoman (Ex Musala Lantai 3)</option>
             </select>
         </div>
 

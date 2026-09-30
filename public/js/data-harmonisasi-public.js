@@ -165,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function() {
             <tr>
               <th>No</th>
               <th>Judul Rancangan</th>
-              <th>Pemrakarsa</th>
               <th>Pemerintah Daerah</th>
               <th>Tanggal Rapat</th>
               <th>Status</th>
@@ -175,7 +174,6 @@ document.addEventListener('DOMContentLoaded', function() {
           <tbody>
             ${data.map((h, index) => {
               const judul = h.judul_rancangan || '-';
-              const pemrakarsa = h.pemrakarsa || '-';
               const status = h.status || 'Diterima';
               const statusClass = status === 'Diterima' ? 'status-selesai' : 'status-proses';
               const statusText = status === 'Diterima' ? 'Diterima' : 'Dikembalikan';
@@ -185,9 +183,6 @@ document.addEventListener('DOMContentLoaded', function() {
                   <td data-label="">${startIndex + index + 1}</td>
                   <td class="text-full" data-label="Judul Rancangan" title="${escapeHtml(judul)}">
                     <div class="cell-content">${escapeHtml(judul)}</div>
-                  </td>
-                  <td class="text-full" data-label="Pemrakarsa" title="${escapeHtml(pemrakarsa)}">
-                    <div class="cell-content">${escapeHtml(pemrakarsa)}</div>
                   </td>
                   <td data-label="Pemerintah Daerah">${escapeHtml(h.pemerintah_daerah || '-')}</td>
                   <td data-label="Tanggal Rapat">${formatDate(h.tanggal_rapat)}</td>
@@ -308,7 +303,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     htmlContent += `<strong>Judul Rancangan:</strong><br>`;
     htmlContent += `<div style="margin: 10px 0; padding: 10px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 5px; white-space: pre-wrap; color: #333; word-wrap: break-word; word-break: break-word;">${escapeHtml(judulRancangan || '-')}</div><br>`;
-    htmlContent += `<strong>Pemrakarsa:</strong> ${escapeHtml(pemrakarsa) || '-'}<br>`;
     htmlContent += `<strong>Pemerintah Daerah:</strong> ${escapeHtml(pemerintahDaerah) || '-'}<br>`;
     if (tanggalSuratDiterima && tanggalSuratDiterima !== '-') {
       htmlContent += `<strong>Tanggal Surat Diterima:</strong> ${tanggalSuratDiterima}<br>`;

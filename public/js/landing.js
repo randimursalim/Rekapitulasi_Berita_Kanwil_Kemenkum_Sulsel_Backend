@@ -1663,7 +1663,6 @@ function renderHarmonisasiPreview(data) {
           <tr>
             <th>No</th>
             <th>Judul Rancangan</th>
-            <th>Pemrakarsa</th>
             <th>Pemerintah Daerah</th>
             <th>Tanggal Rapat</th>
             <th>Status</th>
@@ -1672,7 +1671,6 @@ function renderHarmonisasiPreview(data) {
         <tbody>
           ${data.map((h, index) => {
             const judul = h.judul_rancangan || '-';
-            const pemrakarsa = h.pemrakarsa || '-';
             const status = h.status || 'Diterima';
             const statusClass = status === 'Diterima' ? 'status-selesai' : 'status-proses';
             const statusText = status === 'Diterima' ? 'Diterima' : 'Dikembalikan';
@@ -1682,9 +1680,6 @@ function renderHarmonisasiPreview(data) {
                 <td data-label="">${index + 1}</td>
                 <td class="text-full" data-label="Judul Rancangan" title="${escapeHtml(judul)}">
                   <div class="cell-content">${escapeHtml(judul)}</div>
-                </td>
-                <td class="text-full" data-label="Pemrakarsa" title="${escapeHtml(pemrakarsa)}">
-                  <div class="cell-content">${escapeHtml(pemrakarsa)}</div>
                 </td>
                 <td data-label="Pemerintah Daerah">${escapeHtml(h.pemerintah_daerah || '-')}</td>
                 <td data-label="Tanggal Rapat">${formatDate(h.tanggal_rapat)}</td>

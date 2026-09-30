@@ -403,7 +403,7 @@ if (!isset($BASE)) {
         <div class="harmonisasi-page-public">
             <!-- Pencarian -->
             <div class="search-container" style="margin-bottom: 20px;">
-                <input type="text" id="searchInput" placeholder="Cari berdasarkan judul, pemrakarsa, pemerintah daerah, atau pemegang draf..." 
+                <input type="text" id="searchInput" placeholder="Cari berdasarkan judul, pemerintah daerah, atau pemegang draf..." 
                        style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem;">
             </div>
 
