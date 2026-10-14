@@ -15,11 +15,11 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once __DIR__ . '/../app/helpers/maintenance_helper.php';
 if (MaintenanceHelper::isMaintenanceMode()) {
-    $isAdmin = MaintenanceHelper::isAdmin();
-    if (!$isAdmin) {
-        include __DIR__ . '/../app/views/pages/maintenance.php';
-        exit();
-    }
+  $isAdmin = MaintenanceHelper::isAdmin();
+  if (!$isAdmin) {
+    include __DIR__ . '/../app/views/pages/maintenance.php';
+    exit();
+  }
 }
 
 // Auto-detect BASE_URL untuk localhost vs hosting
@@ -112,7 +112,8 @@ $BASE = rtrim($BASE, '/');
               <!-- <li><a href="https://simanis.kemenkumsulsel.id/" target="_blank">Simanis</a></li> -->
               <li><a href="<?= $BASE ?>/index.php?page=simanis">Simanis</a></li>
               <li><a href="<?= $BASE ?>/index.php?page=simtamu">Simtamu</a></li>
-              <li><a href="<?= $BASE ?>/siapakemenkumsulsel/">SI-APA</a></li>
+              <!-- <li><a href="<?= $BASE ?>/siapakemenkumsulsel/">SI-APA</a></li> -->
+              <li><a href="https://sicakap.kemenkumsulsel.id/arsip/#/" target="_blank">Layanan Arsip</a></li>
             </ul>
           </li>
           <li class="dropdown">
