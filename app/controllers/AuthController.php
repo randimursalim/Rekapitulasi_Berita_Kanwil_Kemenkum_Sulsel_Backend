@@ -31,14 +31,22 @@ class AuthController
             @session_start();
         }
 
-        // Jika user sudah login (dan user adalah Admin), arahkan ke dashboard
+        // Jika user sudah login, arahkan ke halaman sesuai permission
         if (isset($_SESSION['user'])) {
             if (!empty($_GET['redirect'])) {
                 $redirectPage = preg_replace('/[^a-zA-Z0-9\-_]/', '', $_GET['redirect']);
                 header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=' . $redirectPage);
             } else {
+                if (!isset($_SESSION['user']['permissions'])) {
+                    require_once __DIR__ . '/../models/RoleModel.php';
+                    $roleModel = new RoleModel();
+                    $_SESSION['user']['permissions'] = $roleModel->getPermissionsByRoleName($_SESSION['user']['role'] ?? '');
+                }
+                $permissions = $_SESSION['user']['permissions'] ?? [];
                 $defaultRedirect = 'dashboard';
-                if ($_SESSION['user']['role'] === 'p3h') {
+                if (($_SESSION['user']['role'] ?? '') !== 'Admin' && !in_array('dashboard', $permissions) && !empty($permissions)) {
+                    $defaultRedirect = $permissions[0];
+                } elseif ($_SESSION['user']['role'] === 'p3h') {
                     $defaultRedirect = 'harmonisasi';
                 } elseif ($_SESSION['user']['role'] === 'pegawai') {
                     $defaultRedirect = 'jadwal-peminjaman-ruangan';
@@ -341,8 +349,37 @@ class AuthController
     public static function requireAdmin()
     {
         self::requireLogin();
-        if ($_SESSION['user']['role'] !== 'Admin') {
-            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=dashboard');
+        if (($_SESSION['user']['role'] ?? '') !== 'Admin') {
+            $permissions = $_SESSION['user']['permissions'] ?? [];
+            $defaultPage = 'dashboard';
+            if (!in_array('dashboard', $permissions) && !empty($permissions)) {
+                $defaultPage = $permissions[0];
+            }
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=' . $defaultPage);
+            exit;
+        }
+    }
+
+    // === Middleware untuk cek hak akses permission menu ===
+    public static function requirePermission($menuKey)
+    {
+        self::requireLogin();
+        if (!self::hasPermission($menuKey)) {
+            $permissions = $_SESSION['user']['permissions'] ?? [];
+            $defaultPage = 'dashboard';
+            if (($_SESSION['user']['role'] ?? '') !== 'Admin' && !in_array('dashboard', $permissions) && !empty($permissions)) {
+                $defaultPage = $permissions[0];
+            }
+            if ($defaultPage === $menuKey) {
+                $defaultPage = 'edit-profil';
+                foreach ($permissions as $p) {
+                    if ($p !== $menuKey) {
+                        $defaultPage = $p;
+                        break;
+                    }
+                }
+            }
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '') . '/index.php?page=' . $defaultPage);
             exit;
         }
     }

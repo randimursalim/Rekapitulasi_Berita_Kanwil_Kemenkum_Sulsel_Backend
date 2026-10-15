@@ -4283,7 +4283,8 @@ body.dark .status-belum {
   background: var(--panel-color);
 }
 
-.peminjaman-ruangan-page.is-pegawai .activity-data {
+.peminjaman-ruangan-page.is-pegawai .activity-data,
+.peminjaman-ruangan-page.is-non-admin .activity-data {
   grid-template-columns: 60px 1.5fr 2fr 2fr 1fr 1fr !important;
 }
 

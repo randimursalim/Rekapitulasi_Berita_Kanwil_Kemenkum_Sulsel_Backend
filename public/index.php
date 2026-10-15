@@ -65,7 +65,22 @@ if (isset($_SESSION['user'])) {
         'pengguna', 'statistik-pengguna', 'role'
     ];
     if (in_array($page, $mainPages) && !AuthController::hasPermission($page)) {
-        header('Location: ' . BASE_URL . '/index.php?page=' . $defaultPage);
+        if ($page !== $defaultPage && AuthController::hasPermission($defaultPage)) {
+            header('Location: ' . BASE_URL . '/index.php?page=' . $defaultPage);
+        } else {
+            $accessiblePage = null;
+            foreach ($permissions as $p) {
+                if (in_array($p, $mainPages)) {
+                    $accessiblePage = $p;
+                    break;
+                }
+            }
+            if ($accessiblePage) {
+                header('Location: ' . BASE_URL . '/index.php?page=' . $accessiblePage);
+            } else {
+                header('Location: ' . BASE_URL . '/index.php?page=edit-profil');
+            }
+        }
         exit;
     }
 } else {
@@ -218,10 +233,10 @@ switch ($page) {
         $controller->arsip();
         break;
 
-    // === PERIZINAN MAGANG/PENELITIAN (Admin Only) ===
+    // === PERIZINAN MAGANG/PENELITIAN ===
     case 'izin':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+        AuthController::requirePermission('izin');
 
         require_once __DIR__ . '/../app/controllers/IzinController.php';
         $controller = new IzinController();
@@ -248,7 +263,7 @@ switch ($page) {
 
     case 'toggle-status-simanis':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('izin');
         require_once __DIR__ . '/../app/controllers/IzinController.php';
         $controller = new IzinController();
         $controller->toggleStatusSimanis();
@@ -287,7 +302,7 @@ switch ($page) {
 
     case 'tambah-izin':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+        AuthController::requirePermission('izin');
 
         require_once __DIR__ . '/../app/controllers/IzinController.php';
         $controller = new IzinController();
@@ -296,7 +311,7 @@ switch ($page) {
 
     case 'store-izin':
         // require_once __DIR__ . '/../app/controllers/AuthController.php';
-        // AuthController::requireAdmin(); // Hanya admin yang bisa akses
+        // AuthController::requirePermission('izin');
 
         require_once __DIR__ . '/../app/controllers/IzinController.php';
         $controller = new IzinController();
@@ -305,7 +320,7 @@ switch ($page) {
 
     case 'update-status':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('izin');
 
         require_once __DIR__ . '/../app/controllers/IzinController.php';
         $controller = new IzinController();
@@ -314,7 +329,7 @@ switch ($page) {
 
     case 'upload-balasan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('izin');
 
         require_once __DIR__ . '/../app/controllers/IzinController.php';
         $controller = new IzinController();
@@ -323,7 +338,7 @@ switch ($page) {
 
     case 'kirim-balasan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('izin');
 
         require_once __DIR__ . '/../app/controllers/IzinController.php';
         $controller = new IzinController();
@@ -332,7 +347,7 @@ switch ($page) {
 
     case 'kirim-wa':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('izin');
 
         require_once __DIR__ . '/../app/controllers/IzinController.php';
         $controller = new IzinController();
@@ -341,17 +356,17 @@ switch ($page) {
 
     case 'hapus-izin':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+        AuthController::requirePermission('izin');
 
         require_once __DIR__ . '/../app/controllers/IzinController.php';
         $controller = new IzinController();
         $controller->hapusIzin();
         break;
 
-    // === PENGGUNA (Admin Only) ===
+    // === PENGGUNA ===
     case 'pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+        AuthController::requirePermission('pengguna');
 
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
@@ -360,7 +375,7 @@ switch ($page) {
 
     case 'tambah-pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+        AuthController::requirePermission('pengguna');
 
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
@@ -369,7 +384,7 @@ switch ($page) {
 
     case 'edit-pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+        AuthController::requirePermission('pengguna');
 
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
@@ -396,7 +411,7 @@ switch ($page) {
 
     case 'statistik-pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin(); // Hanya admin yang bisa lihat statistik pengguna
+        AuthController::requirePermission('statistik-pengguna');
 
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
@@ -488,7 +503,7 @@ switch ($page) {
 
     case 'edit-peminjaman-ruangan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireLogin();
+        AuthController::requireAdmin();
 
         require_once __DIR__ . '/../app/controllers/PeminjamanRuanganController.php';
         $controller = new PeminjamanRuanganController();
@@ -506,7 +521,7 @@ switch ($page) {
 
     case 'update-peminjaman-ruangan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireLogin();
+        AuthController::requireAdmin();
 
         require_once __DIR__ . '/../app/controllers/PeminjamanRuanganController.php';
         $controller = new PeminjamanRuanganController();
@@ -515,7 +530,7 @@ switch ($page) {
 
     case 'hapus-peminjaman-ruangan':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireLogin();
+        AuthController::requireAdmin();
 
         require_once __DIR__ . '/../app/controllers/PeminjamanRuanganController.php';
         $controller = new PeminjamanRuanganController();
@@ -782,7 +797,7 @@ switch ($page) {
 
     case 'store-pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+        AuthController::requirePermission('pengguna');
 
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
@@ -792,7 +807,7 @@ switch ($page) {
 
     case 'update-pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+        AuthController::requirePermission('pengguna');
 
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
@@ -801,7 +816,7 @@ switch ($page) {
 
     case 'hapus-pengguna':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+        AuthController::requirePermission('pengguna');
 
         require_once __DIR__ . '/../app/controllers/PenggunaController.php';
         $controller = new PenggunaController();
@@ -815,10 +830,10 @@ switch ($page) {
         exit;
         break;
 
-    // === BUKU TAMU (Admin Only) ===
+    // === BUKU TAMU ===
     case 'tamu':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+        AuthController::requirePermission('tamu');
 
         require_once __DIR__ . '/../app/controllers/TamuController.php';
         $controller = new TamuController();
@@ -833,7 +848,7 @@ switch ($page) {
 
     case 'tambah-tamu':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+        AuthController::requirePermission('tamu');
 
         require_once __DIR__ . '/../app/controllers/TamuController.php';
         $controller = new TamuController();
@@ -842,7 +857,7 @@ switch ($page) {
 
     case 'store-tamu':
         // require_once __DIR__ . '/../app/controllers/AuthController.php';
-        // AuthController::requireAdmin(); // Hanya admin yang bisa akses
+        // AuthController::requirePermission('tamu');
 
         require_once __DIR__ . '/../app/controllers/TamuController.php';
         $controller = new TamuController();
@@ -851,7 +866,7 @@ switch ($page) {
 
     case 'hapus-tamu':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin(); // Hanya admin yang bisa akses
+        AuthController::requirePermission('tamu');
 
         require_once __DIR__ . '/../app/controllers/TamuController.php';
         $controller = new TamuController();
@@ -860,7 +875,7 @@ switch ($page) {
 
     case 'export-excel':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('tamu');
 
         require_once __DIR__ . '/../app/controllers/TamuController.php';
         $controller = new TamuController();
@@ -869,7 +884,7 @@ switch ($page) {
 
     case 'export-word':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('tamu');
 
         require_once __DIR__ . '/../app/controllers/TamuController.php';
 
@@ -880,7 +895,7 @@ switch ($page) {
 
     case 'print-tamu':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('tamu');
 
         require_once __DIR__ . '/../app/controllers/TamuController.php';
         $controller = new TamuController();
@@ -889,7 +904,7 @@ switch ($page) {
 
     case 'edit-tamu':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('tamu');
 
         require_once __DIR__ . '/../app/controllers/TamuController.php';
         $controller = new TamuController();
@@ -898,17 +913,17 @@ switch ($page) {
 
     case 'update-tamu':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('tamu');
 
         require_once __DIR__ . '/../app/controllers/TamuController.php';
         $controller = new TamuController();
         $controller->updateTamu();
         break;
 
-    // === MANAJEMEN ROLE & HAK AKSES (Admin Only) ===
+    // === MANAJEMEN ROLE & HAK AKSES ===
     case 'role':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('role');
 
         require_once __DIR__ . '/../app/controllers/RoleController.php';
         $controller = new RoleController();
@@ -917,7 +932,7 @@ switch ($page) {
 
     case 'tambah-role':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('role');
 
         require_once __DIR__ . '/../app/controllers/RoleController.php';
         $controller = new RoleController();
@@ -926,7 +941,7 @@ switch ($page) {
 
     case 'store-role':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('role');
 
         require_once __DIR__ . '/../app/controllers/RoleController.php';
         $controller = new RoleController();
@@ -935,7 +950,7 @@ switch ($page) {
 
     case 'edit-role':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('role');
 
         require_once __DIR__ . '/../app/controllers/RoleController.php';
         $controller = new RoleController();
@@ -944,7 +959,7 @@ switch ($page) {
 
     case 'update-role':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('role');
 
         require_once __DIR__ . '/../app/controllers/RoleController.php';
         $controller = new RoleController();
@@ -953,7 +968,7 @@ switch ($page) {
 
     case 'hapus-role':
         require_once __DIR__ . '/../app/controllers/AuthController.php';
-        AuthController::requireAdmin();
+        AuthController::requirePermission('role');
 
         require_once __DIR__ . '/../app/controllers/RoleController.php';
         $controller = new RoleController();

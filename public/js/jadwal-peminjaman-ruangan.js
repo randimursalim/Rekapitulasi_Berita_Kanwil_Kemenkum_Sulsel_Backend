@@ -120,7 +120,9 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    const isPegawai = document.querySelector('.peminjaman-ruangan-page')?.classList.contains('is-pegawai') || false;
+    const isNonAdmin = document.querySelector('.peminjaman-ruangan-page')?.classList.contains('is-pegawai') 
+      || document.querySelector('.peminjaman-ruangan-page')?.classList.contains('is-non-admin') 
+      || false;
 
     const html = `
       <div class="data no">
@@ -156,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ${data.map(p => `<span class="data-list">${formatTime(p.waktu_kegiatan)}</span>`).join('')}
       </div>
 
-      ${!isPegawai ? `
+      ${!isNonAdmin ? `
       <div class="data actions">
         <span class="data-title">Aksi</span>
         ${data.map((p, index) => `
